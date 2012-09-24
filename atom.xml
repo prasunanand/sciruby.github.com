@@ -4,13 +4,105 @@
   <title>SciRuby</title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2012-07-31T17:16:40-05:00</updated>
+  <updated>2012-09-24T14:57:23-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name>SciRuby</name>
     
   </author>
 
+  
+  <entry>
+    <title>Second NMatrix Alpha Released</title>
+    <link href="http://sciruby.com/blog/2012/09/24/second-nmatrix-alpha-released/"/>
+    <updated>2012-09-24T14:12:00-05:00</updated>
+    <id>http://sciruby.com/blog/2012/09/24/second-nmatrix-alpha-released</id>
+    <content type="html">&lt;p&gt;On Friday, we released the somewhat overdue second alpha of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;, version 0.0.2.&lt;/p&gt;
+
+&lt;p&gt;This second alpha has boasts a significantly improved and much more maintainable code base, thanks to our Summer 2012
+ SciRuby Fellow, &lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt;, and sponsoring organization &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The library has been almost completely rewritten in C++, with API available for both C and C++.&lt;/p&gt;
+
+&lt;p&gt;It also includes basic slicing support for dense and list matrices and dense LU decomposition.&lt;/p&gt;
+
+&lt;p&gt;Check it out and let us know what you think! Remember to look in the &lt;a href=&quot;https://github.com/SciRuby/nmatrix/issues?direction=desc&amp;amp;sort=created&amp;amp;state=open&quot;&gt;issue tracker&lt;/a&gt;
+ if you have any problems.&lt;/p&gt;
+
+&lt;p&gt;Finally, if you're a student, you should consider applying to be a &lt;a href=&quot;sciruby-receives-ruby-association-grant--fellowships-available/&quot;&gt;SciRuby Fellow&lt;/a&gt; this winter or spring.&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>SciRuby Receives Ruby Association Grant; Fellowships Available</title>
+    <link href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/"/>
+    <updated>2012-09-24T13:43:00-05:00</updated>
+    <id>http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available</id>
+    <content type="html">&lt;p&gt;We are incredibly pleased to announce that the Ruby Association has awarded us a &lt;a href=&quot;http://www.ruby.or.jp/en/news/20120717.html&quot;&gt;1,000,000 JPY grant&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;When we applied, we proposed to build upon our &lt;a href=&quot;http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/&quot;&gt;successful SciRuby Summer of Code&lt;/a&gt;,
+which we undertook with the support of &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt;. We are pleased to announce applications
+for SciRuby fellowships.&lt;/p&gt;
+
+&lt;h2&gt;Funding Note&lt;/h2&gt;
+
+&lt;p&gt;A million yen translates to around $12,000, which is nearly enough to hire two graduate or undergraduate students
+for an academic term. We would like to hire more than one; but for that, &lt;a href=&quot;http://pledgie.com/campaigns/15783&quot;&gt;we need your help&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Fellowship Terms&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We plan to provide each fellow with a monthly stipend competitive with her or his home institution (e.g., if research assistants
+in your graduate program typically receive $1,500 per month, your stipend with us would be $1,500 per month).&lt;/li&gt;
+&lt;li&gt;Tenure will be one semester or one quarter (with an option to renew for a second quarter), depending upon the academic
+calendar of the student's home institution.&lt;/li&gt;
+&lt;li&gt;Tenure must begin no later than January 2013.&lt;/li&gt;
+&lt;li&gt;Fellows are expected to work full-time (forty hours per week) on some element of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;The Ruby Association requires monthly progress reports for stipend payment.&lt;/li&gt;
+&lt;li&gt;Fellows will be assigned mentors, but should expect to work relatively independently unless located near a SciRuby mentor.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Requirements&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fluency in C/C++, Ruby, and the English language.&lt;/li&gt;
+&lt;li&gt;Comfort with git and Github.&lt;/li&gt;
+&lt;li&gt;An understanding of GDB and Valgrind (or similar debugging tools) as well as RSpec.&lt;/li&gt;
+&lt;li&gt;A course of study in the sciences or engineering at an accredited college or university.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;To Apply&lt;/h2&gt;
+
+&lt;p&gt;Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.&lt;/p&gt;
+
+&lt;p&gt;Don't feel that you should limit yourself if you have important things to say; but don't feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Contact information.&lt;/strong&gt; Please provide your email address, GitHub username, and &lt;strong&gt;approximate&lt;/strong&gt; physical location.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Why do you like Ruby?&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;What do you like about science and why? What area do you like best?&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Describe your &lt;strong&gt;experience&lt;/strong&gt; with the following: Ruby, C/C++, other languages.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Describe your &lt;strong&gt;educational background&lt;/strong&gt; (school, degree plan, major, past degrees, research area).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Please describe what you plan to work on for this project. (Check out the &lt;a href=&quot;http://github.com/SciRuby/nmatrix/issues&quot;&gt;NMatrix issue tracker&lt;/a&gt; for ideas.)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;What would be the outcome of your work?&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If selected, you will be providing monthly demonstrations of you work. What milestones do you envision for your project?&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Please provide contact information for your graduate program or someone who can offer stipend information.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Please provide a link to your school's academic calendar.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;What other responsibilities do you have during your likely fellowship term? How will you allocate and manage your time?&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;How do you feel about &lt;strong&gt;chunky bacon&lt;/strong&gt;?&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Is there anything else you think we should have asked but didn't?&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;Email your answers to sciruby.project on gmail. &lt;em&gt;Please include a resume or curriculum vitae.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3&gt;Application Deadline&lt;/h3&gt;
+
+&lt;p&gt;Applications are due by the 31st of October, 2012.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Major Refactoring in the Pipeline</title>
