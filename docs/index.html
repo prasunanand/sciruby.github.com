@@ -106,24 +106,51 @@
     
   </header>
   
-  <h2 id="installation">Installation</h2>
-
-
-
+  <h2>Installation</h2>
 
 <p class="warning"><strong>Word to the wise:</strong> These gems have been tested, but not extensively. If you&#8217;re thinking of using SciRuby to write mission critical code, such as for driving a car or flying a space shuttle, you may wish to choose other software (for now).</p>
 
 
-<p><strong>Thorough instructions for installing NMatrix are available in the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a>.</strong></p>
+<p><strong>You might also check out the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a> if you have trouble finding what you&#8217;re seeking here.</strong></p>
 
-<p>Please note that SciRuby and NMatrix require Ruby 1.9.2 or higher. Individual components <em>may</em> work with Ruby 1.8, but we may not be able to help you if you have trouble. You&#8217;ll also need GCC 4.3 or higher.</p>
+<h3>General instructions</h3>
 
-<h3>Platform-specific instructions</h3>
+
+<p>These instructions are primarily for NMatrix installation. Until a new version of SciRuby is released, you&#8217;ll need to install
+component gems manually (see below).</p>
+
+<ol>
+<li><p>Make sure you have <em>Ruby 1.9.2 or higher</em>. Individual components <em>may</em> work with Ruby 1.8, but we may not be able to help you if you have trouble.</p></li>
+<li><p>For NMatrix, you&#8217;ll also need a compiler which supports C++0x or C++11, such as GCC 4.3 or higher. <a href="/docs/installation/mac.html">Mac OSX GCC instructions are here.</a></p></li>
+<li><p><a href="/docs/installation/atlas.html">Install ATLAS</a> (required for NMatrix). If you&#8217;re using a Mac, this should be part of <a href="https://developer.apple.com/technologies/tools/">Developer Tools</a>.</p></li>
+<li><p>Install NMatrix:</p></li>
+</ol>
+
+
+<pre><code>gem install nmatrix
+</code></pre>
+
+
+<p>That step should take about twenty minutes and won&#8217;t offer much feedback.</p>
+
+<p>If that doesn&#8217;t work, you might also try compiling the sources manually:</p>
+
+<pre><code>git clone https://github.com/SciRuby/nmatrix.git
+cd nmatrix/
+bundle install
+rake compile
+rake repackage
+gem install pkg/nmatrix-*.gem
+</code></pre>
+
+
+<p>Note that the above will give you the current working version, which has not necessarily been released yet.</p>
+
+<h3>Platform notes</h3>
 
 
 <ul>
 <li><a href="/docs/installation/mac.html">Mac OSX</a></li>
-<li><a href="/docs/installation/windows.html">Windows</a></li>
 <li><a href="/docs/installation/linux.html">Linux</a></li>
 </ul>
 
@@ -152,7 +179,6 @@
 <ul>
 <li><a href="http://rubyvis.rubyforge.org">Rubyvis</a></li>
 <li><a href="http://ruby-statsample.rubyforge.org/">Statsample</a></li>
-<li><a href="/nmatrix/">NMatrix</a></li>
 </ul>
 
 
