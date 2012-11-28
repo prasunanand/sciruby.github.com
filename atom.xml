@@ -4,13 +4,36 @@
   <title>SciRuby</title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2012-09-26T16:19:10-05:00</updated>
+  <updated>2012-11-28T14:35:27-06:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name>SciRuby</name>
     
   </author>
 
+  
+  <entry>
+    <title>Spring 2013 SciRuby Fellows Selected</title>
+    <link href="http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected/"/>
+    <updated>2012-11-28T13:46:00-06:00</updated>
+    <id>http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected</id>
+    <content type="html">&lt;p&gt;Last week we selected three excellent candidates for &lt;a href=&quot;http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/&quot;&gt;SciRuby fellowships&lt;/a&gt;. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of SciRuby Associate Director &lt;a href=&quot;http://openwetware.org/wiki/Prince_Lab&quot;&gt;John Prince's lab&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://github.com/agarie&quot;&gt;Carlos Agarie&lt;/a&gt; will be working half-time starting immediately on providing certain critical functionality to NMatrix and on improving our documentation.&lt;/p&gt;
+
+&lt;p&gt;Specifically, matrix inversions and determinant calculations both depend upon BLAS, and in some cases CLAPACK. However, the CLAPACK interface is unavailable to most Mac users; and neither BLAS nor LAPACK provides rational support, which is on the NMatrix roadmap.&lt;/p&gt;
+
+&lt;p&gt;Carlos is a Brazilian exchange student at Embry-Riddle Aeronautical University in Arizona.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://github.com/masaomi&quot;&gt;Masaomi &quot;Masa&quot; Hatakeyama&lt;/a&gt; is a post-doctoral researcher at the University of Zurich. He is devoting ten hours per week initially to adding NMatrix support to Ruby/GSL, while also improving the NMatrix unit tests. His work is critical to interoperability between NMatrix and the other SciRuby projects.&lt;/p&gt;
+
+&lt;p&gt;Finally, &lt;a href=&quot;http://github.com/ryanmt&quot;&gt;Ryan Taylor&lt;/a&gt; is a biochemistry doctoral candidate at Brigham Young University in the United States. Ryan will be working full-time starting in January on NMatrix, and plans to contribute functionality essential to any matrix library---such as factorizations and decompositions; computations of trace, exponentials, square roots, norms, and tensors; basic statistics; transforms; and solvers.&lt;/p&gt;
+
+&lt;p&gt;We also want to take a moment to thank &lt;a href=&quot;http://www.symora.com&quot;&gt;Symora Networks&lt;/a&gt; for its assistance. Specifically, the size of the Ruby Association grant is such that the U.S. requires us to apply for tax status, a somewhat expensive process for an open source project. Symora is providing the bulk of the money required for that application. Thanks also go to our many individual donors, who are just as necessary to this process.&lt;/p&gt;
+
+&lt;p&gt;And of course, none of this would be possible without the Ruby Association. They provided us not only with financial resources to grow our project, but also with an endorsement of our vision: Ruby needs scientific packages in order to grow as a language.&lt;/p&gt;
+</content>
+  </entry>
   
   <entry>
     <title>Second NMatrix Alpha Released</title>

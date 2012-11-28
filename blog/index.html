@@ -107,6 +107,50 @@
     
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/11/28/spring-2013-sciruby-fellows-selected/">Spring 2013 SciRuby Fellows Selected</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-11-28 13:46:00 -0600" pubdate  updated >Nov 28<span>th</span>, 2012</time>
+
+
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last week we selected three excellent candidates for <a href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby fellowships</a>. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of SciRuby Associate Director <a href="http://openwetware.org/wiki/Prince_Lab">John Prince&#8217;s lab</a>.</p>
+
+<p><a href="http://github.com/agarie">Carlos Agarie</a> will be working half-time starting immediately on providing certain critical functionality to NMatrix and on improving our documentation.</p>
+
+<p>Specifically, matrix inversions and determinant calculations both depend upon BLAS, and in some cases CLAPACK. However, the CLAPACK interface is unavailable to most Mac users; and neither BLAS nor LAPACK provides rational support, which is on the NMatrix roadmap.</p>
+
+<p>Carlos is a Brazilian exchange student at Embry-Riddle Aeronautical University in Arizona.</p>
+
+<p><a href="http://github.com/masaomi">Masaomi &#8220;Masa&#8221; Hatakeyama</a> is a post-doctoral researcher at the University of Zurich. He is devoting ten hours per week initially to adding NMatrix support to Ruby/GSL, while also improving the NMatrix unit tests. His work is critical to interoperability between NMatrix and the other SciRuby projects.</p>
+
+<p>Finally, <a href="http://github.com/ryanmt">Ryan Taylor</a> is a biochemistry doctoral candidate at Brigham Young University in the United States. Ryan will be working full-time starting in January on NMatrix, and plans to contribute functionality essential to any matrix library&#8212;such as factorizations and decompositions; computations of trace, exponentials, square roots, norms, and tensors; basic statistics; transforms; and solvers.</p>
+
+<p>We also want to take a moment to thank <a href="http://www.symora.com">Symora Networks</a> for its assistance. Specifically, the size of the Ruby Association grant is such that the U.S. requires us to apply for tax status, a somewhat expensive process for an open source project. Symora is providing the bulk of the money required for that application. Thanks also go to our many individual donors, who are just as necessary to this process.</p>
+
+<p>And of course, none of this would be possible without the Ruby Association. They provided us not only with financial resources to grow our project, but also with an endorsement of our vision: Ruby needs scientific packages in order to grow as a language.</p>
+</div>
+  <footer>
+    <a rel="full-article" href="/blog/2012/11/28/spring-2013-sciruby-fellows-selected/">Read on &rarr;</a>
+  </footer>
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/09/24/second-nmatrix-alpha-released/">Second NMatrix Alpha Released</a></h1>
     
     
@@ -715,80 +759,6 @@ dense = n.cast(:dense, :int64)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/15/the-challenges-of-copyrights/">The Challenges of Copyrights</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-15 19:56:00 -0500" pubdate  updated >Aug 15<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Last week, I thought it would be fun to translate some of the <em><a href="http://nr.com/">Numerical Recipes</a></em> algorithms into Ruby,
- specifically those for the Gamma distribution and incomplete gamma function. I got them all working pretty well, and
- they were only a hundred or so lines of code altogether.</p>
-
-<p>But a voice in the back of my head said, &#8220;Hey, you should ask Bill Press if he wants to be involved.&#8221;</p>
-
-<p><a href="http://en.wikipedia.org/wiki/William_H._Press">Bill Press</a>, by the way, is a pretty cool astrophysicist who decided he
- wanted to come work here at UT as a computational biologist instead. He also happens to be first author on <em>Numerical
- Recipes</em>, and a fairly regular attendee at my lab&#8217;s weekly meetings. Once he had to pause my exam to take a call
- from the White House, which was also pretty awesome.</p>
-
-<p>So I emailed Dr. Press to ask him if he&#8217;d be interested in helping out with SciRuby, and specifically if he might be
- willing to donate a copy of NR. He was happy to donate a copy and to help out in whatever way he could, he wrote back,
- but the license for NR wouldn&#8217;t allow us to use the code from the book.</p>
-
-<p>My stomach sank. I had missed that disclaimer, and I was used to dealing with more-or-less public domain (or at least
- GPLed) Ruby code.</p>
-
-<p>The email continued. We should be careful using other libraries, because many of them were illegally derived from
- copyrighted materials.</p>
-
-<p>Several interesting discussions ensued (<a href="https://plus.google.com/108379995018215027591/posts/2AefG8i3nUX">including this public one</a>).
- The take-away is that many people don&#8217;t understand code copyrights (I among them). Consequently, most governments don&#8217;t
- understand copyrights (and it doesn&#8217;t help that U.S. Congress isn&#8217;t exactly full of programmers).</p>
-
-<p>Some were critical of Press and his coauthors for not simply giving us special permission to use his code, but such a
- gimme would be complicated for NR. If they permitted us to use NR code in SciRuby, that code would then be available to
- anyone else to use under the terms of the GPL. I imagine his publisher would be less than thrilled.</p>
-
-<p>So here are some general guidelines for those who want to contribute code to an open-source scientific project,
- particularly SciRuby. Please keep in mind that I am not a lawyer, and take any of this with a grain of salt.</p>
-
-<ul>
-<li><p>If in doubt, check with the author.</p></li>
-<li><p>Do unto others as you would have them do unto you. In other words, honor closed source licenses if you wish your open
-source license to be honored.</p></li>
-<li><p><em>Always cite your sources.</em> If a copyright owner discovers apparently derivative code without a citation, it&#8217;s easy
-to him or her to assume you plagiarized it directly from his or her work. If it has a citation, someone else gets the
-blame, or the copyright owner can determine that the code is only <em>apparently</em>, but not <em>actually</em>, derivative.</p></li>
-<li><p>If you write your own code, derived from your own math, document it. Scan your derivation and make it public (send it
-to our Google Group, for example).</p></li>
-</ul>
-
-
-<p>Any more words of wisdom? Stick them in the comments.</p>
-</div>
-  <footer>
-    <a rel="full-article" href="/blog/2011/08/15/the-challenges-of-copyrights/">Read on &rarr;</a>
-  </footer>
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -817,6 +787,10 @@ to our Google Group, for example).</p></li>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/11/28/spring-2013-sciruby-fellows-selected/">Spring 2013 SciRuby Fellows Selected</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/24/second-nmatrix-alpha-released/">Second NMatrix Alpha Released</a>
       </li>
     
@@ -830,10 +804,6 @@ to our Google Group, for example).</p></li>
     
       <li class="post">
         <a href="/blog/2012/05/23/sciruby-summer-of-code-selection-announced/">SciRuby Summer of Code Selection Announced</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/08/sciruby-summer-of-code/">Announcing SciRuby Summer Coding Fellowship</a>
       </li>
     
   </ul>

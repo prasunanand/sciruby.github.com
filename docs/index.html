@@ -111,7 +111,7 @@
 <p class="warning"><strong>Word to the wise:</strong> These gems have been tested, but not extensively. If you&#8217;re thinking of using SciRuby to write mission critical code, such as for driving a car or flying a space shuttle, you may wish to choose other software (for now).</p>
 
 
-<p><strong>You might also check out the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a> if you have trouble finding what you&#8217;re seeking here.</strong></p>
+<p><strong>You might also check out the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a> if you have trouble finding answers here.</strong></p>
 
 <h3>General instructions</h3>
 
@@ -144,7 +144,7 @@ gem install pkg/nmatrix-*.gem
 </code></pre>
 
 
-<p>Note that the above will give you the current working version, which has not necessarily been released yet.</p>
+<p>Note that the above will give you the development version, which probably hasn&#8217;t been released yet.</p>
 
 <h3>Platform notes</h3>
 
@@ -167,6 +167,23 @@ gem install pkg/nmatrix-*.gem
 <li><em>Probability:</em> <span class="gem"><a href="https://github.com/clbustos/distribution">distribution</a></span></li>
 </ul>
 
+
+
+
+<h4>SciRuby</h4>
+
+
+<p><strong>Don&#8217;t do this.</strong> SciRuby depends on statsample, which requires NArray, which conflicts with NMatrix.</p>
+
+<p>But if you absolutely must, you can install the SciRuby gem as follows:</p>
+
+<pre><code>gem install gtksourceview2 # optional, for code editor
+gem install statsample-optimization # optional: rb-gsl, statistics2 -- for the statsample gem
+gem install sciruby
+</code></pre>
+
+
+<p>We expect it to be fixed once Ruby/GSL includes NMatrix support.</p>
 
 <h2>Project Status</h2>
 
@@ -224,6 +241,10 @@ gem install pkg/nmatrix-*.gem
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/11/28/spring-2013-sciruby-fellows-selected/">Spring 2013 SciRuby Fellows Selected</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/24/second-nmatrix-alpha-released/">Second NMatrix Alpha Released</a>
       </li>
     
@@ -237,10 +258,6 @@ gem install pkg/nmatrix-*.gem
     
       <li class="post">
         <a href="/blog/2012/05/23/sciruby-summer-of-code-selection-announced/">SciRuby Summer of Code Selection Announced</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/08/sciruby-summer-of-code/">Announcing SciRuby Summer Coding Fellowship</a>
       </li>
     
   </ul>
