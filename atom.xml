@@ -1,58 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title>SciRuby</title>
+  <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2012-12-07T13:03:00-06:00</updated>
+  <updated>2012-12-07T14:50:16-06:00</updated>
   <id>http://sciruby.com/</id>
   <author>
-    <name>SciRuby</name>
+    <name><![CDATA[SciRuby]]></name>
     
   </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
-    <title>How to use NMatrix's shortcuts</title>
+    <title type="html"><![CDATA[How to use NMatrix's shortcuts]]></title>
     <link href="http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts/"/>
     <updated>2012-12-07T12:30:00-06:00</updated>
     <id>http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts</id>
-    <content type="html">&lt;p&gt;John Woods &lt;a href=&quot;https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b&quot;&gt;merged my last pull request to NMatrix&lt;/a&gt; recently and I wanted to write about why we created these shortcuts and what can be done with them. &lt;!--more--&gt;&lt;/p&gt;
+    <content type="html"><![CDATA[<p>John Woods <a href="https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b">merged my last pull request to NMatrix</a> recently and I wanted to write about why we created these shortcuts and what can be done with them. <!--more--></p>
 
-&lt;h2&gt;The need for shortcuts&lt;/h2&gt;
+<h2>The need for shortcuts</h2>
 
-&lt;p&gt;The first iteration of NMatrix shortcuts was written by &lt;a href=&quot;https://github.com/dcarrera&quot;&gt;Daniel Carrera&lt;/a&gt; and sent to the mailing list, where I started working with them. Some discussions, decisions and two pull requests later, we have a working set of methods to create common matrices (&lt;code&gt;zeros&lt;/code&gt;, &lt;code&gt;ones&lt;/code&gt;, &lt;code&gt;random&lt;/code&gt;, etc) and do some cool stuff (&lt;code&gt;column&lt;/code&gt; and &lt;code&gt;linspace&lt;/code&gt;) very easily.&lt;/p&gt;
+<p>The first iteration of NMatrix shortcuts was written by <a href="https://github.com/dcarrera">Daniel Carrera</a> and sent to the mailing list, where I started working with them. Some discussions, decisions and two pull requests later, we have a working set of methods to create common matrices (<code>zeros</code>, <code>ones</code>, <code>random</code>, etc) and do some cool stuff (<code>column</code> and <code>linspace</code>) very easily.</p>
 
-&lt;p&gt;There are at least two good reasons to have these shortcuts: MATLAB users are going to feel at home, and the shortcuts allow us to prototype and experiment more rapidly. For example, it's dead simple to create an identify matrix when you need one:&lt;/p&gt;
+<p>There are at least two good reasons to have these shortcuts: MATLAB users are going to feel at home, and the shortcuts allow us to prototype and experiment more rapidly. For example, it&#8217;s dead simple to create an identify matrix when you need one:</p>
 
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt; require 'nmatrix'
+<pre><code>&gt;&gt; require 'nmatrix'
 
-&amp;gt;&amp;gt; matrix = NMatrix.identity(3) # 3x3
-=&amp;gt; #&amp;lt;NMatrix:0x007faa5b8cda40shape:[3,3] dtype:float64 stype:dense&amp;gt; 
-&amp;gt;&amp;gt; matrix.pp
+&gt;&gt; matrix = NMatrix.identity(3) # 3x3
+=&gt; #&lt;NMatrix:0x007faa5b8cda40shape:[3,3] dtype:float64 stype:dense&gt; 
+&gt;&gt; matrix.pp
 
 # [1.0, 0.0, 0.0]
 # [0.0, 1.0, 0.0]
 # [0.0, 0.0, 1.0]
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;And a random matrix to test some operation:&lt;/p&gt;
+<p>And a random matrix to test some operation:</p>
 
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt; rand_matrix = NMatrix.random(4) # 4x4
-=&amp;gt; #&amp;lt;NMatrix:0x007faa5b01cdd8shape:[4,4] dtype:float64 stype:dense&amp;gt;
-&amp;gt;&amp;gt; rand_matrix.pp
+<pre><code>&gt;&gt; rand_matrix = NMatrix.random(4) # 4x4
+=&gt; #&lt;NMatrix:0x007faa5b01cdd8shape:[4,4] dtype:float64 stype:dense&gt;
+&gt;&gt; rand_matrix.pp
 
 # [0.5933103148378577, 0.8556103970281977, 0.7176768395610358, 0.07160353964395305]
 # [0.8566365570076784, 0.33925854948960343, 0.5994298479703805, 0.6906794137948586]
 # [0.5684593743073485, 0.10273166792035393, 0.46187577773882293, 0.586085963973687]
 # [0.8944982538369494, 0.9896291945923837, 0.8787034784673503, 0.5933103148378577]
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;h2&gt;Shortcuts available&lt;/h2&gt;
+<h2>Shortcuts available</h2>
 
-&lt;p&gt;The following list is taken from &lt;a href=&quot;https://github.com/SciRuby/nmatrix/wiki/NMatrix&quot;&gt;NMatrix's wiki&lt;/a&gt;. All are class methods on &lt;code&gt;NMatrix&lt;/code&gt;.&lt;/p&gt;
+<p>The following list is taken from <a href="https://github.com/SciRuby/nmatrix/wiki/NMatrix">NMatrix&#8217;s wiki</a>. All are class methods on <code>NMatrix</code>.</p>
 
-&lt;pre&gt;&lt;code&gt;ones(3,3)                    # A 3x3 matrix of ones.
+<pre><code>ones(3,3)                    # A 3x3 matrix of ones.
 zeros(4,4) or zeroes(4,4)    # Creates a matrix of zeros with dimensions as parameters.
 identity(5,5) or eye(5,5)    # A 5x5 identity matrix. Only works with NMatrix.
 seq(8)                       # An 8-vector with a sequence of values from 0 to 7.
@@ -66,17 +67,17 @@ bindgen(8)                   # Same as `seq(8, :byte)`.
 cindgen(8)                   # Same as `seq(8, :complex64)`.
 
 linspace(0, pi, 100)         # A vector of 100 values from 0 to pi, inclusive. Only works with NVector.
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;The method names are mostly from MATLAB. In the future, when more functionality is added, we'll try to create a more &quot;Ruby-like&quot; feel to the API. But as these shortcuts do very primitive tasks, there isn't any obvious room for improvement. (Feel free to prove us wrong, however!)&lt;/p&gt;
+<p>The method names are mostly from MATLAB. In the future, when more functionality is added, we&#8217;ll try to create a more &#8220;Ruby-like&#8221; feel to the API. But as these shortcuts do very primitive tasks, there isn&#8217;t any obvious room for improvement. (Feel free to prove us wrong, however!)</p>
 
-&lt;p&gt;I'll create a separate wiki page for the shortcuts to be able to organize and put more information about how to use them. But I want to create a better RDoc documentation for NMatrix — so the full API will probably be referenced there. I'll write a new blog post here when something along these lines is done.&lt;/p&gt;
+<p>I&#8217;ll create a separate wiki page for the shortcuts to be able to organize and put more information about how to use them. But I want to create a better RDoc documentation for NMatrix — so the full API will probably be referenced there. I&#8217;ll write a new blog post here when something along these lines is done.</p>
 
-&lt;h2&gt;Examples&lt;/h2&gt;
+<h2>Examples</h2>
 
-&lt;p&gt;First, let's try normalizing the columns of an NMatrix.&lt;/p&gt;
+<p>First, let&#8217;s try normalizing the columns of an NMatrix.</p>
 
-&lt;pre&gt;&lt;code&gt;require 'nmatrix'
+<pre><code>require 'nmatrix'
 
 m = NMatrix.seq(3, :float32)
 m.pp
@@ -105,13 +106,13 @@ end
 # 0.9999999701976772
 # 1.0
 # 1.0
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;Unfortunately, slice by reference isn't working on &lt;code&gt;HEAD&lt;/code&gt;, or we could make a few additional improvements (see issue &lt;a href=&quot;https://github.com/SciRuby/nmatrix/issues/51&quot;&gt;#51&lt;/a&gt;).&lt;/p&gt;
+<p>Unfortunately, slice by reference isn&#8217;t working on <code>HEAD</code>, or we could make a few additional improvements (see issue <a href="https://github.com/SciRuby/nmatrix/issues/51">#51</a>).</p>
 
-&lt;p&gt;The other thing that I've wanted to do is to use &lt;code&gt;linspace&lt;/code&gt; to generate points for plotting sines, cosines, etc. Here is an example:&lt;/p&gt;
+<p>The other thing that I&#8217;ve wanted to do is to use <code>linspace</code> to generate points for plotting sines, cosines, etc. Here is an example:</p>
 
-&lt;pre&gt;&lt;code&gt;require 'nmatrix'
+<pre><code>require 'nmatrix'
 
 vector = NVector.linspace(0, Math::PI, 10)
 vector.pretty_print
@@ -143,286 +144,286 @@ vector.pretty_print
 # 0.6427876096865395
 # 0.3420201433256689
 # 1.2246467991473532e-16
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;These results show a happy result, in that we are able to use NMatrix for simple tasks already. Of course, there are problems to be solved, e.g. slice by reference, inversion for all dtypes, eigenvalues. But it's going somewhere, it's growing.&lt;/p&gt;
+<p>These results show a happy result, in that we are able to use NMatrix for simple tasks already. Of course, there are problems to be solved, e.g. slice by reference, inversion for all dtypes, eigenvalues. But it&#8217;s going somewhere, it&#8217;s growing.</p>
 
-&lt;p&gt;I hope that by this time next year we'll have a very mature linear algebra library (and much more).&lt;/p&gt;
-</content>
+<p>I hope that by this time next year we&#8217;ll have a very mature linear algebra library (and much more).</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>Spring 2013 SciRuby Fellows Selected</title>
+    <title type="html"><![CDATA[Spring 2013 SciRuby Fellows Selected]]></title>
     <link href="http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected/"/>
     <updated>2012-11-28T13:46:00-06:00</updated>
     <id>http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected</id>
-    <content type="html">&lt;p&gt;Last week we selected three excellent candidates for &lt;a href=&quot;http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/&quot;&gt;SciRuby fellowships&lt;/a&gt;. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of an anonymous contributor. &lt;!--more--&gt;&lt;/p&gt;
+    <content type="html"><![CDATA[<p>Last week we selected three excellent candidates for <a href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby fellowships</a>. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of an anonymous contributor. <!--more--></p>
 
-&lt;p&gt;&lt;a href=&quot;http://github.com/agarie&quot;&gt;Carlos Agarie&lt;/a&gt; will be working half-time starting immediately on providing certain critical functionality to NMatrix and on improving our documentation. Specifically, matrix inversions and determinant calculations both depend upon BLAS, and in some cases CLAPACK. However, the CLAPACK interface is unavailable to most Mac users; and neither BLAS nor LAPACK provides rational support, which is on the NMatrix roadmap. Carlos is a Brazilian exchange student at Embry-Riddle Aeronautical University in Arizona.&lt;/p&gt;
+<p><a href="http://github.com/agarie">Carlos Agarie</a> will be working half-time starting immediately on providing certain critical functionality to NMatrix and on improving our documentation. Specifically, matrix inversions and determinant calculations both depend upon BLAS, and in some cases CLAPACK. However, the CLAPACK interface is unavailable to most Mac users; and neither BLAS nor LAPACK provides rational support, which is on the NMatrix roadmap. Carlos is a Brazilian exchange student at Embry-Riddle Aeronautical University in Arizona.</p>
 
-&lt;p&gt;&lt;a href=&quot;http://github.com/masaomi&quot;&gt;Masaomi &quot;Masa&quot; Hatakeyama&lt;/a&gt; is a post-doctoral researcher at the University of Zurich. He is devoting ten hours per week initially to adding NMatrix support to Ruby/GSL, while also improving the NMatrix unit tests. His work is critical to interoperability between NMatrix and the other SciRuby projects.&lt;/p&gt;
+<p><a href="http://github.com/masaomi">Masaomi &#8220;Masa&#8221; Hatakeyama</a> is a post-doctoral researcher at the University of Zurich. He is devoting ten hours per week initially to adding NMatrix support to Ruby/GSL, while also improving the NMatrix unit tests. His work is critical to interoperability between NMatrix and the other SciRuby projects.</p>
 
-&lt;p&gt;Finally, &lt;a href=&quot;http://github.com/ryanmt&quot;&gt;Ryan Taylor&lt;/a&gt; is a biochemistry doctoral candidate at Brigham Young University in the United States. Ryan will be working full-time starting in January on NMatrix, and plans to contribute functionality essential to any matrix library---such as factorizations and decompositions; computations of trace, exponentials, square roots, norms, and tensors; basic statistics; transforms; and solvers.&lt;/p&gt;
+<p>Finally, <a href="http://github.com/ryanmt">Ryan Taylor</a> is a biochemistry doctoral candidate at Brigham Young University in the United States. Ryan will be working full-time starting in January on NMatrix, and plans to contribute functionality essential to any matrix library&#8212;such as factorizations and decompositions; computations of trace, exponentials, square roots, norms, and tensors; basic statistics; transforms; and solvers.</p>
 
-&lt;p&gt;We also want to take a moment to thank &lt;a href=&quot;http://www.symora.com&quot;&gt;Symora Networks&lt;/a&gt; for its assistance. Specifically, the size of the Ruby Association grant is such that the U.S. requires us to apply for tax status, a somewhat expensive process for an open source project. Symora is providing the bulk of the money required for that application. Thanks also go to our many individual donors, who are just as necessary to this process.&lt;/p&gt;
+<p>We also want to take a moment to thank <a href="http://www.symora.com">Symora Networks</a> for its assistance. Specifically, the size of the Ruby Association grant is such that the U.S. requires us to apply for tax status, a somewhat expensive process for an open source project. Symora is providing the bulk of the money required for that application. Thanks also go to our many individual donors, who are just as necessary to this process.</p>
 
-&lt;p&gt;And of course, none of this would be possible without the Ruby Association. They provided us not only with financial resources to grow our project, but also with an endorsement of our vision: Ruby needs scientific packages in order to grow as a language.&lt;/p&gt;
-</content>
+<p>And of course, none of this would be possible without the Ruby Association. They provided us not only with financial resources to grow our project, but also with an endorsement of our vision: Ruby needs scientific packages in order to grow as a language.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>Second NMatrix Alpha Released</title>
+    <title type="html"><![CDATA[Second NMatrix Alpha Released]]></title>
     <link href="http://sciruby.com/blog/2012/09/24/second-nmatrix-alpha-released/"/>
     <updated>2012-09-24T14:12:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/09/24/second-nmatrix-alpha-released</id>
-    <content type="html">&lt;p&gt;On Friday, we released the somewhat overdue second alpha of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;, version 0.0.2.&lt;/p&gt;
+    <content type="html"><![CDATA[<p>On Friday, we released the somewhat overdue second alpha of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>, version 0.0.2.</p>
 
-&lt;p&gt;This second alpha has boasts a significantly improved and much more maintainable code base, thanks to our Summer 2012
- SciRuby Fellow, &lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt;, and sponsoring organization &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt;. &lt;!--more--&gt;&lt;/p&gt;
+<p>This second alpha has boasts a significantly improved and much more maintainable code base, thanks to our Summer 2012
+ SciRuby Fellow, <a href="https://github.com/chriswailes">Chris Wailes</a>, and sponsoring organization <a href="http://brighterplanet.com">Brighter Planet</a>. <!--more--></p>
 
-&lt;p&gt;The library has been almost completely rewritten in C++, with API available for both C and C++.&lt;/p&gt;
+<p>The library has been almost completely rewritten in C++, with API available for both C and C++.</p>
 
-&lt;p&gt;It also includes basic slicing support for dense and list matrices and dense LU decomposition.&lt;/p&gt;
+<p>It also includes basic slicing support for dense and list matrices and dense LU decomposition.</p>
 
-&lt;p&gt;Check it out and let us know what you think! Remember to look in the &lt;a href=&quot;https://github.com/SciRuby/nmatrix/issues?direction=desc&amp;amp;sort=created&amp;amp;state=open&quot;&gt;issue tracker&lt;/a&gt;
- if you have any problems.&lt;/p&gt;
+<p>Check it out and let us know what you think! Remember to look in the <a href="https://github.com/SciRuby/nmatrix/issues?direction=desc&amp;sort=created&amp;state=open">issue tracker</a>
+ if you have any problems.</p>
 
-&lt;p&gt;Finally, if you're a student, you should consider applying to be a &lt;a href=&quot;http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/&quot;&gt;SciRuby Fellow&lt;/a&gt; this winter or spring.&lt;/p&gt;
-</content>
+<p>Finally, if you&#8217;re a student, you should consider applying to be a <a href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby Fellow</a> this winter or spring.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>SciRuby Receives Ruby Association Grant; Fellowships Available</title>
+    <title type="html"><![CDATA[SciRuby Receives Ruby Association Grant; Fellowships Available]]></title>
     <link href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/"/>
     <updated>2012-09-24T13:43:00-05:00</updated>
-    <id>http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available</id>
-    <content type="html">&lt;p&gt;We are incredibly pleased to announce that the Ruby Association has awarded us a &lt;a href=&quot;http://www.ruby.or.jp/en/news/20120717.html&quot;&gt;1,000,000 JPY grant&lt;/a&gt;.&lt;/p&gt;
+    <id>http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant&#8211;fellowships-available</id>
+    <content type="html"><![CDATA[<p>We are incredibly pleased to announce that the Ruby Association has awarded us a <a href="http://www.ruby.or.jp/en/news/20120717.html">1,000,000 JPY grant</a>.</p>
 
-&lt;p&gt;When we applied, we proposed to build upon our &lt;a href=&quot;http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/&quot;&gt;successful SciRuby Summer of Code&lt;/a&gt;,
-which we undertook with the support of &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt;. We are pleased to announce applications
-for SciRuby fellowships.&lt;!--more--&gt;&lt;/p&gt;
+<p>When we applied, we proposed to build upon our <a href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/">successful SciRuby Summer of Code</a>,
+which we undertook with the support of <a href="http://brighterplanet.com">Brighter Planet</a>. We are pleased to announce applications
+for SciRuby fellowships.<!--more--></p>
 
-&lt;h2&gt;Funding Note&lt;/h2&gt;
+<h2>Funding Note</h2>
 
-&lt;p&gt;A million yen translates to around $12,000, which is nearly enough to hire two graduate or undergraduate students
-for an academic term. We would like to hire more than one; but for that, &lt;a href=&quot;http://pledgie.com/campaigns/15783&quot;&gt;we need your help&lt;/a&gt;.&lt;/p&gt;
+<p>A million yen translates to around $12,000, which is nearly enough to hire two graduate or undergraduate students
+for an academic term. We would like to hire more than one; but for that, <a href="http://pledgie.com/campaigns/15783">we need your help</a>.</p>
 
-&lt;h2&gt;Fellowship Terms&lt;/h2&gt;
+<h2>Fellowship Terms</h2>
 
-&lt;ul&gt;
-&lt;li&gt;We plan to provide each fellow with a monthly stipend competitive with her or his home institution (e.g., if research assistants
-in your graduate program typically receive $1,500 per month, your stipend with us would be $1,500 per month).&lt;/li&gt;
-&lt;li&gt;Tenure will be one semester or one quarter (with an option to renew for a second quarter), depending upon the academic
-calendar of the student's home institution.&lt;/li&gt;
-&lt;li&gt;Tenure must begin no later than January 2013.&lt;/li&gt;
-&lt;li&gt;Fellows are expected to work full-time (forty hours per week) on some element of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;The Ruby Association requires monthly progress reports for stipend payment.&lt;/li&gt;
-&lt;li&gt;Fellows will be assigned mentors, but should expect to work relatively independently unless located near a SciRuby mentor.&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h2&gt;Requirements&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fluency in C/C++, Ruby, and the English language.&lt;/li&gt;
-&lt;li&gt;Comfort with git and Github.&lt;/li&gt;
-&lt;li&gt;An understanding of GDB and Valgrind (or similar debugging tools) as well as RSpec.&lt;/li&gt;
-&lt;li&gt;A course of study in the sciences or engineering at an accredited college or university.&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+<li>We plan to provide each fellow with a monthly stipend competitive with her or his home institution (e.g., if research assistants
+in your graduate program typically receive $1,500 per month, your stipend with us would be $1,500 per month).</li>
+<li>Tenure will be one semester or one quarter (with an option to renew for a second quarter), depending upon the academic
+calendar of the student&#8217;s home institution.</li>
+<li>Tenure must begin no later than January 2013.</li>
+<li>Fellows are expected to work full-time (forty hours per week) on some element of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>.</li>
+<li>The Ruby Association requires monthly progress reports for stipend payment.</li>
+<li>Fellows will be assigned mentors, but should expect to work relatively independently unless located near a SciRuby mentor.</li>
+</ul>
 
 
-&lt;h2&gt;To Apply&lt;/h2&gt;
+<h2>Requirements</h2>
 
-&lt;p&gt;Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.&lt;/p&gt;
-
-&lt;p&gt;Don't feel that you should limit yourself if you have important things to say; but don't feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Contact information.&lt;/strong&gt; Please provide your email address, GitHub username, and &lt;strong&gt;approximate&lt;/strong&gt; physical location.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Why do you like Ruby?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;What do you like about science and why? What area do you like best?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Describe your &lt;strong&gt;experience&lt;/strong&gt; with the following: Ruby, C/C++, other languages.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Describe your &lt;strong&gt;educational background&lt;/strong&gt; (school, degree plan, major, past degrees, research area).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Please describe what you plan to work on for this project. (Check out the &lt;a href=&quot;http://github.com/SciRuby/nmatrix/issues&quot;&gt;NMatrix issue tracker&lt;/a&gt; for ideas.)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;What would be the outcome of your work?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If selected, you will be providing monthly demonstrations of you work. What milestones do you envision for your project?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Please provide contact information for your graduate program or someone who can offer stipend information.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Please provide a link to your school's academic calendar.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;What other responsibilities do you have during your likely fellowship term? How will you allocate and manage your time?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;How do you feel about &lt;strong&gt;chunky bacon&lt;/strong&gt;?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Is there anything else you think we should have asked but didn't?&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
+<ul>
+<li>Fluency in C/C++, Ruby, and the English language.</li>
+<li>Comfort with git and Github.</li>
+<li>An understanding of GDB and Valgrind (or similar debugging tools) as well as RSpec.</li>
+<li>A course of study in the sciences or engineering at an accredited college or university.</li>
+</ul>
 
 
-&lt;p&gt;Email your answers to sciruby.project on gmail. &lt;em&gt;Please include a resume or curriculum vitae.&lt;/em&gt;&lt;/p&gt;
+<h2>To Apply</h2>
 
-&lt;h3&gt;Application Deadline&lt;/h3&gt;
+<p>Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.</p>
 
-&lt;p&gt;Applications are due by the 31st of October, 2012.&lt;/p&gt;
-</content>
+<p>Don&#8217;t feel that you should limit yourself if you have important things to say; but don&#8217;t feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.</p>
+
+<ol>
+<li><p><strong>Contact information.</strong> Please provide your email address, GitHub username, and <strong>approximate</strong> physical location.</p></li>
+<li><p>Why do you like Ruby?</p></li>
+<li><p>What do you like about science and why? What area do you like best?</p></li>
+<li><p>Describe your <strong>experience</strong> with the following: Ruby, C/C++, other languages.</p></li>
+<li><p>Describe your <strong>educational background</strong> (school, degree plan, major, past degrees, research area).</p></li>
+<li><p>Please describe what you plan to work on for this project. (Check out the <a href="http://github.com/SciRuby/nmatrix/issues">NMatrix issue tracker</a> for ideas.)</p></li>
+<li><p>What would be the outcome of your work?</p></li>
+<li><p>If selected, you will be providing monthly demonstrations of you work. What milestones do you envision for your project?</p></li>
+<li><p>Please provide contact information for your graduate program or someone who can offer stipend information.</p></li>
+<li><p>Please provide a link to your school&#8217;s academic calendar.</p></li>
+<li><p>What other responsibilities do you have during your likely fellowship term? How will you allocate and manage your time?</p></li>
+<li><p>How do you feel about <strong>chunky bacon</strong>?</p></li>
+<li><p>Is there anything else you think we should have asked but didn&#8217;t?</p></li>
+</ol>
+
+
+<p>Email your answers to sciruby.project on gmail. <em>Please include a resume or curriculum vitae.</em></p>
+
+<h3>Application Deadline</h3>
+
+<p>Applications are due by the 31st of October, 2012.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>Major Refactoring in the Pipeline</title>
+    <title type="html"><![CDATA[Major Refactoring in the Pipeline]]></title>
     <link href="http://sciruby.com/blog/2012/07/31/major-refactoring-in-the-pipeline/"/>
     <updated>2012-07-31T16:23:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/07/31/major-refactoring-in-the-pipeline</id>
-    <content type="html">&lt;p&gt;Activity has picked up enormously on &lt;a href=&quot;http://groups.google.com/group/sciruby-dev&quot;&gt;our listserv&lt;/a&gt; over the last few weeks,
-which makes us all very happy.&lt;/p&gt;
+    <content type="html"><![CDATA[<p>Activity has picked up enormously on <a href="http://groups.google.com/group/sciruby-dev">our listserv</a> over the last few weeks,
+which makes us all very happy.</p>
 
-&lt;p&gt;&lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt; and I have been working on a major refactoring of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;,
-our replacement for NArray. You may recall that we released our first alpha (0.0.1) back in April, and that we've been
-relatively silent since then.&lt;!--more--&gt;&lt;/p&gt;
+<p><a href="https://github.com/chriswailes">Chris Wailes</a> and I have been working on a major refactoring of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>,
+our replacement for NArray. You may recall that we released our first alpha (0.0.1) back in April, and that we&#8217;ve been
+relatively silent since then.<!--more--></p>
 
-&lt;p&gt;We're pleased to announce that our second alpha, NMatrix v0.0.2, should be available as a gem by mid-August.&lt;/p&gt;
+<p>We&#8217;re pleased to announce that our second alpha, NMatrix v0.0.2, should be available as a gem by mid-August.</p>
 
-&lt;p&gt;Our first alpha was a proof of concept. The second alpha is the framework upon which we will build an empire of chunky
-bacon.&lt;/p&gt;
+<p>Our first alpha was a proof of concept. The second alpha is the framework upon which we will build an empire of chunky
+bacon.</p>
 
-&lt;p&gt;Chris came up with the idea to convert all of NMatrix's Ruby/C template code into C++ templates, and we've been working
-on that steadily. These are cleaner and easier to maintain than the C parser-based templates I wrote a few months ago.&lt;/p&gt;
+<p>Chris came up with the idea to convert all of NMatrix&#8217;s Ruby/C template code into C++ templates, and we&#8217;ve been working
+on that steadily. These are cleaner and easier to maintain than the C parser-based templates I wrote a few months ago.</p>
 
-&lt;p&gt;In addition, I have incorporated basic slicing, contributed by &lt;a href=&quot;http://github.com/flipback&quot;&gt;Aleksey Timin&lt;/a&gt;, who has been
-absolutely essential to our growing project.&lt;/p&gt;
+<p>In addition, I have incorporated basic slicing, contributed by <a href="http://github.com/flipback">Aleksey Timin</a>, who has been
+absolutely essential to our growing project.</p>
 
-&lt;p&gt;One major hiccup has been that NMatrix and NArray conflict with one another when both are included (particularly poor
-planning on my part). This means that Ruby/GSL can't work with NMatrix without some modifications -- which are underway
-in a &lt;a href=&quot;http://github.com/SciRuby/rb-gsl&quot;&gt;fork&lt;/a&gt;. We plan to release fixes for Ruby/GSL and Statsample as soon as possible.&lt;/p&gt;
+<p>One major hiccup has been that NMatrix and NArray conflict with one another when both are included (particularly poor
+planning on my part). This means that Ruby/GSL can&#8217;t work with NMatrix without some modifications &#8211; which are underway
+in a <a href="http://github.com/SciRuby/rb-gsl">fork</a>. We plan to release fixes for Ruby/GSL and Statsample as soon as possible.</p>
 
-&lt;p&gt;We want to again thank &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt; for their support of our summer coding fellowship.
-Little of this would be possible without them.&lt;/p&gt;
-</content>
+<p>We want to again thank <a href="http://brighterplanet.com">Brighter Planet</a> for their support of our summer coding fellowship.
+Little of this would be possible without them.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>SciRuby Summer of Code Selection Announced</title>
+    <title type="html"><![CDATA[SciRuby Summer of Code Selection Announced]]></title>
     <link href="http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced/"/>
     <updated>2012-05-23T18:08:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced</id>
-    <content type="html">&lt;p&gt;We were blown away by the quality of the application pool for our &lt;a href=&quot;http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/&quot;&gt;first ever SciRuby Summer of Code, sponsored by Brighter Planet&lt;/a&gt;. We received eight exemplary applications for a single placement, and nearly every applicant showed up on at least
- one selection committee member's top-three list.&lt;!--more--&gt;&lt;/p&gt;
+    <content type="html"><![CDATA[<p>We were blown away by the quality of the application pool for our <a href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/">first ever SciRuby Summer of Code, sponsored by Brighter Planet</a>. We received eight exemplary applications for a single placement, and nearly every applicant showed up on at least
+ one selection committee member&#8217;s top-three list.<!--more--></p>
 
-&lt;p&gt;I am pleased to report that we have selected &lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt;, a doctoral student in Computer
- Science at the University of Colorado at Boulder, to be the recipient of our fellowship this year.&lt;/p&gt;
+<p>I am pleased to report that we have selected <a href="https://github.com/chriswailes">Chris Wailes</a>, a doctoral student in Computer
+ Science at the University of Colorado at Boulder, to be the recipient of our fellowship this year.</p>
 
-&lt;p&gt;Chris plans to contribute to NMatrix, by adding parallel computing support and/or by creating a Ruby domain-specific language for
- linear algebra.&lt;/p&gt;
+<p>Chris plans to contribute to NMatrix, by adding parallel computing support and/or by creating a Ruby domain-specific language for
+ linear algebra.</p>
 
-&lt;p&gt;The SciRuby Project is deeply grateful to &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt; for its generous support of our
+<p>The SciRuby Project is deeply grateful to <a href="http://brighterplanet.com">Brighter Planet</a> for its generous support of our
  relatively new project and this fellowship program. We also wish to thank the applicants, and encourage them to apply
- again next time.&lt;/p&gt;
-</content>
+ again next time.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>Announcing SciRuby Summer Coding Fellowship</title>
+    <title type="html"><![CDATA[Announcing SciRuby Summer Coding Fellowship]]></title>
     <link href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/"/>
     <updated>2012-05-08T16:33:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code</id>
-    <content type="html">&lt;p&gt;We are immensely pleased to announce the first ever &lt;strong&gt;SciRuby Summer of Code, sponsored by &lt;a href=&quot;http://brighterplanet.com/&quot;&gt;Brighter Planet&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+    <content type="html"><![CDATA[<p>We are immensely pleased to announce the first ever <strong>SciRuby Summer of Code, sponsored by <a href="http://brighterplanet.com/">Brighter Planet</a></strong>.</p>
 
-&lt;p&gt;&lt;img src=&quot;http://static.brighterplanet.com/assets/logos/flush-left/inline/green/rasterized/brighter_planet-140.png&quot; alt=&quot;Brighter Planet logo&quot; /&gt;&lt;/p&gt;
+<p><img src="http://static.brighterplanet.com/assets/logos/flush-left/inline/green/rasterized/brighter_planet-140.png" alt="Brighter Planet logo" /></p>
 
-&lt;p&gt;The fellowship is intended for undergraduate and graduate science and engineering students interested in going into research.&lt;!--more--&gt;&lt;/p&gt;
+<p>The fellowship is intended for undergraduate and graduate science and engineering students interested in going into research.<!--more--></p>
 
-&lt;p&gt;Fellowship tenure is full-time, May 18th through August 18th (dates are flexible). The stipend is $1,500.&lt;/p&gt;
+<p>Fellowship tenure is full-time, May 18th through August 18th (dates are flexible). The stipend is $1,500.</p>
 
-&lt;h2&gt;Eligibility and Criteria&lt;/h2&gt;
+<h2>Eligibility and Criteria</h2>
 
-&lt;ul&gt;
-&lt;li&gt;Current enrollment in a graduate or undergraduate program, or completion of such a program within the previous twelve-month period.&lt;/li&gt;
-&lt;li&gt;Good working knowledge of C and Ruby, version control (ideally git), and *nix (Linux, Unix, or Mac).&lt;/li&gt;
-&lt;li&gt;Completion of an introductory course on algorithms and data structures.&lt;/li&gt;
-&lt;li&gt;Demonstrated interest in science/engineering research.&lt;/li&gt;
-&lt;li&gt;Initiative and good communication skills.&lt;/li&gt;
-&lt;li&gt;Access to equipment (e.g., computer with some sort of *nix-like OS, or at least a terminal for ssh).&lt;/li&gt;
-&lt;li&gt;Ideally, U.S. resident status.&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;h2&gt;To Apply&lt;/h2&gt;
-
-&lt;p&gt;Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.&lt;/p&gt;
-
-&lt;p&gt;Don't feel that you should limit yourself if you have important things to say; but don't feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Contact information.&lt;/strong&gt; Please provide your email address, GitHub username, and &lt;strong&gt;approximate&lt;/strong&gt; physical location.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Why do you like Ruby?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;What do you like about science and why? What area do you like best?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Describe your &lt;strong&gt;experience&lt;/strong&gt; with the following: Ruby, C, other languages.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Describe your &lt;strong&gt;educational background&lt;/strong&gt; (school, degree plan, major, past degrees, research area).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Are you a current or recently-graduated student?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Please describe what you plan to work on for this project. (Check out the &lt;a href=&quot;http://github.com/SciRuby/nmatrix/issues&quot;&gt;NMatrix&lt;/a&gt; and &lt;a href=&quot;http://github.com/SciRuby/sciruby/issues&quot;&gt;SciRuby&lt;/a&gt; issue trackers for ideas.)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;What would be the outcome of your work over the summer?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If selected, you will be making regular demonstrations of you work over the summer. What milestones do you envision for your project?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;What other projects and/or jobs are you working on this summer? How will you allocate and manage your time?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;How do you feel about &lt;strong&gt;chunky bacon&lt;/strong&gt;?&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Is there anything else you think we should have asked but didn't?&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
+<ul>
+<li>Current enrollment in a graduate or undergraduate program, or completion of such a program within the previous twelve-month period.</li>
+<li>Good working knowledge of C and Ruby, version control (ideally git), and *nix (Linux, Unix, or Mac).</li>
+<li>Completion of an introductory course on algorithms and data structures.</li>
+<li>Demonstrated interest in science/engineering research.</li>
+<li>Initiative and good communication skills.</li>
+<li>Access to equipment (e.g., computer with some sort of *nix-like OS, or at least a terminal for ssh).</li>
+<li>Ideally, U.S. resident status.</li>
+</ul>
 
 
-&lt;p&gt;Email your answers to sciruby.project on gmail. &lt;em&gt;Please include a resume or curriculum vitae.&lt;/em&gt;&lt;/p&gt;
+<h2>To Apply</h2>
 
-&lt;h3&gt;Application Deadline&lt;/h3&gt;
+<p>Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.</p>
 
-&lt;p&gt;Applications are now closed. We hope to offer the fellowship again next year.&lt;/p&gt;
-</content>
+<p>Don&#8217;t feel that you should limit yourself if you have important things to say; but don&#8217;t feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.</p>
+
+<ol>
+<li><p><strong>Contact information.</strong> Please provide your email address, GitHub username, and <strong>approximate</strong> physical location.</p></li>
+<li><p>Why do you like Ruby?</p></li>
+<li><p>What do you like about science and why? What area do you like best?</p></li>
+<li><p>Describe your <strong>experience</strong> with the following: Ruby, C, other languages.</p></li>
+<li><p>Describe your <strong>educational background</strong> (school, degree plan, major, past degrees, research area).</p></li>
+<li><p>Are you a current or recently-graduated student?</p></li>
+<li><p>Please describe what you plan to work on for this project. (Check out the <a href="http://github.com/SciRuby/nmatrix/issues">NMatrix</a> and <a href="http://github.com/SciRuby/sciruby/issues">SciRuby</a> issue trackers for ideas.)</p></li>
+<li><p>What would be the outcome of your work over the summer?</p></li>
+<li><p>If selected, you will be making regular demonstrations of you work over the summer. What milestones do you envision for your project?</p></li>
+<li><p>What other projects and/or jobs are you working on this summer? How will you allocate and manage your time?</p></li>
+<li><p>How do you feel about <strong>chunky bacon</strong>?</p></li>
+<li><p>Is there anything else you think we should have asked but didn&#8217;t?</p></li>
+</ol>
+
+
+<p>Email your answers to sciruby.project on gmail. <em>Please include a resume or curriculum vitae.</em></p>
+
+<h3>Application Deadline</h3>
+
+<p>Applications are now closed. We hope to offer the fellowship again next year.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>First NMatrix Alpha Released</title>
+    <title type="html"><![CDATA[First NMatrix Alpha Released]]></title>
     <link href="http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/"/>
     <updated>2012-04-11T13:36:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released</id>
-    <content type="html">&lt;p&gt;Two months ago, I &lt;a href=&quot;2012/02/11/numeric-matrix-considerations&quot;&gt;mentioned the existence of a prototype Ruby linear algebra library&lt;/a&gt;, written in C.&lt;/p&gt;
+    <content type="html"><![CDATA[<p>Two months ago, I <a href="2012/02/11/numeric-matrix-considerations">mentioned the existence of a prototype Ruby linear algebra library</a>, written in C.</p>
 
-&lt;p&gt;I am pleased to announce that yesterday we released our first alpha of said library, &lt;a href=&quot;http://sciruby.com/nmatrix/&quot;&gt;NMatrix&lt;/a&gt; v0.0.1.&lt;!--more--&gt;&lt;/p&gt;
+<p>I am pleased to announce that yesterday we released our first alpha of said library, <a href="http://sciruby.com/nmatrix/">NMatrix</a> v0.0.1.<!--more--></p>
 
-&lt;h2&gt;Creating Matrices&lt;/h2&gt;
+<h2>Creating Matrices</h2>
 
-&lt;p&gt;There are lots of different ways to create matrices. The first and easiest is to supply dimensions and initial data:&lt;/p&gt;
+<p>There are lots of different ways to create matrices. The first and easiest is to supply dimensions and initial data:</p>
 
-&lt;pre&gt;&lt;code&gt;&gt;&gt; n = NMatrix.new(4, 0) # a square 4x4 dense zero matrix
-=&gt; #&amp;lt;NMatrix:0x9a57e14shape:[4,4] dtype:int32 stype:dense&amp;gt;
-&gt;&gt; n.pretty_print
+<pre><code>>> n = NMatrix.new(4, 0) # a square 4x4 dense zero matrix
+=> #&lt;NMatrix:0x9a57e14shape:[4,4] dtype:int32 stype:dense&gt;
+>> n.pretty_print
 0  0  0  0
 0  0  0  0
 0  0  0  0
 0  0  0  0
-=&gt; nil
-&lt;/code&gt;&lt;/pre&gt;
+=> nil
+</code></pre>
 
 
-&lt;h2&gt;Data Types&lt;/h2&gt;
+<h2>Data Types</h2>
 
-&lt;p&gt;You may notice that this first matrix defaulted to &lt;tt&gt;dtype=:int32&lt;/tt&gt;. NMatrix will try to guess the &lt;i&gt;dtype&lt;/i&gt; based on the
-first initial value you provide (e.g., &lt;tt&gt;NMatrix.new(4, [0.0, 1])&lt;/tt&gt; will be :float32), but you can choose to provide
-a &lt;i&gt;dtype&lt;/i&gt; in addition to or in lieu of initial values:&lt;/p&gt;
+<p>You may notice that this first matrix defaulted to <tt>dtype=:int32</tt>. NMatrix will try to guess the <i>dtype</i> based on the
+first initial value you provide (e.g., <tt>NMatrix.new(4, [0.0, 1])</tt> will be :float32), but you can choose to provide
+a <i>dtype</i> in addition to or in lieu of initial values:</p>
 
-&lt;pre&gt;&lt;code&gt;&gt;&gt; n = NMatrix.new(4, [0,1], :rational128)
-=&gt; #&amp;lt;NMatrix:0x9959e04shape:[4,4] dtype:rational128 stype:dense&amp;gt;
-&gt;&gt; n.pretty_print
+<pre><code>>> n = NMatrix.new(4, [0,1], :rational128)
+=> #&lt;NMatrix:0x9959e04shape:[4,4] dtype:rational128 stype:dense&gt;
+>> n.pretty_print
 0/1  1/1  0/1  1/1
 0/1  1/1  0/1  1/1
 0/1  1/1  0/1  1/1
 0/1  1/1  0/1  1/1
-&gt;&gt; m = NMatrix.new(4, :int64)  # no initialization of values
-=&gt; #&amp;lt;NMatrix:0x99fad68shape:[4,4] dtype:int64 stype:dense&amp;gt;
-&gt;&gt; m.pretty_print
+>> m = NMatrix.new(4, :int64)  # no initialization of values
+=> #&lt;NMatrix:0x99fad68shape:[4,4] dtype:int64 stype:dense&gt;
+>> m.pretty_print
 -1217641248  161386160  161386100  161385680
 161385640  161385520  161385420  161384180
 161384120  161381060  161381020  161412140
 161411940  161411880  161411840  160879240
-=&gt; nil
-&lt;/code&gt;&lt;/pre&gt;
+=> nil
+</code></pre>
 
 
-&lt;h2&gt;Storage Formats&lt;/h2&gt;
+<h2>Storage Formats</h2>
 
-&lt;p&gt;The storage type (&lt;i&gt;stype&lt;/i&gt;) can also be specified, prior to the dimension argument. However, with sparse storage formats, initial values don't make sense, and these matrices will contain zeros by default.&lt;/p&gt;
+<p>The storage type (<i>stype</i>) can also be specified, prior to the dimension argument. However, with sparse storage formats, initial values don&#8217;t make sense, and these matrices will contain zeros by default.</p>
 
-&lt;pre&gt;&lt;code&gt;# empty list-of-lists-of-lists 4x3x4 matrix
+<pre><code># empty list-of-lists-of-lists 4x3x4 matrix
 n = NMatrix.new(:list, [4,3,4], :int64)
 
 # Ruby objects in a 'Yale' sparse matrix
@@ -430,241 +431,241 @@ m = NMatrix.new(:yale, [5,4], :object)
 
 # A byte matrix containing a gradient
 o = NMatrix.new(:dense, 5, [0,1,2,3,4], :byte)
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
 
-&lt;p&gt;The matrix &lt;tt&gt;m&lt;/tt&gt; created above is a Yale-format sparse matrix, or more specifically, &quot;new Yale,&quot; which differs from &quot;old Yale&quot; in that the diagonal is stored separately from the non-diagonal elements. Thus, diagonals can be accessed and set in constant time.&lt;/p&gt;
+<p>The matrix <tt>m</tt> created above is a Yale-format sparse matrix, or more specifically, &#8220;new Yale,&#8221; which differs from &#8220;old Yale&#8221; in that the diagonal is stored separately from the non-diagonal elements. Thus, diagonals can be accessed and set in constant time.</p>
 
-&lt;p&gt;Currently, all storage is row-based.&lt;/p&gt;
+<p>Currently, all storage is row-based.</p>
 
-&lt;h3&gt;Conversion&lt;/h3&gt;
+<h3>Conversion</h3>
 
-&lt;p&gt;You can also convert between any of these three stypes using &lt;tt&gt;cast&lt;/tt&gt;, e.g.,&lt;/p&gt;
+<p>You can also convert between any of these three stypes using <tt>cast</tt>, e.g.,</p>
 
-&lt;pre&gt;&lt;code&gt;n = NMatrix.new(:list, 4, :int64)
+<pre><code>n = NMatrix.new(:list, 4, :int64)
 n[0,0] = 5
 n[0,3] = -2
 dense = n.cast(:dense, :int64)
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
 
-&lt;h2&gt;Vectors&lt;/h2&gt;
+<h2>Vectors</h2>
 
-&lt;p&gt;Currently, only dense vectors are implemented as a child class of &lt;tt&gt;NMatrix&lt;/tt&gt;, and creation is similar:&lt;/p&gt;
+<p>Currently, only dense vectors are implemented as a child class of <tt>NMatrix</tt>, and creation is similar:</p>
 
-&lt;pre&gt;&lt;code&gt;&gt;&gt; nv = NVector.new(5, :int64)
-=&gt; #&amp;lt;NVector:0x9a62328shape:[5,1] dtype:int64 stype:dense orientation:column&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-
-&lt;h2&gt;Math Operations&lt;/h2&gt;
-
-&lt;p&gt;Most element-wise mathematical operations are supported for Yale and dense types. These use the basic operators (e.g., +, -, /, *, ==).&lt;/p&gt;
-
-&lt;p&gt;For non-element-wise matrix multiplication, use the &lt;tt&gt;dot&lt;/tt&gt; instance method of NMatrix. Whole-matrix comparison (returning a single boolean value) is the &lt;tt&gt;equal?&lt;/tt&gt; or &lt;tt&gt;eql?&lt;/tt&gt; method.&lt;/p&gt;
-
-&lt;h2&gt;Road Map&lt;/h2&gt;
-
-&lt;p&gt;Much more remains to be written than has been completed. Here are some of our key priorities:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;determinants&lt;/li&gt;
-&lt;li&gt;matrix-vector multiplication for Yale&lt;/li&gt;
-&lt;li&gt;adaptation of SciRuby Matlab file reader to support NMatrix&lt;/li&gt;
-&lt;li&gt;in-place transposition&lt;/li&gt;
-&lt;/ul&gt;
+<pre><code>>> nv = NVector.new(5, :int64)
+=> #&lt;NVector:0x9a62328shape:[5,1] dtype:int64 stype:dense orientation:column&gt;
+</code></pre>
 
 
-&lt;p&gt;If you want to get involved, I suggest visiting the &lt;a href=&quot;https://github.com/sciruby/nmatrix/issues&quot;&gt;NMatrix issue tracker&lt;/a&gt;. It will contain not only bugs, but also features that need to be implemented.&lt;/p&gt;
+<h2>Math Operations</h2>
 
-&lt;h2&gt;Conclusion&lt;/h2&gt;
+<p>Most element-wise mathematical operations are supported for Yale and dense types. These use the basic operators (e.g., +, -, /, *, ==).</p>
 
-&lt;p&gt;We're all pretty excited about NMatrix. But we couldn't have gotten this far without Masahiro Tanaka's &lt;a href=&quot;http://narray.rubyforge.org/&quot;&gt;NArray&lt;/a&gt;, which has served as a model for our library.&lt;/p&gt;
+<p>For non-element-wise matrix multiplication, use the <tt>dot</tt> instance method of NMatrix. Whole-matrix comparison (returning a single boolean value) is the <tt>equal?</tt> or <tt>eql?</tt> method.</p>
 
-&lt;p&gt;And we can't do it without your help. A numerical library in Ruby is no small endeavour, and probably requires at least one full-time programmer (which we do not have). Please consider contributing, even if it's just by letting us know what you think.&lt;/p&gt;
+<h2>Road Map</h2>
 
-&lt;p&gt;Happy coding!&lt;/p&gt;
-</content>
+<p>Much more remains to be written than has been completed. Here are some of our key priorities:</p>
+
+<ul>
+<li>determinants</li>
+<li>matrix-vector multiplication for Yale</li>
+<li>adaptation of SciRuby Matlab file reader to support NMatrix</li>
+<li>in-place transposition</li>
+</ul>
+
+
+<p>If you want to get involved, I suggest visiting the <a href="https://github.com/sciruby/nmatrix/issues">NMatrix issue tracker</a>. It will contain not only bugs, but also features that need to be implemented.</p>
+
+<h2>Conclusion</h2>
+
+<p>We&#8217;re all pretty excited about NMatrix. But we couldn&#8217;t have gotten this far without Masahiro Tanaka&#8217;s <a href="http://narray.rubyforge.org/">NArray</a>, which has served as a model for our library.</p>
+
+<p>And we can&#8217;t do it without your help. A numerical library in Ruby is no small endeavour, and probably requires at least one full-time programmer (which we do not have). Please consider contributing, even if it&#8217;s just by letting us know what you think.</p>
+
+<p>Happy coding!</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>Numeric Matrix Considerations</title>
+    <title type="html"><![CDATA[Numeric Matrix Considerations]]></title>
     <link href="http://sciruby.com/blog/2012/02/11/numeric-matrix-considerations/"/>
     <updated>2012-02-11T17:35:00-06:00</updated>
     <id>http://sciruby.com/blog/2012/02/11/numeric-matrix-considerations</id>
-    <content type="html">&lt;p&gt;Maybe you've been wondering why the SciRuby people have been so quiet lately.&lt;/p&gt;
+    <content type="html"><![CDATA[<p>Maybe you&#8217;ve been wondering why the SciRuby people have been so quiet lately.</p>
 
-&lt;p&gt;Mostly, we've been working on &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;, which is our prototype linear algebra library, written as a Ruby C extension.&lt;!--more--&gt;&lt;/p&gt;
+<p>Mostly, we&#8217;ve been working on <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>, which is our prototype linear algebra library, written as a Ruby C extension.<!--more--></p>
 
-&lt;p&gt;So far, we have dense and linked-list-of-linked-lists (or just &quot;list&quot;) matrices, which can exist in an essentially unlimited number of dimensions. This week, I implemented the &lt;a href=&quot;https://github.com/SciRuby/nmatrix/blob/sparse/ext/nmatrix/yale.c&quot;&gt;beginnings of a two-dimensional sparse type known as &quot;new Yale.&quot;&lt;/a&gt; If you're curious, check out &lt;em&gt;&lt;a href=&quot;http://apps.nrbook.com/c/index.html&quot;&gt;Numerical Recipes in C&lt;/a&gt;&lt;/em&gt;, pp. 78-79.&lt;/p&gt;
+<p>So far, we have dense and linked-list-of-linked-lists (or just &#8220;list&#8221;) matrices, which can exist in an essentially unlimited number of dimensions. This week, I implemented the <a href="https://github.com/SciRuby/nmatrix/blob/sparse/ext/nmatrix/yale.c">beginnings of a two-dimensional sparse type known as &#8220;new Yale.&#8221;</a> If you&#8217;re curious, check out <em><a href="http://apps.nrbook.com/c/index.html">Numerical Recipes in C</a></em>, pp. 78-79.</p>
 
-&lt;p&gt;&quot;New Yale&quot; differs from &quot;old Yale&quot; (which SciPy uses for its CSR type) in that the diagonals are accessible in &lt;tt&gt;O(1)&lt;/tt&gt; instead of &lt;tt&gt;O(log(n))&lt;/tt&gt; time. Most libraries for Yale matrices include conditionals that permit both types to be used together (e.g., multiplying a new Yale matrix by an old Yale matrix).&lt;/p&gt;
+<p>&#8220;New Yale&#8221; differs from &#8220;old Yale&#8221; (which SciPy uses for its CSR type) in that the diagonals are accessible in <tt>O(1)</tt> instead of <tt>O(log(n))</tt> time. Most libraries for Yale matrices include conditionals that permit both types to be used together (e.g., multiplying a new Yale matrix by an old Yale matrix).</p>
 
-&lt;p&gt;As I worked through implementation of matrix multiplication for Yale, I realized that matrix libraries are a bottomless pit. One could probably write matrix algorithms forever and still have lots left to do.&lt;/p&gt;
+<p>As I worked through implementation of matrix multiplication for Yale, I realized that matrix libraries are a bottomless pit. One could probably write matrix algorithms forever and still have lots left to do.</p>
 
-&lt;p&gt;So we need to set ourselves some limits.&lt;/p&gt;
+<p>So we need to set ourselves some limits.</p>
 
-&lt;p&gt;It's not just whether the diagonal is extracted from the rest of the matrix. It's also whether you want to be able to multiply integer-valued matrices by real-valued matrices without an expensive copy operation. It's whether you want to be able to multiply dense against Yale matrices or two Yale and list matrices that have different dtypes, or have separate storage for symmetric matrices, and so on.&lt;/p&gt;
+<p>It&#8217;s not just whether the diagonal is extracted from the rest of the matrix. It&#8217;s also whether you want to be able to multiply integer-valued matrices by real-valued matrices without an expensive copy operation. It&#8217;s whether you want to be able to multiply dense against Yale matrices or two Yale and list matrices that have different dtypes, or have separate storage for symmetric matrices, and so on.</p>
 
-&lt;p&gt;Some of this can be templated using generators. But the complexity begins to grow to the point where it's infeasible to test everything you've implemented. (You also start to get lost in a magical world of function pointers, which is yet another concern.)&lt;/p&gt;
+<p>Some of this can be templated using generators. But the complexity begins to grow to the point where it&#8217;s infeasible to test everything you&#8217;ve implemented. (You also start to get lost in a magical world of function pointers, which is yet another concern.)</p>
 
-&lt;p&gt;So, again, we need to set ourselves some limits.&lt;/p&gt;
+<p>So, again, we need to set ourselves some limits.</p>
 
-&lt;p&gt;Where those limits might be, however, I know not. Weigh in on the Google Group, in the comments, or on &lt;a href=&quot;https://plus.google.com/109304769076178160953/posts&quot;&gt;our Google+ page&lt;/a&gt;!&lt;/p&gt;
-</content>
+<p>Where those limits might be, however, I know not. Weigh in on the Google Group, in the comments, or on <a href="https://plus.google.com/109304769076178160953/posts">our Google+ page</a>!</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>First Pre-alpha Release</title>
+    <title type="html"><![CDATA[First Pre-alpha Release]]></title>
     <link href="http://sciruby.com/blog/2011/11/02/first-pre-alpha-release/"/>
     <updated>2011-11-02T21:39:00-05:00</updated>
     <id>http://sciruby.com/blog/2011/11/02/first-pre-alpha-release</id>
-    <content type="html">&lt;p&gt;&lt;a href=&quot;http://news.ycombinator.com/item?id=3180369&quot;&gt;We made it to the top spot on Hacker News&lt;/a&gt; on Halloween (three days ago now). We weren't quite prepared for the level of interest generated by that posting, so we've experienced a few growing pains. (Please please please don't send us to Slashdot.) &lt;!--more--&gt;&lt;/p&gt;
+    <content type="html"><![CDATA[<p><a href="http://news.ycombinator.com/item?id=3180369">We made it to the top spot on Hacker News</a> on Halloween (three days ago now). We weren&#8217;t quite prepared for the level of interest generated by that posting, so we&#8217;ve experienced a few growing pains. (Please please please don&#8217;t send us to Slashdot.) <!--more--></p>
 
-&lt;p&gt;But growing pains are a good thing! They are, of course, the result of growth -- which we like!&lt;/p&gt;
+<p>But growing pains are a good thing! They are, of course, the result of growth &#8211; which we like!</p>
 
-&lt;p&gt;We've had experienced Ruby developers coming out of the woodwork and admitting -- albeit only after looking over their shoulders -- that they, too, have secretly been using Ruby for science, and are thrilled about this project.&lt;/p&gt;
+<p>We&#8217;ve had experienced Ruby developers coming out of the woodwork and admitting &#8211; albeit only after looking over their shoulders &#8211; that they, too, have secretly been using Ruby for science, and are thrilled about this project.</p>
 
-&lt;p&gt;&lt;a href=&quot;https://github.com/noahhl&quot;&gt;Noah&lt;/a&gt; from 37signals offered an extremely helpful piece of advice. He pointed out the way &lt;a href=&quot;http://github.com/antirez/redis&quot;&gt;redis&lt;/a&gt; uses its &lt;a href=&quot;https://github.com/antirez/redis/issues?state=open&quot;&gt;issue tracker&lt;/a&gt; to facilitate contributions from people who aren't as familiar with the project status. So now if you want to get involved, instead of checking the Roadmap, you should check the &lt;a href=&quot;https://github.com/sciruby/sciruby/issues?sort=created&amp;amp;direction=desc&amp;amp;state=open&quot;&gt;SciRuby issue tracker&lt;/a&gt;.&lt;/p&gt;
+<p><a href="https://github.com/noahhl">Noah</a> from 37signals offered an extremely helpful piece of advice. He pointed out the way <a href="http://github.com/antirez/redis">redis</a> uses its <a href="https://github.com/antirez/redis/issues?state=open">issue tracker</a> to facilitate contributions from people who aren&#8217;t as familiar with the project status. So now if you want to get involved, instead of checking the Roadmap, you should check the <a href="https://github.com/sciruby/sciruby/issues?sort=created&amp;direction=desc&amp;state=open">SciRuby issue tracker</a>.</p>
 
-&lt;p&gt;We had a couple of people who indicated confusion over what features had already been implemented in SciRuby. The source of the confusion was most likely that we hadn't released a gem in a while, but had still been updating the master branch in the repository.&lt;/p&gt;
+<p>We had a couple of people who indicated confusion over what features had already been implemented in SciRuby. The source of the confusion was most likely that we hadn&#8217;t released a gem in a while, but had still been updating the master branch in the repository.</p>
 
-&lt;p&gt;Our plan had been to wait until we had numeric array and matrix support ready before releasing another gem version. But we capitulated, and have now put out a &quot;pre-alpha,&quot; version 0.1.3, available through your friendly neighborhood RubyGems. As of this posting, the v0.1.3 tag corresponds to the code in master.&lt;/p&gt;
+<p>Our plan had been to wait until we had numeric array and matrix support ready before releasing another gem version. But we capitulated, and have now put out a &#8220;pre-alpha,&#8221; version 0.1.3, available through your friendly neighborhood RubyGems. As of this posting, the v0.1.3 tag corresponds to the code in master.</p>
 
-&lt;h2&gt;Features&lt;/h2&gt;
+<h2>Features</h2>
 
-&lt;h3&gt;Plotter GUI&lt;/h3&gt;
-
-
-&lt;p&gt;The most useful feature is probably Plotter, which is a GUI for Rubyvis. You can instantiate it in a couple of different ways. I prefer this one:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sciruby-plotter my_test_plot.rb
-&lt;/code&gt;&lt;/pre&gt;
+<h3>Plotter GUI</h3>
 
 
-&lt;p&gt;You can modify your source file and the plotter should automatically update the plot. If you want to save your plot, push the 's' key.&lt;/p&gt;
+<p>The most useful feature is probably Plotter, which is a GUI for Rubyvis. You can instantiate it in a couple of different ways. I prefer this one:</p>
 
-&lt;p&gt;Similar to the plotter is a basic Rubyvis code editor. You can instantiate it from irb by calling &lt;code&gt;SciRuby::Editor.new&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Datasets&lt;/h3&gt;
-
-
-&lt;p&gt;We thought it would be super cool if SciRuby could be used for a lot of those examples people used to write for R. You know, R has all those cool datasets, like &lt;a href=&quot;http://stat.ethz.ch/R-manual/R-patched/library/datasets/html/faithful.html&quot;&gt;Old Faithful's eruption times&lt;/a&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;faithful = SciRuby::dataset(:r, 'faithful')
-&lt;/code&gt;&lt;/pre&gt;
+<pre><code>sciruby-plotter my_test_plot.rb
+</code></pre>
 
 
-&lt;p&gt;You might be wondering, &quot;Why do you have to indicate that it comes from R if it only loads R datasets?&quot; Wonder no more.&lt;/p&gt;
+<p>You can modify your source file and the plotter should automatically update the plot. If you want to save your plot, push the &#8216;s&#8217; key.</p>
 
-&lt;p&gt;I wrote a module for searching online databases for useful datasets as well. It's very buggy. Right now it only works on the &lt;a href=&quot;http://www.guardian.co.uk/world-government-data&quot;&gt;Guardian World Government Data repository&lt;/a&gt;, which is itself somewhat flaky. In other words, this feature might get removed unless some people express an interest in improving it.&lt;/p&gt;
+<p>Similar to the plotter is a basic Rubyvis code editor. You can instantiate it from irb by calling <code>SciRuby::Editor.new</code>.</p>
 
-&lt;h3&gt;Statistical Analysis DSL&lt;/h3&gt;
+<h3>Datasets</h3>
 
 
-&lt;p&gt;Claudio Bustos' &lt;a href=&quot;http://ruby-statsample.rubyforge.org/statsample/Statsample/Analysis.html&quot;&gt;Statsample::Analysis&lt;/a&gt; has been migrated into SciRuby. It should eventually ease the transition to SciRuby for those who are familiar with R.&lt;/p&gt;
+<p>We thought it would be super cool if SciRuby could be used for a lot of those examples people used to write for R. You know, R has all those cool datasets, like <a href="http://stat.ethz.ch/R-manual/R-patched/library/datasets/html/faithful.html">Old Faithful&#8217;s eruption times</a>.</p>
 
-&lt;p&gt;It should work almost exactly the same way as the version from Statsample, but you'll call it with &lt;code&gt;SciRuby::Analysis&lt;/code&gt; instead of &lt;code&gt;Statsample::Analysis&lt;/code&gt;.&lt;/p&gt;
+<pre><code>faithful = SciRuby::dataset(:r, 'faithful')
+</code></pre>
 
-&lt;h2&gt;Installation&lt;/h2&gt;
 
-&lt;p&gt;As always, if you want to install SciRuby, you should look at the &lt;a href=&quot;http://sciruby.com/docs#installation&quot;&gt;installation instructions&lt;/a&gt;.&lt;/p&gt;
-</content>
+<p>You might be wondering, &#8220;Why do you have to indicate that it comes from R if it only loads R datasets?&#8221; Wonder no more.</p>
+
+<p>I wrote a module for searching online databases for useful datasets as well. It&#8217;s very buggy. Right now it only works on the <a href="http://www.guardian.co.uk/world-government-data">Guardian World Government Data repository</a>, which is itself somewhat flaky. In other words, this feature might get removed unless some people express an interest in improving it.</p>
+
+<h3>Statistical Analysis DSL</h3>
+
+
+<p>Claudio Bustos&#8217; <a href="http://ruby-statsample.rubyforge.org/statsample/Statsample/Analysis.html">Statsample::Analysis</a> has been migrated into SciRuby. It should eventually ease the transition to SciRuby for those who are familiar with R.</p>
+
+<p>It should work almost exactly the same way as the version from Statsample, but you&#8217;ll call it with <code>SciRuby::Analysis</code> instead of <code>Statsample::Analysis</code>.</p>
+
+<h2>Installation</h2>
+
+<p>As always, if you want to install SciRuby, you should look at the <a href="http://sciruby.com/docs#installation">installation instructions</a>.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>Interview with the SciRuby Team</title>
+    <title type="html"><![CDATA[Interview with the SciRuby Team]]></title>
     <link href="http://sciruby.com/blog/2011/08/17/interview-with-the-sciruby-team/"/>
     <updated>2011-08-17T21:59:00-05:00</updated>
     <id>http://sciruby.com/blog/2011/08/17/interview-with-the-sciruby-team</id>
-    <content type="html">&lt;p&gt;We just had an interview published today over at &lt;a href=&quot;http://www.floss4science.com/interview-sciruby-team/&quot;&gt;Floss for Science&lt;/a&gt;,
- and we're super excited because it's our very first media coverage.&lt;!--more--&gt;&lt;/p&gt;
+    <content type="html"><![CDATA[<p>We just had an interview published today over at <a href="http://www.floss4science.com/interview-sciruby-team/">Floss for Science</a>,
+ and we&#8217;re super excited because it&#8217;s our very first media coverage.<!--more--></p>
 
-&lt;p&gt;If you want to vote it up at &lt;a href=&quot;http://www.reddit.com&quot;&gt;reddit&lt;/a&gt;, that would be outstanding &amp;emdash; or share it however you
- like to share things. Here are the links:&lt;/p&gt;
+<p>If you want to vote it up at <a href="http://www.reddit.com">reddit</a>, that would be outstanding &emdash; or share it however you
+ like to share things. Here are the links:</p>
 
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.reddit.com/r/programming/comments/jlh19/interview_sciruby_team/&quot;&gt;/r/programming&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.reddit.com/r/ruby/comments/jlkur/interview_sciruby_team/&quot;&gt;r/ruby&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+<li><a href="http://www.reddit.com/r/programming/comments/jlh19/interview_sciruby_team/">/r/programming</a></li>
+<li><a href="http://www.reddit.com/r/ruby/comments/jlkur/interview_sciruby_team/">r/ruby</a></li>
+</ul>
 
 
-&lt;p&gt;Already we've had a bunch of new people joining us on IRC (#sciruby on Freenode) and in our
- &lt;a href=&quot;http://groups.google.com/group/sciruby-dev&quot;&gt;Google Group&lt;/a&gt;. Thanks for all your support!&lt;/p&gt;
-</content>
+<p>Already we&#8217;ve had a bunch of new people joining us on IRC (#sciruby on Freenode) and in our
+ <a href="http://groups.google.com/group/sciruby-dev">Google Group</a>. Thanks for all your support!</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>The Challenges of Copyrights</title>
+    <title type="html"><![CDATA[The Challenges of Copyrights]]></title>
     <link href="http://sciruby.com/blog/2011/08/15/the-challenges-of-copyrights/"/>
     <updated>2011-08-15T19:56:00-05:00</updated>
     <id>http://sciruby.com/blog/2011/08/15/the-challenges-of-copyrights</id>
-    <content type="html">&lt;p&gt;Last week, I thought it would be fun to translate some of the &lt;em&gt;&lt;a href=&quot;http://nr.com/&quot;&gt;Numerical Recipes&lt;/a&gt;&lt;/em&gt; algorithms into Ruby,
+    <content type="html"><![CDATA[<p>Last week, I thought it would be fun to translate some of the <em><a href="http://nr.com/">Numerical Recipes</a></em> algorithms into Ruby,
  specifically those for the Gamma distribution and incomplete gamma function. I got them all working pretty well, and
- they were only a hundred or so lines of code altogether.&lt;/p&gt;
+ they were only a hundred or so lines of code altogether.</p>
 
-&lt;p&gt;But a voice in the back of my head said, &quot;Hey, you should ask Bill Press if he wants to be involved.&quot; &lt;!--more--&gt;&lt;/p&gt;
+<p>But a voice in the back of my head said, &#8220;Hey, you should ask Bill Press if he wants to be involved.&#8221; <!--more--></p>
 
-&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/William_H._Press&quot;&gt;Bill Press&lt;/a&gt;, by the way, is a pretty cool astrophysicist who decided he
- wanted to come work here at UT as a computational biologist instead. He also happens to be first author on &lt;em&gt;Numerical
- Recipes&lt;/em&gt;, and a fairly regular attendee at my lab's weekly meetings. Once he had to pause my exam to take a call
- from the White House, which was also pretty awesome.&lt;/p&gt;
+<p><a href="http://en.wikipedia.org/wiki/William_H._Press">Bill Press</a>, by the way, is a pretty cool astrophysicist who decided he
+ wanted to come work here at UT as a computational biologist instead. He also happens to be first author on <em>Numerical
+ Recipes</em>, and a fairly regular attendee at my lab&#8217;s weekly meetings. Once he had to pause my exam to take a call
+ from the White House, which was also pretty awesome.</p>
 
-&lt;p&gt;So I emailed Dr. Press to ask him if he'd be interested in helping out with SciRuby, and specifically if he might be
+<p>So I emailed Dr. Press to ask him if he&#8217;d be interested in helping out with SciRuby, and specifically if he might be
  willing to donate a copy of NR. He was happy to donate a copy and to help out in whatever way he could, he wrote back,
- but the license for NR wouldn't allow us to use the code from the book.&lt;/p&gt;
+ but the license for NR wouldn&#8217;t allow us to use the code from the book.</p>
 
-&lt;p&gt;My stomach sank. I had missed that disclaimer, and I was used to dealing with more-or-less public domain (or at least
- GPLed) Ruby code.&lt;/p&gt;
+<p>My stomach sank. I had missed that disclaimer, and I was used to dealing with more-or-less public domain (or at least
+ GPLed) Ruby code.</p>
 
-&lt;p&gt;The email continued. We should be careful using other libraries, because many of them were illegally derived from
- copyrighted materials.&lt;/p&gt;
+<p>The email continued. We should be careful using other libraries, because many of them were illegally derived from
+ copyrighted materials.</p>
 
-&lt;p&gt;Several interesting discussions ensued (&lt;a href=&quot;https://plus.google.com/108379995018215027591/posts/2AefG8i3nUX&quot;&gt;including this public one&lt;/a&gt;).
- The take-away is that many people don't understand code copyrights (I among them). Consequently, most governments don't
- understand copyrights (and it doesn't help that U.S. Congress isn't exactly full of programmers).&lt;/p&gt;
+<p>Several interesting discussions ensued (<a href="https://plus.google.com/108379995018215027591/posts/2AefG8i3nUX">including this public one</a>).
+ The take-away is that many people don&#8217;t understand code copyrights (I among them). Consequently, most governments don&#8217;t
+ understand copyrights (and it doesn&#8217;t help that U.S. Congress isn&#8217;t exactly full of programmers).</p>
 
-&lt;p&gt;Some were critical of Press and his coauthors for not simply giving us special permission to use his code, but such a
+<p>Some were critical of Press and his coauthors for not simply giving us special permission to use his code, but such a
  gimme would be complicated for NR. If they permitted us to use NR code in SciRuby, that code would then be available to
- anyone else to use under the terms of the GPL. I imagine his publisher would be less than thrilled.&lt;/p&gt;
+ anyone else to use under the terms of the GPL. I imagine his publisher would be less than thrilled.</p>
 
-&lt;p&gt;So here are some general guidelines for those who want to contribute code to an open-source scientific project,
- particularly SciRuby. Please keep in mind that I am not a lawyer, and take any of this with a grain of salt.&lt;/p&gt;
+<p>So here are some general guidelines for those who want to contribute code to an open-source scientific project,
+ particularly SciRuby. Please keep in mind that I am not a lawyer, and take any of this with a grain of salt.</p>
 
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;If in doubt, check with the author.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Do unto others as you would have them do unto you. In other words, honor closed source licenses if you wish your open
-source license to be honored.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;em&gt;Always cite your sources.&lt;/em&gt; If a copyright owner discovers apparently derivative code without a citation, it's easy
+<ul>
+<li><p>If in doubt, check with the author.</p></li>
+<li><p>Do unto others as you would have them do unto you. In other words, honor closed source licenses if you wish your open
+source license to be honored.</p></li>
+<li><p><em>Always cite your sources.</em> If a copyright owner discovers apparently derivative code without a citation, it&#8217;s easy
 to him or her to assume you plagiarized it directly from his or her work. If it has a citation, someone else gets the
-blame, or the copyright owner can determine that the code is only &lt;em&gt;apparently&lt;/em&gt;, but not &lt;em&gt;actually&lt;/em&gt;, derivative.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If you write your own code, derived from your own math, document it. Scan your derivation and make it public (send it
-to our Google Group, for example).&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
+blame, or the copyright owner can determine that the code is only <em>apparently</em>, but not <em>actually</em>, derivative.</p></li>
+<li><p>If you write your own code, derived from your own math, document it. Scan your derivation and make it public (send it
+to our Google Group, for example).</p></li>
+</ul>
 
 
-&lt;p&gt;Any more words of wisdom? Stick them in the comments.&lt;/p&gt;
-</content>
+<p>Any more words of wisdom? Stick them in the comments.</p>
+]]></content>
   </entry>
   
   <entry>
-    <title>First Post!</title>
+    <title type="html"><![CDATA[First Post!]]></title>
     <link href="http://sciruby.com/blog/2011/08/15/first-post/"/>
     <updated>2011-08-15T19:50:00-05:00</updated>
     <id>http://sciruby.com/blog/2011/08/15/first-post</id>
-    <content type="html">&lt;p&gt;I thought I'd start by introducing myself. I'm the project director for SciRuby, and I'm a molecular biology doctoral
- student at the University of Texas. I work in the &lt;a href=&quot;http://marcottelab.org/&quot;&gt;Marcotte Lab&lt;/a&gt;, and actually occupy the
- former desk (and lab hostname) of John Prince, another of the SciRuby project leads. &lt;!--more--&gt;&lt;/p&gt;
+    <content type="html"><![CDATA[<p>I thought I&#8217;d start by introducing myself. I&#8217;m the project director for SciRuby, and I&#8217;m a molecular biology doctoral
+ student at the University of Texas. I work in the <a href="http://marcottelab.org/">Marcotte Lab</a>, and actually occupy the
+ former desk (and lab hostname) of John Prince, another of the SciRuby project leads. <!--more--></p>
 
-&lt;p&gt;In addition to working as a graduate student, I am a blogger and an offline political activist -- specifically, a
+<p>In addition to working as a graduate student, I am a blogger and an offline political activist &#8211; specifically, a
  community organizer. While I have contributed code to SciRuby already, and plan to continue, my main role here derives
- from my community organizing experience: &lt;strong&gt;I want &lt;em&gt;you&lt;/em&gt; to get involved.&lt;/strong&gt;&lt;/p&gt;
+ from my community organizing experience: <strong>I want <em>you</em> to get involved.</strong></p>
 
-&lt;p&gt;In that vein, I have written &lt;a href=&quot;http://sciruby.com/blog/2011/08/15/the-challenges-of-copyrights/&quot;&gt;a fascinating (and humble) precautionary tale&lt;/a&gt;.&lt;/p&gt;
+<p>In that vein, I have written <a href="http://sciruby.com/blog/2011/08/15/the-challenges-of-copyrights/">a fascinating (and humble) precautionary tale</a>.</p>
 
-&lt;p&gt;Oh, and if do you want to get involved, you can find us in #sciruby (Freenode.net), or you can come check out our
-&lt;a href=&quot;http://groups.google.com/group/sciruby-dev&quot;&gt;Google Group&lt;/a&gt;.&lt;/p&gt;
-</content>
+<p>Oh, and if do you want to get involved, you can find us in #sciruby (Freenode.net), or you can come check out our
+<a href="http://groups.google.com/group/sciruby-dev">Google Group</a>.</p>
+]]></content>
   </entry>
   
 </feed>
