@@ -2,57 +2,61 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://sciruby.com/blog/2011/08/15/first-post/</loc>
-        <lastmod>2011-08-23T14:37:17-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2011/08/15/the-challenges-of-copyrights/</loc>
-        <lastmod>2011-08-23T14:37:17-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2011/08/17/interview-with-the-sciruby-team/</loc>
-        <lastmod>2011-08-23T14:37:17-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2011/11/02/first-pre-alpha-release/</loc>
-        <lastmod>2011-11-02T22:14:30-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2012/02/11/numeric-matrix-considerations/</loc>
-        <lastmod>2012-04-11T13:38:27-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/</loc>
-        <lastmod>2012-04-11T15:25:06-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/</loc>
-        <lastmod>2012-05-22T14:14:21-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced/</loc>
-        <lastmod>2012-05-23T20:32:13-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2012/07/31/major-refactoring-in-the-pipeline/</loc>
-        <lastmod>2012-07-31T16:40:20-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>
             http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/
         </loc>
-        <lastmod>2012-09-24T14:56:48-05:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2012/09/24/second-nmatrix-alpha-released/</loc>
-        <lastmod>2012-09-24T16:45:10-05:00</lastmod>
+        <lastmod>2012-12-07T12:43:08-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected/</loc>
-        <lastmod>2012-12-04T15:54:48-06:00</lastmod>
+        <lastmod>2012-12-07T12:28:53-06:00</lastmod>
+    </url>
+    <url>
+        <loc>http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts/</loc>
+        <lastmod>2012-12-07T12:30:12-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/</loc>
-        <lastmod>2012-12-04T15:54:48-06:00</lastmod>
+        <lastmod>2012-12-07T12:43:08-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/docs/installation/atlas.html</loc>
@@ -80,10 +84,10 @@
     </url>
     <url>
         <loc>http://sciruby.com/blog/</loc>
-        <lastmod>2012-12-04T15:54:48-06:00</lastmod>
+        <lastmod>2012-12-07T12:43:08-06:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/archives/</loc>
-        <lastmod>2012-12-04T15:54:48-06:00</lastmod>
+        <lastmod>2012-12-07T12:43:08-06:00</lastmod>
     </url>
 </urlset>

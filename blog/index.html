@@ -107,6 +107,170 @@
     
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/12/07/how-to-use-nmatrix-shortcuts/">How to Use NMatrix&#8217;s Shortcuts</a></h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2012-12-07 12:30:00 -0600" pubdate  updated >Dec 7<span>th</span>, 2012</time>
+
+
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">Carlos Agarie</span></span>
+</p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>John Woods <a href="https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b">merged my last pull request to NMatrix</a> recently and I wanted to write about why we created these shortcuts and what can be done with them.</p>
+
+<h2>The need for shortcuts</h2>
+
+<p>The first iteration of NMatrix shortcuts was written by <a href="https://github.com/dcarrera">Daniel Carrera</a> and sent to the mailing list, where I started working with them. Some discussions, decisions and two pull requests later, we have a working set of methods to create common matrices (<code>zeros</code>, <code>ones</code>, <code>random</code>, etc) and do some cool stuff (<code>column</code> and <code>linspace</code>) very easily.</p>
+
+<p>There are at least two good reasons to have these shortcuts: MATLAB users are going to feel at home, and the shortcuts allow us to prototype and experiment more rapidly. For example, it&#8217;s dead simple to create an identify matrix when you need one:</p>
+
+<pre><code>&gt;&gt; require 'nmatrix'
+
+&gt;&gt; matrix = NMatrix.identity(3) # 3x3
+=&gt; #&lt;NMatrix:0x007faa5b8cda40shape:[3,3] dtype:float64 stype:dense&gt; 
+&gt;&gt; matrix.pp
+
+# [1.0, 0.0, 0.0]
+# [0.0, 1.0, 0.0]
+# [0.0, 0.0, 1.0]
+</code></pre>
+
+<p>And a random matrix to test some operation:</p>
+
+<pre><code>&gt;&gt; rand_matrix = NMatrix.random(4) # 4x4
+=&gt; #&lt;NMatrix:0x007faa5b01cdd8shape:[4,4] dtype:float64 stype:dense&gt;
+&gt;&gt; rand_matrix.pp
+
+# [0.5933103148378577, 0.8556103970281977, 0.7176768395610358, 0.07160353964395305]
+# [0.8566365570076784, 0.33925854948960343, 0.5994298479703805, 0.6906794137948586]
+# [0.5684593743073485, 0.10273166792035393, 0.46187577773882293, 0.586085963973687]
+# [0.8944982538369494, 0.9896291945923837, 0.8787034784673503, 0.5933103148378577]
+</code></pre>
+
+<h2>Shortcuts available</h2>
+
+<p>The following list is taken from <a href="https://github.com/SciRuby/nmatrix/wiki/NMatrix">NMatrix&#8217;s wiki</a>. All are class methods on <code>NMatrix</code>.</p>
+
+<pre><code>ones(3,3)                    # A 3x3 matrix of ones.
+zeros(4,4) or zeroes(4,4)    # Creates a matrix of zeros with dimensions as parameters.
+identity(5,5) or eye(5,5)    # A 5x5 identity matrix. Only works with NMatrix.
+seq(8)                       # An 8-vector with a sequence of values from 0 to 7.
+random(6,6)                  # A 6x6 matrix of random values between 0 and 1.
+
+column(2)                    # Return the 2nd column of the original matrix. Only works with NMatrix.
+
+indgen(8)                    # To make IDL users happy. Same as `seq(8, :int32)`.
+findgen(8)                   # Same as `seq(8, :float32)`.
+bindgen(8)                   # Same as `seq(8, :byte)`.
+cindgen(8)                   # Same as `seq(8, :complex64)`.
+
+linspace(0, pi, 100)         # A vector of 100 values from 0 to pi, inclusive. Only works with NVector.
+</code></pre>
+
+<p>The method names are mostly from MATLAB. In the future, when more functionality is added, we&#8217;ll try to create a more &#8220;Ruby-like&#8221; feel to the API. But as these shortcuts do very primitive tasks, there isn&#8217;t any obvious room for improvement. (Feel free to prove us wrong, however!)</p>
+
+<p>I&#8217;ll create a separate wiki page for the shortcuts to be able to organize and put more information about how to use them. But I want to create a better RDoc documentation for NMatrix — so the full API will probably be referenced there. I&#8217;ll write a new blog post here when something along these lines is done.</p>
+
+<h2>Examples</h2>
+
+<p>First, let&#8217;s try normalizing the columns of an NMatrix.</p>
+
+<pre><code>require 'nmatrix'
+
+m = NMatrix.seq(3, :float32)
+m.pp
+
+# [0.0, 1.0, 2.0]
+# [3.0, 4.0, 5.0]
+# [6.0, 7.0, 8.0]
+
+(0 .. m.shape[1] - 1).each do |j|
+  col = m.column(j)
+    norm = Math.sqrt(col.transpose.dot(col)[0, 0])
+    (0 .. m.shape[0] - 1).each { |i| m[i,j] /= norm }
+end
+
+m.pp
+
+# [0.0, 0.12309148907661438, 0.20739033818244934]
+# [0.4472135901451111, 0.4923659563064575, 0.5184758305549622]
+# [0.8944271802902222, 0.861640453338623, 0.8295613527297974]
+
+(0 .. m.shape[1] - 1).each do |j|
+  col = m.column(j)
+  puts Math.sqrt(col.transpose.dot(col)[0,0])
+end
+
+# 0.9999999701976772
+# 1.0
+# 1.0
+</code></pre>
+
+<p>Unfortunately, slice by reference isn&#8217;t working on <code>HEAD</code>, or we could make a few additional improvements (see issue <a href="https://github.com/SciRuby/nmatrix/issues/51">#51</a>).</p>
+
+<p>The other thing that I&#8217;ve wanted to do is to use <code>linspace</code> to generate points for plotting sines, cosines, etc. Here is an example:</p>
+
+<pre><code>require 'nmatrix'
+
+vector = NVector.linspace(0, Math::PI, 10)
+vector.pretty_print
+
+# 0.0
+# 0.3490658503988659
+# 0.6981317007977318
+# 1.0471975511965976
+# 1.3962634015954636
+# 1.7453292519943295
+# 2.0943951023931953
+# 2.443460952792061
+# 2.792526803190927
+# 3.141592653589793
+
+10.times do |i|
+  vector[k, 0] = Math::sin(vector[k, 0])
+end
+
+vector.pretty_print
+
+# 0.0
+# 0.3420201433256687
+# 0.6427876096865393
+# 0.8660254037844386
+# 0.984807753012208
+# 0.984807753012208
+# 0.8660254037844388
+# 0.6427876096865395
+# 0.3420201433256689
+# 1.2246467991473532e-16
+</code></pre>
+
+<p>These results show a happy result, in that we are able to use NMatrix for simple tasks already. Of course, there are problems to be solved, e.g. slice by reference, inversion for all dtypes, eigenvalues. But it&#8217;s going somewhere, it&#8217;s growing.</p>
+
+<p>I hope that by this time next year we&#8217;ll have a very mature linear algebra library (and much more).</p>
+</div>
+  <footer>
+    <a rel="full-article" href="/blog/2012/12/07/how-to-use-nmatrix-shortcuts/">Read on &rarr;</a>
+  </footer>
+
+
+  </article>
+
+
+  <article>
+    
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/11/28/spring-2013-sciruby-fellows-selected/">Spring 2013 SciRuby Fellows Selected</a></h1>
     
     
@@ -118,6 +282,10 @@
 <time datetime="2012-11-28 13:46:00 -0600" pubdate  updated >Nov 28<span>th</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -158,25 +326,16 @@
 <time datetime="2012-09-24 14:12:00 -0500" pubdate  updated >Sep 24<span>th</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
 
 
-  <div class="entry-content"><p>On Friday, we released the somewhat overdue second alpha of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>, version 0.0.2.</p>
-
-<p>This second alpha has boasts a significantly improved and much more maintainable code base, thanks to our Summer 2012
- SciRuby Fellow, <a href="https://github.com/chriswailes">Chris Wailes</a>, and sponsoring organization <a href="http://brighterplanet.com">Brighter Planet</a>.</p>
-
-<p>The library has been almost completely rewritten in C++, with API available for both C and C++.</p>
-
-<p>It also includes basic slicing support for dense and list matrices and dense LU decomposition.</p>
-
-<p>Check it out and let us know what you think! Remember to look in the <a href="https://github.com/SciRuby/nmatrix/issues?direction=desc&amp;sort=created&amp;state=open">issue tracker</a>
- if you have any problems.</p>
-
-<p>Finally, if you&#8217;re a student, you should consider applying to be a <a href="/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby Fellow</a> this winter or spring.</p>
-</div>
+  <div class="entry-content"><p>On Friday, we released the somewhat overdue second alpha of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>, version 0.0.2. </div>
   <footer>
     <a rel="full-article" href="/blog/2012/09/24/second-nmatrix-alpha-released/">Read on &rarr;</a>
   </footer>
@@ -200,6 +359,10 @@
 <time datetime="2012-09-24 13:43:00 -0500" pubdate  updated >Sep 24<span>th</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -292,6 +455,10 @@ calendar of the student&#8217;s home institution.</li>
 <time datetime="2012-07-31 16:23:00 -0500" pubdate  updated >Jul 31<span>st</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -345,6 +512,10 @@ Little of this would be possible without them.</p>
 <time datetime="2012-05-23 18:08:00 -0500" pubdate  updated >May 23<span>rd</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -386,6 +557,10 @@ Little of this would be possible without them.</p>
 <time datetime="2012-05-08 16:33:00 -0500" pubdate  updated >May 8<span>th</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -463,6 +638,10 @@ Little of this would be possible without them.</p>
 <time datetime="2012-04-11 13:36:00 -0500" pubdate  updated >Apr 11<span>th</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -601,6 +780,10 @@ dense = n.cast(:dense, :int64)
 <time datetime="2012-02-11 17:35:00 -0600" pubdate  updated >Feb 11<span>th</span>, 2012</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -649,6 +832,10 @@ dense = n.cast(:dense, :int64)
 <time datetime="2011-11-02 21:39:00 -0500" pubdate  updated >Nov 2<span>nd</span>, 2011</time>
 
 
+ &bull; 
+  
+
+<span class="byline author vcard"><span class="fn">John Woods</span></span>
 </p>
     
   </header>
@@ -712,49 +899,6 @@ dense = n.cast(:dense, :int64)
 
   </article>
 
-
-  <article>
-    
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/17/interview-with-the-sciruby-team/">Interview With the SciRuby Team</a></h1>
-    
-    
-      <p class="meta">
-
-
-
-
-<time datetime="2011-08-17 21:59:00 -0500" pubdate  updated >Aug 17<span>th</span>, 2011</time>
-
-
-</p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>We just had an interview published today over at <a href="http://www.floss4science.com/interview-sciruby-team/">Floss for Science</a>,
- and we&#8217;re super excited because it&#8217;s our very first media coverage.</p>
-
-<p>If you want to vote it up at <a href="http://www.reddit.com">reddit</a>, that would be outstanding &emdash; or share it however you
- like to share things. Here are the links:</p>
-
-<ul>
-<li><a href="http://www.reddit.com/r/programming/comments/jlh19/interview_sciruby_team/">/r/programming</a></li>
-<li><a href="http://www.reddit.com/r/ruby/comments/jlkur/interview_sciruby_team/">r/ruby</a></li>
-</ul>
-
-
-<p>Already we&#8217;ve had a bunch of new people joining us on IRC (#sciruby on Freenode) and in our
- <a href="http://groups.google.com/group/sciruby-dev">Google Group</a>. Thanks for all your support!</p>
-</div>
-  <footer>
-    <a rel="full-article" href="/blog/2011/08/17/interview-with-the-sciruby-team/">Read on &rarr;</a>
-  </footer>
-
-
-  </article>
-
 <nav role="pagination">
   <div>
     
@@ -783,6 +927,10 @@ dense = n.cast(:dense, :int64)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/12/07/how-to-use-nmatrix-shortcuts/">How to use NMatrix&#8217;s shortcuts</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/11/28/spring-2013-sciruby-fellows-selected/">Spring 2013 SciRuby Fellows Selected</a>
       </li>
     
@@ -796,10 +944,6 @@ dense = n.cast(:dense, :int64)
     
       <li class="post">
         <a href="/blog/2012/07/31/major-refactoring-in-the-pipeline/">Major Refactoring in the Pipeline</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/23/sciruby-summer-of-code-selection-announced/">SciRuby Summer of Code Selection Announced</a>
       </li>
     
   </ul>
