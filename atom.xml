@@ -4,7 +4,7 @@
   <title>SciRuby</title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2012-12-07T12:45:06-06:00</updated>
+  <updated>2012-12-07T13:03:00-06:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name>SciRuby</name>
@@ -17,7 +17,7 @@
     <link href="http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts/"/>
     <updated>2012-12-07T12:30:00-06:00</updated>
     <id>http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts</id>
-    <content type="html">&lt;p&gt;John Woods &lt;a href=&quot;https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b&quot;&gt;merged my last pull request to NMatrix&lt;/a&gt; recently and I wanted to write about why we created these shortcuts and what can be done with them.&lt;/p&gt;
+    <content type="html">&lt;p&gt;John Woods &lt;a href=&quot;https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b&quot;&gt;merged my last pull request to NMatrix&lt;/a&gt; recently and I wanted to write about why we created these shortcuts and what can be done with them. &lt;!--more--&gt;&lt;/p&gt;
 
 &lt;h2&gt;The need for shortcuts&lt;/h2&gt;
 
@@ -156,7 +156,7 @@ vector.pretty_print
     <link href="http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected/"/>
     <updated>2012-11-28T13:46:00-06:00</updated>
     <id>http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected</id>
-    <content type="html">&lt;p&gt;Last week we selected three excellent candidates for &lt;a href=&quot;http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/&quot;&gt;SciRuby fellowships&lt;/a&gt;. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of an anonymous contributor.&lt;/p&gt;
+    <content type="html">&lt;p&gt;Last week we selected three excellent candidates for &lt;a href=&quot;http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/&quot;&gt;SciRuby fellowships&lt;/a&gt;. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of an anonymous contributor. &lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://github.com/agarie&quot;&gt;Carlos Agarie&lt;/a&gt; will be working half-time starting immediately on providing certain critical functionality to NMatrix and on improving our documentation. Specifically, matrix inversions and determinant calculations both depend upon BLAS, and in some cases CLAPACK. However, the CLAPACK interface is unavailable to most Mac users; and neither BLAS nor LAPACK provides rational support, which is on the NMatrix roadmap. Carlos is a Brazilian exchange student at Embry-Riddle Aeronautical University in Arizona.&lt;/p&gt;
 
@@ -175,10 +175,10 @@ vector.pretty_print
     <link href="http://sciruby.com/blog/2012/09/24/second-nmatrix-alpha-released/"/>
     <updated>2012-09-24T14:12:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/09/24/second-nmatrix-alpha-released</id>
-    <content type="html">&lt;p&gt;On Friday, we released the somewhat overdue second alpha of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;, version 0.0.2. &lt;!--more--&gt;&lt;/p&gt;
+    <content type="html">&lt;p&gt;On Friday, we released the somewhat overdue second alpha of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;, version 0.0.2.&lt;/p&gt;
 
 &lt;p&gt;This second alpha has boasts a significantly improved and much more maintainable code base, thanks to our Summer 2012
- SciRuby Fellow, &lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt;, and sponsoring organization &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt;.&lt;/p&gt;
+ SciRuby Fellow, &lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt;, and sponsoring organization &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt;. &lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;The library has been almost completely rewritten in C++, with API available for both C and C++.&lt;/p&gt;
 
@@ -200,7 +200,7 @@ vector.pretty_print
 
 &lt;p&gt;When we applied, we proposed to build upon our &lt;a href=&quot;http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/&quot;&gt;successful SciRuby Summer of Code&lt;/a&gt;,
 which we undertook with the support of &lt;a href=&quot;http://brighterplanet.com&quot;&gt;Brighter Planet&lt;/a&gt;. We are pleased to announce applications
-for SciRuby fellowships.&lt;/p&gt;
+for SciRuby fellowships.&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;h2&gt;Funding Note&lt;/h2&gt;
 
@@ -272,7 +272,7 @@ which makes us all very happy.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt; and I have been working on a major refactoring of &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;,
 our replacement for NArray. You may recall that we released our first alpha (0.0.1) back in April, and that we've been
-relatively silent since then.&lt;/p&gt;
+relatively silent since then.&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;We're pleased to announce that our second alpha, NMatrix v0.0.2, should be available as a gem by mid-August.&lt;/p&gt;
 
@@ -300,7 +300,7 @@ Little of this would be possible without them.&lt;/p&gt;
     <updated>2012-05-23T18:08:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced</id>
     <content type="html">&lt;p&gt;We were blown away by the quality of the application pool for our &lt;a href=&quot;http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/&quot;&gt;first ever SciRuby Summer of Code, sponsored by Brighter Planet&lt;/a&gt;. We received eight exemplary applications for a single placement, and nearly every applicant showed up on at least
- one selection committee member's top-three list.&lt;/p&gt;
+ one selection committee member's top-three list.&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;I am pleased to report that we have selected &lt;a href=&quot;https://github.com/chriswailes&quot;&gt;Chris Wailes&lt;/a&gt;, a doctoral student in Computer
  Science at the University of Colorado at Boulder, to be the recipient of our fellowship this year.&lt;/p&gt;
@@ -323,7 +323,7 @@ Little of this would be possible without them.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://static.brighterplanet.com/assets/logos/flush-left/inline/green/rasterized/brighter_planet-140.png&quot; alt=&quot;Brighter Planet logo&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The fellowship is intended for undergraduate and graduate science and engineering students interested in going into research.&lt;/p&gt;
+&lt;p&gt;The fellowship is intended for undergraduate and graduate science and engineering students interested in going into research.&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;Fellowship tenure is full-time, May 18th through August 18th (dates are flexible). The stipend is $1,500.&lt;/p&gt;
 
@@ -377,7 +377,7 @@ Little of this would be possible without them.&lt;/p&gt;
     <id>http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released</id>
     <content type="html">&lt;p&gt;Two months ago, I &lt;a href=&quot;2012/02/11/numeric-matrix-considerations&quot;&gt;mentioned the existence of a prototype Ruby linear algebra library&lt;/a&gt;, written in C.&lt;/p&gt;
 
-&lt;p&gt;I am pleased to announce that yesterday we released our first alpha of said library, &lt;a href=&quot;http://sciruby.com/nmatrix/&quot;&gt;NMatrix&lt;/a&gt; v0.0.1.&lt;/p&gt;
+&lt;p&gt;I am pleased to announce that yesterday we released our first alpha of said library, &lt;a href=&quot;http://sciruby.com/nmatrix/&quot;&gt;NMatrix&lt;/a&gt; v0.0.1.&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;h2&gt;Creating Matrices&lt;/h2&gt;
 
@@ -494,7 +494,7 @@ dense = n.cast(:dense, :int64)
     <id>http://sciruby.com/blog/2012/02/11/numeric-matrix-considerations</id>
     <content type="html">&lt;p&gt;Maybe you've been wondering why the SciRuby people have been so quiet lately.&lt;/p&gt;
 
-&lt;p&gt;Mostly, we've been working on &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;, which is our prototype linear algebra library, written as a Ruby C extension.&lt;/p&gt;
+&lt;p&gt;Mostly, we've been working on &lt;a href=&quot;http://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt;, which is our prototype linear algebra library, written as a Ruby C extension.&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;So far, we have dense and linked-list-of-linked-lists (or just &quot;list&quot;) matrices, which can exist in an essentially unlimited number of dimensions. This week, I implemented the &lt;a href=&quot;https://github.com/SciRuby/nmatrix/blob/sparse/ext/nmatrix/yale.c&quot;&gt;beginnings of a two-dimensional sparse type known as &quot;new Yale.&quot;&lt;/a&gt; If you're curious, check out &lt;em&gt;&lt;a href=&quot;http://apps.nrbook.com/c/index.html&quot;&gt;Numerical Recipes in C&lt;/a&gt;&lt;/em&gt;, pp. 78-79.&lt;/p&gt;
 
@@ -519,7 +519,7 @@ dense = n.cast(:dense, :int64)
     <link href="http://sciruby.com/blog/2011/11/02/first-pre-alpha-release/"/>
     <updated>2011-11-02T21:39:00-05:00</updated>
     <id>http://sciruby.com/blog/2011/11/02/first-pre-alpha-release</id>
-    <content type="html">&lt;p&gt;&lt;a href=&quot;http://news.ycombinator.com/item?id=3180369&quot;&gt;We made it to the top spot on Hacker News&lt;/a&gt; on Halloween (three days ago now). We weren't quite prepared for the level of interest generated by that posting, so we've experienced a few growing pains. (Please please please don't send us to Slashdot.)&lt;/p&gt;
+    <content type="html">&lt;p&gt;&lt;a href=&quot;http://news.ycombinator.com/item?id=3180369&quot;&gt;We made it to the top spot on Hacker News&lt;/a&gt; on Halloween (three days ago now). We weren't quite prepared for the level of interest generated by that posting, so we've experienced a few growing pains. (Please please please don't send us to Slashdot.) &lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;But growing pains are a good thing! They are, of course, the result of growth -- which we like!&lt;/p&gt;
 
@@ -578,7 +578,7 @@ dense = n.cast(:dense, :int64)
     <updated>2011-08-17T21:59:00-05:00</updated>
     <id>http://sciruby.com/blog/2011/08/17/interview-with-the-sciruby-team</id>
     <content type="html">&lt;p&gt;We just had an interview published today over at &lt;a href=&quot;http://www.floss4science.com/interview-sciruby-team/&quot;&gt;Floss for Science&lt;/a&gt;,
- and we're super excited because it's our very first media coverage.&lt;/p&gt;
+ and we're super excited because it's our very first media coverage.&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;If you want to vote it up at &lt;a href=&quot;http://www.reddit.com&quot;&gt;reddit&lt;/a&gt;, that would be outstanding &amp;emdash; or share it however you
  like to share things. Here are the links:&lt;/p&gt;
@@ -603,7 +603,7 @@ dense = n.cast(:dense, :int64)
  specifically those for the Gamma distribution and incomplete gamma function. I got them all working pretty well, and
  they were only a hundred or so lines of code altogether.&lt;/p&gt;
 
-&lt;p&gt;But a voice in the back of my head said, &quot;Hey, you should ask Bill Press if he wants to be involved.&quot;&lt;/p&gt;
+&lt;p&gt;But a voice in the back of my head said, &quot;Hey, you should ask Bill Press if he wants to be involved.&quot; &lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/William_H._Press&quot;&gt;Bill Press&lt;/a&gt;, by the way, is a pretty cool astrophysicist who decided he
  wanted to come work here at UT as a computational biologist instead. He also happens to be first author on &lt;em&gt;Numerical
@@ -654,7 +654,7 @@ to our Google Group, for example).&lt;/p&gt;&lt;/li&gt;
     <id>http://sciruby.com/blog/2011/08/15/first-post</id>
     <content type="html">&lt;p&gt;I thought I'd start by introducing myself. I'm the project director for SciRuby, and I'm a molecular biology doctoral
  student at the University of Texas. I work in the &lt;a href=&quot;http://marcottelab.org/&quot;&gt;Marcotte Lab&lt;/a&gt;, and actually occupy the
- former desk (and lab hostname) of John Prince, another of the SciRuby project leads.&lt;/p&gt;
+ former desk (and lab hostname) of John Prince, another of the SciRuby project leads. &lt;!--more--&gt;&lt;/p&gt;
 
 &lt;p&gt;In addition to working as a graduate student, I am a blogger and an offline political activist -- specifically, a
  community organizer. While I have contributed code to SciRuby already, and plan to continue, my main role here derives
