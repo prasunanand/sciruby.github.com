@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Matrices | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/matrices/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2013-04-15T18:27:40-05:00</updated>
+  <updated>2013-09-18T22:56:45-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -18,7 +18,10 @@
     <link href="http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts/"/>
     <updated>2012-12-07T12:30:00-06:00</updated>
     <id>http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts</id>
-    <content type="html"><![CDATA[<p>John Woods <a href="https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b">merged my last pull request to NMatrix</a> recently and I wanted to write about why we created these shortcuts and what can be done with them. <!--more--></p>
+    <content type="html"><![CDATA[<p class="warning"><strong>Warning:</strong> This code predates v0.0.9 alpha, which is when the NMatrix constructor changed. Please check the <a href="https://github.com/SciRuby/nmatrix/wiki/Getting-started#shortcuts">NMatrix Getting Started guide</a> for the most recent information.</p>
+
+
+<p>John Woods <a href="https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b">merged my last pull request to NMatrix</a> recently and I wanted to write about why we created these shortcuts and what can be done with them. <!--more--></p>
 
 <h2>The need for shortcuts</h2>
 
@@ -157,7 +160,10 @@ vector.pretty_print
     <link href="http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/"/>
     <updated>2012-04-11T13:36:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released</id>
-    <content type="html"><![CDATA[<p>Two months ago, I <a href="2012/02/11/numeric-matrix-considerations">mentioned the existence of a prototype Ruby linear algebra library</a>, written in C.</p>
+    <content type="html"><![CDATA[<p class="warning"><strong>Warning:</strong> Code in this blog post is very old and likely will not work with the current version of NMatrix. Please check the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a> for the most recent information.</p>
+
+
+<p>Two months ago, I <a href="2012/02/11/numeric-matrix-considerations">mentioned the existence of a prototype Ruby linear algebra library</a>, written in C.</p>
 
 <p>I am pleased to announce that yesterday we released our first alpha of said library, <a href="/nmatrix/">NMatrix</a> v0.0.1.<!--more--></p>
 

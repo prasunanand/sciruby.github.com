@@ -9,7 +9,8 @@
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Documentation Word to the wise: These gems have been tested, but not extensively. If you&#8217;re thinking of using SciRuby to write mission &hellip;">
+  <meta name="description" content="Documentation NMatrix Installation instructions
+NMatrix documentation Other Gems If you have any trouble getting SciRuby to work and are too &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +73,7 @@
   <li><a href="/docs">Installation</a></li>
   <li><a href="http://github.com/sciruby/sciruby">SciRuby</a></li>
   <li><a href="/nmatrix">NMatrix</a></li>
+  <li><a href="/publications/">Citing SciRuby</a></li>
 </ul>
 
 </nav>
@@ -85,63 +87,24 @@
     
   </header>
   
-  <p class="warning"><strong>Word to the wise:</strong> These gems have been tested, but not extensively. If you&#8217;re thinking of using SciRuby to write mission critical code, such as for driving a car or flying a space shuttle, you may wish to choose other software (for now).</p>
-
-
-<p><strong>You might also check out the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a> if you have trouble finding answers here.</strong></p>
-
-<h3>General instructions</h3>
-
-
-<p>These instructions are primarily for NMatrix installation. Until a new version of SciRuby is released, you&#8217;ll need to install
-component gems manually (see below).</p>
-
-<ol>
-<li><p>Make sure you have <em>Ruby 1.9.2 or higher</em>. Individual components <em>may</em> work with Ruby 1.8, but we may not be able to help you if you have trouble.</p></li>
-<li><p>For NMatrix, you&#8217;ll also need a compiler which supports C++0x or C++11, such as GCC 4.3 or higher. <a href="/docs/installation/mac.html">Mac OSX GCC instructions are here.</a></p></li>
-<li><p><a href="/docs/installation/atlas.html">Install ATLAS</a> (required for NMatrix). If you&#8217;re using a Mac, this should be part of <a href="https://developer.apple.com/technologies/tools/">Developer Tools</a>.</p></li>
-<li><p>Install NMatrix:</p></li>
-</ol>
-
-
-<pre><code>gem install nmatrix
-</code></pre>
-
-
-<p>That step should take about twenty minutes and won&#8217;t offer much feedback.</p>
-
-<p>If that doesn&#8217;t work, you might also try compiling the sources manually:</p>
-
-<pre><code>git clone https://github.com/SciRuby/nmatrix.git
-cd nmatrix/
-bundle install
-rake compile
-rake repackage
-gem install pkg/nmatrix-*.gem
-</code></pre>
-
-
-<p>Note that the above will give you the development version, which probably hasn&#8217;t been released yet.</p>
-
-<h3>Platform notes</h3>
+  <h3>NMatrix</h3>
 
 
 <ul>
-<li><a href="/docs/installation/mac.html">Mac OSX</a></li>
-<li><a href="/docs/installation/linux.html">Linux</a></li>
+<li><a href="https://github.com/SciRuby/nmatrix/wiki/Installation">Installation instructions</a></li>
+<li><a href="../nmatrix/docs/">NMatrix documentation</a></li>
 </ul>
 
 
-<h3>Alpha workaround instructions</h3>
+<h3>Other Gems</h3>
 
 
 <p>If you have any trouble getting SciRuby to work and are too impatient to seek assistance, most of the SciRuby components are already available as individual packages. We recommend you try out the following component gems:</p>
 
 <ul>
-<li><em>Visualization:</em> <span class="gem"><a href="https://github.com/clbustos/rubyvis">rubyvis</a></span></li>
-<li><em>Statistics:</em> <span class="gem"><a href="https://github.com/clbustos/statsample">statsample</a></span></li>
+<li><em>Visualization:</em> <span class="gem"><a href="https://github.com/clbustos/rubyvis">rubyvis</a></span>, <span class="gem"><a href="https://github.com/zuhao/plotrb">plotrb</a></span></li>
+<li><em>Statistics and Probability:</em> <span class="gem"><a href="https://github.com/clbustos/statsample">statsample</a></span>, <span class="gem"><a href="https://github.com/clbustos/distribution">distribution</a></span></li>
 <li><em>Numeric:</em> <span class="gem"><a href="https://github.com/clbustos/minimization">minimization</a></span>, <span class="gem"><a href="https://github.com/clbustos/integration">integration</a></span>, <span class="gem"><a href="https://github.com/SciRuby/nmatrix">nmatrix</a></span></li>
-<li><em>Probability:</em> <span class="gem"><a href="https://github.com/clbustos/distribution">distribution</a></span></li>
 </ul>
 
 
@@ -150,35 +113,32 @@ gem install pkg/nmatrix-*.gem
 <h4>SciRuby</h4>
 
 
-<p><strong>Don&#8217;t do this.</strong> SciRuby depends on statsample, which requires NArray, which conflicts with NMatrix.</p>
-
-<p>But if you absolutely must, you can install the SciRuby gem as follows:</p>
-
-<pre><code>gem install gtksourceview2 # optional, for code editor
-gem install statsample-optimization # optional: rb-gsl, statistics2 -- for the statsample gem
-gem install sciruby
-</code></pre>
-
-
-<p>We expect it to be fixed once Ruby/GSL includes NMatrix support.</p>
+<p>The SciRuby gem is currently on hold. Frankly, we don&#8217;t know what to put in it. In the end it&#8217;ll probably end up just
+kind of directing the installation of other gems. In other words, you&#8217;ll install the SciRuby gem, and that&#8217;ll cause the
+other gems to be installed automatically. But for now, you have to install them all by hand, as we simply don&#8217;t have
+enough volunteers to keep everything up-to-date dependency-wise.</p>
 
 <h2>Project Status</h2>
 
 <p>As we are currently alpha, documentation is a work in progress. If you want to get involved, please drop by our <a href="http://groups.google.com/group/sciruby-dev">Google Group</a> or our IRC channel, <tt>#sciruby</tt>.</p>
 
-<p>In the meantime, documentation for existing gems is scattered. You can look through the links below for additional information.</p>
+<p>Documentation for existing gems is scattered. You can look through the links below for additional information.</p>
 
 <h2>Project Pages</h2>
 
 <ul>
+<li><a href="http://github.com/SciRuby/nmatrix/wiki">NMatrix</a></li>
+<li><a href="http://wanzuhao.com/">Plotrb</a> &#8212; This isn&#8217;t exactly a project page, but rather Zuhao&#8217;s Summer of Code blog. It&#8217;s got
+lots of useful examples.</li>
 <li><a href="http://rubyvis.rubyforge.org">Rubyvis</a></li>
 <li><a href="http://ruby-statsample.rubyforge.org/">Statsample</a></li>
 </ul>
 
 
-<h2>rdocs</h2>
+<h2>YARD Documentation</h2>
 
 <ul>
+<li><a href="http://rubydoc.info/gems/plotrb/">Plotrb</a></li>
 <li><a href="http://rubydoc.info/gems/rubyvis/">Rubyvis</a></li>
 <li><a href="http://rubydoc.info/gems/distribution/">Distribution</a> (part of Statsample)</li>
 <li><a href="http://rubydoc.info/gems/statsample/">Statsample</a></li>
@@ -187,9 +147,7 @@ gem install sciruby
 
 <h2>Other resources</h2>
 
-<p>For SciRuby project documentation, you should visit the <a href="https://github.com/sciruby/sciruby/wiki">SciRuby wiki</a>.</p>
-
-<p>You should subscribe to our <a href="http://www.sciruby.com/blog">blog</a> if you want updates, too.</p>
+<p>Well, there&#8217;s always the <a href="http://www.sciruby.com/blog">blog</a>.</p>
 
   
     <footer>
@@ -219,6 +177,10 @@ gem install sciruby
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/18/nmatrix-nearing-beta-release/">NMatrix nearing beta release</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/12/07/how-to-use-nmatrix-shortcuts/">How to use NMatrix's shortcuts</a>
       </li>
     
@@ -232,10 +194,6 @@ gem install sciruby
     
       <li class="post">
         <a href="/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby Receives Ruby Association Grant; Fellowships Available</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/31/major-refactoring-in-the-pipeline/">Major Refactoring in the Pipeline</a>
       </li>
     
   </ul>

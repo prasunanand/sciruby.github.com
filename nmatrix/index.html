@@ -9,7 +9,7 @@
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="NMatrix Mar 12th, 2013 The current version of NMatrix is 0.0.3. NMatrix is a fast numerical linear algebra library for Ruby, written mostly in C++. &hellip;">
+  <meta name="description" content="NMatrix Mar 12th, 2013 NMatrix is a fast numerical linear algebra library for Ruby, written mostly in C and C++. It is part of the SciRuby project. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,7 @@
   <li><a href="/docs">Installation</a></li>
   <li><a href="http://github.com/sciruby/sciruby">SciRuby</a></li>
   <li><a href="/nmatrix">NMatrix</a></li>
+  <li><a href="/publications/">Citing SciRuby</a></li>
 </ul>
 
 </nav>
@@ -97,16 +98,18 @@
 <time datetime="2013-03-12T18:08:00-05:00" pubdate data-updated="true">Mar 12<span>th</span>, 2013</time></p>
   </header>
   
-  <p class="warning">The current version of NMatrix is <strong>0.0.3</strong>.</p>
+  <p>NMatrix is a fast numerical linear algebra library for Ruby, written mostly in C and C++. It is part of the SciRuby project.</p>
+
+<ul>
+<li><a href="/nmatrix/docs/">Current NMatrix gem release RDoc</a></li>
+<li><a href="https://github.com/SciRuby/nmatrix/wiki/Installation">NMatrix wiki: Installation</a></li>
+<li><a href="https://github.com/SciRuby/nmatrix/wiki/Getting-started">NMatrix wiki: Getting Started</a></li>
+</ul>
 
 
-<p>NMatrix is a fast numerical linear algebra library for Ruby, written mostly in C++. It can be used with or without SciRuby, but is part of the SciRuby project.</p>
-
-<p>You can find <a href="/nmatrix/docs">API documentation here</a> and the code <a href="http://github.com/sciruby/nmatrix/">in the Github repository</a>.</p>
-
-<p>Don&#8217;t forget to take a <a href="http://github.com/sciruby/nmatrix/wiki">look at the wiki</a>, where you can find some useful guides and tutorials to help you start using NMatrix!</p>
-
-<p>NMatrix was inspired by, and originally based heavily upon, <a href="http://narray.rubyforge.org">NArray</a> by Masahiro Tanaka.</p>
+<p>We are in the process of switching from RDoc to YARD. YARD does not yet support parsing C++ sources, but we&#8217;re working
+with the YARD developers to get it enabled. <a href="http://rdoc.info/github/SciRuby/nmatrix/">Here are the YARD docs generated from the most recent commit in Github.</a>
+You can, of course, also generate these in RDoc format if you&#8217;ve cloned our git repository; the command is <code>rake rdoc</code>.</p>
 
   
     <footer>
@@ -158,6 +161,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/18/nmatrix-nearing-beta-release/">NMatrix nearing beta release</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/12/07/how-to-use-nmatrix-shortcuts/">How to use NMatrix's shortcuts</a>
       </li>
     
@@ -171,10 +178,6 @@
     
       <li class="post">
         <a href="/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby Receives Ruby Association Grant; Fellowships Available</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/31/major-refactoring-in-the-pipeline/">Major Refactoring in the Pipeline</a>
       </li>
     
   </ul>
