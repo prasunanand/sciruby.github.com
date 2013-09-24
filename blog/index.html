@@ -9,8 +9,8 @@
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="As of this writing, NMatrix v0.0.9 is available on RubyGems. It is likely that the next version will be a beta release
-candidate, as there&#8217;s &hellip;">
+  <meta name="description" content="Editor&#8217;s Note: This is the first of four blog posts detailing
+our Google Summer of Code 2013 students&#8217; work. In the context of the Google &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,96 @@ candidate, as there&#8217;s &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/">GSOC 2013: Data Mining in JRuby With Ruby Band</a></h1>
+    
+    
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard"><span class="fn">Alberto Arrigoni</span></span>
+ &bull; 
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-24T10:44:00-05:00" pubdate data-updated="true">Sep 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p class="note"><strong>Editor&#8217;s Note:</strong> This is the first of four blog posts detailing
+our Google Summer of Code 2013 students&#8217; work.</p>
+
+
+<p>In the context of the Google Summer of Code 2013, I have developed a Ruby gem called <a href="https://github.com/arrigonialberto86/ruby-band">Ruby Band</a>
+that makes some selected Java software for data mining and machine learning applications available to the JRuby/Ruby
+users. This project complements existing software already developed for SciRuby by adding support for the Weka Toolkit
+and general functions included in the Apache Commons Math library.</p>
+
+<p>As Weka does, Ruby Band features a comprehensive collection of data preprocessing and modeling techniques, and supports
+several standard data mining tasks, more specifically: data pre-processing (filtering), clustering, classification,
+regression, and feature selection.</p>
+
+<p>All of Ruby Band&#8217;s techniques have been built on the assumption that the data is
+available as a single flat file or relation, where each datum is described by a fixed number of attributes. The
+loaded datasets are stored in Weka Instances objects, which are used as &#8216;core&#8217; data types for the interactions with
+other software (Apache Commons Math) or platforms.</p>
+
+<p>Originally, Ruby Band was called Ruby Mining. I renamed it Ruby Band, as I imagine
+different software sources (Weka, Apache, etc.) working as a whole, like in a real band. Ruby Band has been designed
+with a modular structure, so that it can be easily extended and integrated with other Java software. The Core module is
+allows data types from different sources to be defined and integrated using converter methods;
+functionalities from each piece of additional software are independently imported. This structure increases the
+extensibility of the product, as in the future other developers may add functionalities according to their needs.</p>
+
+<p>Though Ruby Band provides full support for the greatest part of the Weka APIs, some topics still need to be addressed
+properly. As I coded, I utilized the Weka Java APIs documentation as my roadmap; if you want to contribute,
+<a href="http://weka.wikispaces.com/Use+WEKA+in+your+Java+code">go see what is still missing</a>. The best and easiest way
+to introduce a new functionality into the Ruby Band framework is to write up a pertinent Cucumber test, as a number of
+Weka recipes have been posted online by the creators.</p>
+
+<p>The beta version of Ruby Band has already been released for general use on Rubygems (<code>gem install ruby-band</code>).</p>
+
+<p>This is a quick example of how to train a classifier on a dataset parsed from an ARFF file:</p>
+
+<pre><code>require 'ruby-band'
+
+# parse a dataset
+dataset = Core::Parser.parse_ARFF(my_file.arff)
+
+# initialize and train a classifier
+classifier = Weka::Classifier::Lazy::KStar::Base.new do
+  set_options '-M d'
+  set_data dataset
+  set_class_index 4
+end
+
+# cross-validate the trained classifier
+puts classifier.cross_validate(3)
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -616,52 +706,6 @@ relatively silent since then.</div>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/11/numeric-matrix-considerations/">Numeric Matrix Considerations</a></h1>
-    
-    
-      <p class="meta">
-        
-  
-
-<span class="byline author vcard"><span class="fn">John Woods</span></span>
- &bull; 
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-11T17:35:00-06:00" pubdate data-updated="true">Feb 11<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Maybe you&#8217;ve been wondering why the SciRuby people have been so quiet lately.</p>
-
-<p>Mostly, we&#8217;ve been working on <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>, which is our prototype linear algebra library, written as a Ruby C extension.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/02/11/numeric-matrix-considerations/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -677,6 +721,10 @@ relatively silent since then.</div>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/">GSOC 2013: Data mining in JRuby with Ruby Band</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/18/nmatrix-nearing-beta-release/">NMatrix nearing beta release</a>
       </li>
     
@@ -690,10 +738,6 @@ relatively silent since then.</div>
     
       <li class="post">
         <a href="/blog/2012/09/24/second-nmatrix-alpha-released/">Second NMatrix Alpha Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby Receives Ruby Association Grant; Fellowships Available</a>
       </li>
     
   </ul>

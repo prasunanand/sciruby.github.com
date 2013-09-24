@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Meta - SciRuby</title>
+  <title>GSOC 2013: Data mining in JRuby with Ruby Band - SciRuby</title>
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Category: Meta">
+  <meta name="description" content="Editor&#8217;s Note: This is the first of four blog posts detailing
+our Google Summer of Code 2013 students&#8217; work. In the context of the Google &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sciruby.comblog/categories/meta/">
+  <link rel="canonical" href="http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,36 +80,147 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Meta</h1>
+    
+      <h1 class="entry-title">GSOC 2013: Data Mining in JRuby With Ruby Band</h1>
+    
+    
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard"><span class="fn">Alberto Arrigoni</span></span>
+ &bull; 
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-24T10:44:00-05:00" pubdate data-updated="true">Sep 24<span>th</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
-
-  
-  <h2>2011</h2>
-
-<article>
-  
-<h1><a href="/blog/2011/08/15/the-challenges-of-copyrights/">The Challenges of Copyrights</a></h1>
-<time datetime="2011-08-15T19:56:00-05:00" pubdate><span class='month'>Aug</span> <span class='day'>15</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/algorithms/'>Algorithms</a>, <a class='category' href='/blog/categories/licenses/'>Licenses</a>, <a class='category' href='/blog/categories/meta/'>Meta</a></span>
-</footer>
+<div class="entry-content"><p class="note"><strong>Editor&#8217;s Note:</strong> This is the first of four blog posts detailing
+our Google Summer of Code 2013 students&#8217; work.</p>
 
 
-</article>
+<p>In the context of the Google Summer of Code 2013, I have developed a Ruby gem called <a href="https://github.com/arrigonialberto86/ruby-band">Ruby Band</a>
+that makes some selected Java software for data mining and machine learning applications available to the JRuby/Ruby
+users. This project complements existing software already developed for SciRuby by adding support for the Weka Toolkit
+and general functions included in the Apache Commons Math library.</p>
 
+<p>As Weka does, Ruby Band features a comprehensive collection of data preprocessing and modeling techniques, and supports
+several standard data mining tasks, more specifically: data pre-processing (filtering), clustering, classification,
+regression, and feature selection.</p>
+
+<p>All of Ruby Band&#8217;s techniques have been built on the assumption that the data is
+available as a single flat file or relation, where each datum is described by a fixed number of attributes. The
+loaded datasets are stored in Weka Instances objects, which are used as &#8216;core&#8217; data types for the interactions with
+other software (Apache Commons Math) or platforms.</p>
+
+<p>Originally, Ruby Band was called Ruby Mining. I renamed it Ruby Band, as I imagine
+different software sources (Weka, Apache, etc.) working as a whole, like in a real band. Ruby Band has been designed
+with a modular structure, so that it can be easily extended and integrated with other Java software. The Core module is
+allows data types from different sources to be defined and integrated using converter methods;
+functionalities from each piece of additional software are independently imported. This structure increases the
+extensibility of the product, as in the future other developers may add functionalities according to their needs.</p>
+
+<p>Though Ruby Band provides full support for the greatest part of the Weka APIs, some topics still need to be addressed
+properly. As I coded, I utilized the Weka Java APIs documentation as my roadmap; if you want to contribute,
+<a href="http://weka.wikispaces.com/Use+WEKA+in+your+Java+code">go see what is still missing</a>. The best and easiest way
+to introduce a new functionality into the Ruby Band framework is to write up a pertinent Cucumber test, as a number of
+Weka recipes have been posted online by the creators.</p>
+
+<p>The beta version of Ruby Band has already been released for general use on Rubygems (<code>gem install ruby-band</code>).</p>
+
+<p>This is a quick example of how to train a classifier on a dataset parsed from an ARFF file:</p>
+
+<pre><code>require 'ruby-band'
+
+# parse a dataset
+dataset = Core::Parser.parse_ARFF(my_file.arff)
+
+# initialize and train a classifier
+classifier = Weka::Classifier::Lazy::KStar::Base.new do
+  set_options '-M d'
+  set_data dataset
+  set_class_index 4
+end
+
+# cross-validate the trained classifier
+puts classifier.cross_validate(3)
+</code></pre>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Alberto Arrigoni</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-24T10:44:00-05:00" pubdate data-updated="true">Sep 24<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/data-mining/'>Data mining</a>, <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2013/'>GSOC2013</a>, <a class='category' href='/blog/categories/jruby/'>JRuby</a>, <a class='category' href='/blog/categories/weka/'>Weka</a>, <a class='category' href='/blog/categories/ruby-band/'>ruby-band</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/" data-via="sciruby" data-counturl="http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/09/18/nmatrix-nearing-beta-release/" title="Previous Post: NMatrix nearing beta release">&laquo; NMatrix nearing beta release</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -209,7 +321,10 @@
       var disqus_shortname = 'sciruby';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/';
+        var disqus_url = 'http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
