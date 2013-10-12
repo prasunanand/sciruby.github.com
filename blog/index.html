@@ -9,8 +9,8 @@
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Editor&#8217;s Note: This is the first of four blog posts detailing
-our Google Summer of Code 2013 students&#8217; work. In the context of the Google &hellip;">
+  <meta name="description" content="Editor&#8217;s Note: This is the second of four blog posts detailing our Google Summer of
+Code 2013 students&#8217; work. I edited it to include a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,140 @@ our Google Summer of Code 2013 students&#8217; work. In the context of the Googl
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/">Ruby and the Semantic Web, RDF, and SPARQL: PubliSci</a></h1>
+    
+    
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard"><span class="fn">Will Strinz</span></span>
+ &bull; 
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-12T16:36:00-05:00" pubdate data-updated="true">Oct 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p class="note"><strong>Editor&#8217;s Note:</strong> This is the second of four blog posts detailing our Google Summer of
+Code 2013 students&#8217; work. I edited it to include a very incomplete list of public RDF repositories.</p>
+
+
+<p>This summer I created a Ruby gem, <a href="http://github.com/sciruby/publisci">PubliSci</a>, to facilitate data publication and interaction using
+the <a href="https://en.wikipedia.org/wiki/Semantic_web">Semantic Web</a>. The format offers a unified way to share and combine
+information from multiple sources, support for machine learning tools,
+a <a href="https://en.wikipedia.org/wiki/SPARQL">flexible query language</a> that makes application integration easy, and the
+backing of the World Wide Web Consortium (W3C) and other standards-setting bodies.</p>
+
+<p>The PubliSci gem comprises a set of parsers for converting various input formats using
+the <a href="http://semanticweb.com/w3c-publishes-last-call-working-drafts-for-rdf-data-cube-dcat_b35950">RDF Data Cube vocabulary</a>, and
+a Ruby interface for defining new ones. Since the relationship between external datasets and semantic web formats is
+sometimes up to interpretation, a domain-specific language is included to allow end users to resolve ambiguities and
+provide additional metadata.</p>
+
+<p>Along with the conversion tool, a standalone server is included in the gem that simplifies setting up and interacting
+with RDF data stores. The server allows import, export, querying, and management of external <a href="https://en.wikipedia.org/wiki/Triplestore">triplestores</a> such as
+<a href="http://4store.org/">4store</a>, and supports both cross-domain access and content negotiation so the gem can be accessed
+using Javascript or other applications.</p>
+
+<p class="note"><strong>Triplestores</strong> are databases for the storage and retrieval of <strong>triples</strong>,
+which are typically subject&ndash;object&ndash;predicate relationships (e.g., <i>Bob knows Fred</i>).</p>
+
+
+<p>If you&#8217;d like to contribute, the <a href="https://github.com/wstrinz/publisci">source code is available on Github</a>, and <a href="http://gsocsemantic.wordpress.com/2013/08/05/bio-publisci/">a broad
+outline of the to do list can be had as well</a>.</p>
+
+<h2>Usage</h2>
+
+<p>Once you&#8217;ve done <code>gem install publisci</code>, you can require the gem in the normal way (<code>require 'publisci'</code>). To invoke the
+domain-specific language, you&#8217;ll also want to include the <code>DSL</code> module:</p>
+
+<pre><code>require 'publisci'
+include PubliSci::DSL
+</code></pre>
+
+<p>Input data can be specified like so:</p>
+
+<pre><code># Specify input data
+data do
+  # Use local or remote paths to point to the data file you want to load:
+  source 'https://github.com/wstrinz/publisci/raw/master/spec/csv/bacon.csv'
+
+  # Specify datacube properties.
+  dimension 'producer', 'pricerange'
+  measure 'chunkiness'
+
+  # Set parser-specific options.
+  option 'label_column', 'producer'
+end
+</code></pre>
+
+<p>You can provide meta-data on your dataset as well.</p>
+
+<pre><code>metadata do
+  dataset 'bacon'
+  title 'Bacon dataset'
+  creator 'Will Strinz'
+  description 'some data about bacon'
+  date '1-10-2010'
+end
+</code></pre>
+
+<p>Sending the data to a repository is simple.</p>
+
+<pre><code># Send output to an RDF::Repository
+#  can also use 'generate_n3' to output a turtle string
+repo = to_repository
+</code></pre>
+
+<p>SPARQL queries can be run on the dataset using the <code>QueryHelper</code> module.</p>
+
+<pre><code># run SPARQL queries on the dataset
+PubliSci::QueryHelper.execute('select * where {?s ?p ?o} limit 5', repo)
+</code></pre>
+
+<p>Finally, data can be exported in other formats, such as ARFF:</p>
+
+<pre><code># export in other formats
+PubliSci::Writers::ARFF.new.from_store(repo)
+</code></pre>
+
+<h2>Some places to look for RDF repositories</h2>
+
+<ul>
+<li>Social sciences and economics: <a href="http://wiki.planet-data.eu/web/Datasets">PlanetData wiki: Datasets</a></li>
+<li>Chemistry: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118380/">Resource description framework technologies in chemistry</a></li>
+<li>Molecular biology: <a href="http://www.ebi.ac.uk/rdf/">EMBL-EBI: Current RDF Resources</a>, <a href="http://bio2rdf.org/">Bio2RDF</a>,
+<a href="http://www.geneontology.org/GO.format.rdfxml.shtml">Gene Ontology</a></li>
+<li>Ecology: <a href="http://www.bbc.co.uk/nature/feedsanddata">BBC Wildlife Finder</a></li>
+<li>General: <a href="http://dataincubator.org/">Data Incubator: Growing the Web of Data</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -657,55 +791,6 @@ relatively silent since then.</div>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/11/first-nmatrix-alpha-released/">First NMatrix Alpha Released</a></h1>
-    
-    
-      <p class="meta">
-        
-  
-
-<span class="byline author vcard"><span class="fn">John Woods</span></span>
- &bull; 
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-11T13:36:00-05:00" pubdate data-updated="true">Apr 11<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p class="warning"><strong>Warning:</strong> Code in this blog post is very old and likely will not work with the current version of NMatrix. Please check the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a> for the most recent information.</p>
-
-
-<p>Two months ago, I <a href="2012/02/11/numeric-matrix-considerations">mentioned the existence of a prototype Ruby linear algebra library</a>, written in C.</p>
-
-<p>I am pleased to announce that yesterday we released our first alpha of said library, <a href="/nmatrix/">NMatrix</a> v0.0.1.</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/04/11/first-nmatrix-alpha-released/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -721,6 +806,10 @@ relatively silent since then.</div>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/">Ruby and the Semantic Web, RDF, and SPARQL: PubliSci</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/">GSOC 2013: Data mining in JRuby with Ruby Band</a>
       </li>
     
@@ -734,10 +823,6 @@ relatively silent since then.</div>
     
       <li class="post">
         <a href="/blog/2012/11/28/spring-2013-sciruby-fellows-selected/">Spring 2013 SciRuby Fellows Selected</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/09/24/second-nmatrix-alpha-released/">Second NMatrix Alpha Released</a>
       </li>
     
   </ul>

@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>First NMatrix Alpha Released - SciRuby</title>
+  <title>Ruby and the Semantic Web, RDF, and SPARQL: PubliSci - SciRuby</title>
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Warning: Code in this blog post is very old and likely will not work with the current version of NMatrix. Please check the NMatrix wiki for the most &hellip;">
+  <meta name="description" content="Editor&#8217;s Note: This is the second of four blog posts detailing our Google Summer of
+Code 2013 students&#8217; work. I edited it to include a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/">
+  <link rel="canonical" href="http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -83,14 +84,14 @@
   
   <header>
     
-      <h1 class="entry-title">First NMatrix Alpha Released</h1>
+      <h1 class="entry-title">Ruby and the Semantic Web, RDF, and SPARQL: PubliSci</h1>
     
     
       <p class="meta">
         
   
 
-<span class="byline author vcard"><span class="fn">John Woods</span></span>
+<span class="byline author vcard"><span class="fn">Will Strinz</span></span>
  &bull; 
         
 
@@ -104,125 +105,107 @@
   
 
 
-<time datetime="2012-04-11T13:36:00-05:00" pubdate data-updated="true">Apr 11<span>th</span>, 2012</time>
+<time datetime="2013-10-12T16:36:00-05:00" pubdate data-updated="true">Oct 12<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p class="warning"><strong>Warning:</strong> Code in this blog post is very old and likely will not work with the current version of NMatrix. Please check the <a href="https://github.com/SciRuby/nmatrix/wiki/">NMatrix wiki</a> for the most recent information.</p>
+<div class="entry-content"><p class="note"><strong>Editor&#8217;s Note:</strong> This is the second of four blog posts detailing our Google Summer of
+Code 2013 students&#8217; work. I edited it to include a very incomplete list of public RDF repositories.</p>
 
 
-<p>Two months ago, I <a href="2012/02/11/numeric-matrix-considerations">mentioned the existence of a prototype Ruby linear algebra library</a>, written in C.</p>
+<p>This summer I created a Ruby gem, <a href="http://github.com/sciruby/publisci">PubliSci</a>, to facilitate data publication and interaction using
+the <a href="https://en.wikipedia.org/wiki/Semantic_web">Semantic Web</a>. The format offers a unified way to share and combine
+information from multiple sources, support for machine learning tools,
+a <a href="https://en.wikipedia.org/wiki/SPARQL">flexible query language</a> that makes application integration easy, and the
+backing of the World Wide Web Consortium (W3C) and other standards-setting bodies.</p>
 
-<p>I am pleased to announce that yesterday we released our first alpha of said library, <a href="/nmatrix/">NMatrix</a> v0.0.1.<!--more--></p>
+<p>The PubliSci gem comprises a set of parsers for converting various input formats using
+the <a href="http://semanticweb.com/w3c-publishes-last-call-working-drafts-for-rdf-data-cube-dcat_b35950">RDF Data Cube vocabulary</a>, and
+a Ruby interface for defining new ones. Since the relationship between external datasets and semantic web formats is
+sometimes up to interpretation, a domain-specific language is included to allow end users to resolve ambiguities and
+provide additional metadata.</p>
 
-<h2>Creating Matrices</h2>
+<p>Along with the conversion tool, a standalone server is included in the gem that simplifies setting up and interacting
+with RDF data stores. The server allows import, export, querying, and management of external <a href="https://en.wikipedia.org/wiki/Triplestore">triplestores</a> such as
+<a href="http://4store.org/">4store</a>, and supports both cross-domain access and content negotiation so the gem can be accessed
+using Javascript or other applications.</p>
 
-<p>There are lots of different ways to create matrices. The first and easiest is to supply dimensions and initial data:</p>
+<p class="note"><strong>Triplestores</strong> are databases for the storage and retrieval of <strong>triples</strong>,
+which are typically subject&ndash;object&ndash;predicate relationships (e.g., <i>Bob knows Fred</i>).</p>
 
-<pre><code>>> n = NMatrix.new(4, 0) # a square 4x4 dense zero matrix
-=> #&lt;NMatrix:0x9a57e14shape:[4,4] dtype:int32 stype:dense&gt;
->> n.pretty_print
-0  0  0  0
-0  0  0  0
-0  0  0  0
-0  0  0  0
-=> nil
+
+<p>If you&#8217;d like to contribute, the <a href="https://github.com/wstrinz/publisci">source code is available on Github</a>, and <a href="http://gsocsemantic.wordpress.com/2013/08/05/bio-publisci/">a broad
+outline of the to do list can be had as well</a>.</p>
+
+<h2>Usage</h2>
+
+<p>Once you&#8217;ve done <code>gem install publisci</code>, you can require the gem in the normal way (<code>require 'publisci'</code>). To invoke the
+domain-specific language, you&#8217;ll also want to include the <code>DSL</code> module:</p>
+
+<pre><code>require 'publisci'
+include PubliSci::DSL
 </code></pre>
 
+<p>Input data can be specified like so:</p>
 
-<h2>Data Types</h2>
+<pre><code># Specify input data
+data do
+  # Use local or remote paths to point to the data file you want to load:
+  source 'https://github.com/wstrinz/publisci/raw/master/spec/csv/bacon.csv'
 
-<p>You may notice that this first matrix defaulted to <tt>dtype=:int32</tt>. NMatrix will try to guess the <i>dtype</i> based on the
-first initial value you provide (e.g., <tt>NMatrix.new(4, [0.0, 1])</tt> will be :float32), but you can choose to provide
-a <i>dtype</i> in addition to or in lieu of initial values:</p>
+  # Specify datacube properties.
+  dimension 'producer', 'pricerange'
+  measure 'chunkiness'
 
-<pre><code>>> n = NMatrix.new(4, [0,1], :rational128)
-=> #&lt;NMatrix:0x9959e04shape:[4,4] dtype:rational128 stype:dense&gt;
->> n.pretty_print
-0/1  1/1  0/1  1/1
-0/1  1/1  0/1  1/1
-0/1  1/1  0/1  1/1
-0/1  1/1  0/1  1/1
->> m = NMatrix.new(4, :int64)  # no initialization of values
-=> #&lt;NMatrix:0x99fad68shape:[4,4] dtype:int64 stype:dense&gt;
->> m.pretty_print
--1217641248  161386160  161386100  161385680
-161385640  161385520  161385420  161384180
-161384120  161381060  161381020  161412140
-161411940  161411880  161411840  160879240
-=> nil
+  # Set parser-specific options.
+  option 'label_column', 'producer'
+end
 </code></pre>
 
+<p>You can provide meta-data on your dataset as well.</p>
 
-<h2>Storage Formats</h2>
-
-<p>The storage type (<i>stype</i>) can also be specified, prior to the dimension argument. However, with sparse storage formats, initial values don&#8217;t make sense, and these matrices will contain zeros by default.</p>
-
-<pre><code># empty list-of-lists-of-lists 4x3x4 matrix
-n = NMatrix.new(:list, [4,3,4], :int64)
-
-# Ruby objects in a 'Yale' sparse matrix
-m = NMatrix.new(:yale, [5,4], :object)
-
-# A byte matrix containing a gradient
-o = NMatrix.new(:dense, 5, [0,1,2,3,4], :byte)
+<pre><code>metadata do
+  dataset 'bacon'
+  title 'Bacon dataset'
+  creator 'Will Strinz'
+  description 'some data about bacon'
+  date '1-10-2010'
+end
 </code></pre>
 
+<p>Sending the data to a repository is simple.</p>
 
-<p>The matrix <tt>m</tt> created above is a Yale-format sparse matrix, or more specifically, &#8220;new Yale,&#8221; which differs from &#8220;old Yale&#8221; in that the diagonal is stored separately from the non-diagonal elements. Thus, diagonals can be accessed and set in constant time.</p>
-
-<p>Currently, all storage is row-based.</p>
-
-<h3>Conversion</h3>
-
-<p>You can also convert between any of these three stypes using <tt>cast</tt>, e.g.,</p>
-
-<pre><code>n = NMatrix.new(:list, 4, :int64)
-n[0,0] = 5
-n[0,3] = -2
-dense = n.cast(:dense, :int64)
+<pre><code># Send output to an RDF::Repository
+#  can also use 'generate_n3' to output a turtle string
+repo = to_repository
 </code></pre>
 
+<p>SPARQL queries can be run on the dataset using the <code>QueryHelper</code> module.</p>
 
-<h2>Vectors</h2>
-
-<p>Currently, only dense vectors are implemented as a child class of <tt>NMatrix</tt>, and creation is similar:</p>
-
-<pre><code>>> nv = NVector.new(5, :int64)
-=> #&lt;NVector:0x9a62328shape:[5,1] dtype:int64 stype:dense orientation:column&gt;
+<pre><code># run SPARQL queries on the dataset
+PubliSci::QueryHelper.execute('select * where {?s ?p ?o} limit 5', repo)
 </code></pre>
 
+<p>Finally, data can be exported in other formats, such as ARFF:</p>
 
-<h2>Math Operations</h2>
+<pre><code># export in other formats
+PubliSci::Writers::ARFF.new.from_store(repo)
+</code></pre>
 
-<p>Most element-wise mathematical operations are supported for Yale and dense types. These use the basic operators (e.g., +, -, /, *, ==).</p>
-
-<p>For non-element-wise matrix multiplication, use the <tt>dot</tt> instance method of NMatrix. Whole-matrix comparison (returning a single boolean value) is the <tt>equal?</tt> or <tt>eql?</tt> method.</p>
-
-<h2>Road Map</h2>
-
-<p>Much more remains to be written than has been completed. Here are some of our key priorities:</p>
+<h2>Some places to look for RDF repositories</h2>
 
 <ul>
-<li>determinants</li>
-<li>matrix-vector multiplication for Yale</li>
-<li>adaptation of SciRuby Matlab file reader to support NMatrix</li>
-<li>in-place transposition</li>
+<li>Social sciences and economics: <a href="http://wiki.planet-data.eu/web/Datasets">PlanetData wiki: Datasets</a></li>
+<li>Chemistry: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118380/">Resource description framework technologies in chemistry</a></li>
+<li>Molecular biology: <a href="http://www.ebi.ac.uk/rdf/">EMBL-EBI: Current RDF Resources</a>, <a href="http://bio2rdf.org/">Bio2RDF</a>,
+<a href="http://www.geneontology.org/GO.format.rdfxml.shtml">Gene Ontology</a></li>
+<li>Ecology: <a href="http://www.bbc.co.uk/nature/feedsanddata">BBC Wildlife Finder</a></li>
+<li>General: <a href="http://dataincubator.org/">Data Incubator: Growing the Web of Data</a></li>
 </ul>
 
-
-<p>If you want to get involved, I suggest visiting the <a href="https://github.com/sciruby/nmatrix/issues">NMatrix issue tracker</a>. It will contain not only bugs, but also features that need to be implemented.</p>
-
-<h2>Conclusion</h2>
-
-<p>We&#8217;re all pretty excited about NMatrix. But we couldn&#8217;t have gotten this far without Masahiro Tanaka&#8217;s <a href="http://narray.rubyforge.org/">NArray</a>, which has served as a model for our library.</p>
-
-<p>And we can&#8217;t do it without your help. A numerical library in Ruby is no small endeavour, and probably requires at least one full-time programmer (which we do not have). Please consider contributing, even if it&#8217;s just by letting us know what you think.</p>
-
-<p>Happy coding!</p>
 </div>
 
 
@@ -231,7 +214,7 @@ dense = n.cast(:dense, :int64)
       
   
 
-<span class="byline author vcard">Posted by <span class="fn">John Woods</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Will Strinz</span></span>
 
       
 
@@ -245,12 +228,12 @@ dense = n.cast(:dense, :int64)
   
 
 
-<time datetime="2012-04-11T13:36:00-05:00" pubdate data-updated="true">Apr 11<span>th</span>, 2012</time>
+<time datetime="2013-10-12T16:36:00-05:00" pubdate data-updated="true">Oct 12<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/algorithms/'>Algorithms</a>, <a class='category' href='/blog/categories/matrices/'>Matrices</a>, <a class='category' href='/blog/categories/nmatrix/'>NMatrix</a>
+    <a class='category' href='/blog/categories/data-mining/'>Data mining</a>, <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2013/'>GSOC2013</a>, <a class='category' href='/blog/categories/publisci/'>PubliSci</a>, <a class='category' href='/blog/categories/rdf/'>RDF</a>, <a class='category' href='/blog/categories/sparql/'>SPARQL</a>, <a class='category' href='/blog/categories/semantic-web/'>Semantic Web</a>
   
 </span>
 
@@ -259,7 +242,7 @@ dense = n.cast(:dense, :int64)
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/" data-via="sciruby" data-counturl="http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/" data-via="sciruby" data-counturl="http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/" >Tweet</a>
   
   
   
@@ -270,10 +253,8 @@ dense = n.cast(:dense, :int64)
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/02/11/numeric-matrix-considerations/" title="Previous Post: Numeric Matrix Considerations">&laquo; Numeric Matrix Considerations</a>
+        <a class="basic-alignment left" href="/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/" title="Previous Post: GSOC 2013: Data mining in JRuby with Ruby Band">&laquo; GSOC 2013: Data mining in JRuby with Ruby Band</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/05/08/sciruby-summer-of-code/" title="Next Post: Announcing SciRuby Summer Coding Fellowship">Announcing SciRuby Summer Coding Fellowship &raquo;</a>
       
     </p>
   </footer>
@@ -385,8 +366,8 @@ dense = n.cast(:dense, :int64)
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/';
-        var disqus_url = 'http://sciruby.com/blog/2012/04/11/first-nmatrix-alpha-released/';
+        var disqus_identifier = 'http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/';
+        var disqus_url = 'http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/';
         var disqus_script = 'embed.js';
       
     (function () {
