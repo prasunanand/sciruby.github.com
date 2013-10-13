@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GSOC2013 | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/gsoc2013/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2013-10-12T16:33:52-05:00</updated>
+  <updated>2013-10-13T13:56:32-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -19,8 +19,29 @@
     <updated>2013-10-12T16:36:00-05:00</updated>
     <id>http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci</id>
     <content type="html"><![CDATA[<p class="note"><strong>Editor's Note:</strong> This is the second of four blog posts detailing our Google Summer of
-Code 2013 students' work. I edited it to include a very incomplete list of public RDF repositories.</p>
+Code 2013 students' work. I edited it to include a very incomplete list of public RDF repositories. &mdash;John Woods</p>
 
+
+<h2>Introduction</h2>
+
+<p>There's a huge, huge amount of data around. It often won't fit in a lab notebook or a journal article. Database software
+is one great solution for storage of such data, but relational databases become brittle in the face of changes or new
+information, do not play nicely with other databases or data derived from such databases, and may not be fully machine
+(or human) readable without pre-existing knowledge.</p>
+
+<p>Meanwhile, the Internet is an extremely useful place to discover and share useful information, but it is essentially
+built around linked documents, rather than pure data, and so our primary mechanism for sharing data is as HTML or text.</p>
+
+<p>RDF and related technologies propose to provide the means to move beyond a web of documents to a web of data. Along
+the way, these technologies may address many of the problems with conventional relational databases (e.g., SQL). At its
+core, RDF defines an extremely flexible method for representing data on the web &mdash; which is nonetheless
+unambiguously defined, without any external context, and can be linked to other data as web documents link to each
+other. Because RDF data can be understood as either a set of subject&ndash;predicate&ndash;object statements or a
+directed graph with labeled edges, a number of supporting standards and tools that have grown up around it to provide
+powerful storage and access methods that are often easier to implement and use than those associated with relational
+databases and the document-based web.</p>
+
+<h2>Enter PubliSci</h2>
 
 <p>This summer I created a Ruby gem, <a href="http://github.com/sciruby/publisci">PubliSci</a>, to facilitate data publication and interaction using
 the <a href="https://en.wikipedia.org/wiki/Semantic_web">Semantic Web</a>. The format offers a unified way to share and combine
@@ -34,7 +55,7 @@ a Ruby interface for defining new ones. Since the relationship between external 
 sometimes up to interpretation, a domain-specific language is included to allow end users to resolve ambiguities and
 provide additional metadata.</p>
 
-<p>Along with the conversion tool, a standalone server is included in the gem that simplifies setting up and interacting
+<p>Along with the conversion tool, a standalone server is available as an extension to the gem that simplifies setting up and interacting
 with RDF data stores. The server allows import, export, querying, and management of external <a href="https://en.wikipedia.org/wiki/Triplestore">triplestores</a> such as
 <a href="http://4store.org/">4store</a>, and supports both cross-domain access and content negotiation so the gem can be accessed
 using Javascript or other applications.</p>
@@ -43,7 +64,7 @@ using Javascript or other applications.</p>
 which are typically subject&ndash;object&ndash;predicate relationships (e.g., <i>Bob knows Fred</i>).</p>
 
 
-<p>If you'd like to contribute, the <a href="https://github.com/wstrinz/publisci">source code is available on Github</a>, and <a href="http://gsocsemantic.wordpress.com/2013/08/05/bio-publisci/">a broad
+<p>If you'd like to contribute, the <a href="https://github.com/sciruby/publisci">source code is available on Github</a>, and <a href="http://gsocsemantic.wordpress.com/2013/08/05/bio-publisci/">a broad
 outline of the to do list can be had as well</a>.</p>
 
 <h2>Usage</h2>
@@ -104,7 +125,7 @@ PubliSci::Writers::ARFF.new.from_store(repo)
 <h2>Some places to look for RDF repositories</h2>
 
 <ul>
-<li>Social sciences and economics: <a href="http://wiki.planet-data.eu/web/Datasets">PlanetData wiki: Datasets</a></li>
+<li>Social sciences and economics: <a href="http://wiki.planet-data.eu/web/Datasets">PlanetData wiki: Datasets</a>, <a href="http://270a.info/">270a Linked Dataspaces</a></li>
 <li>Chemistry: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118380/">Resource description framework technologies in chemistry</a></li>
 <li>Molecular biology: <a href="http://www.ebi.ac.uk/rdf/">EMBL-EBI: Current RDF Resources</a>, <a href="http://bio2rdf.org/">Bio2RDF</a>,
 <a href="http://www.geneontology.org/GO.format.rdfxml.shtml">Gene Ontology</a></li>
