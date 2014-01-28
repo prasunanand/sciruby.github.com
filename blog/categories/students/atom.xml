@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Students | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/students/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2013-11-01T17:09:41-05:00</updated>
+  <updated>2014-01-28T15:03:52-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[How to use NMatrix's shortcuts]]></title>
     <link href="http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts/"/>
-    <updated>2012-12-07T12:30:00-06:00</updated>
+    <updated>2012-12-07T12:30:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts</id>
     <content type="html"><![CDATA[<p class="warning"><strong>Warning:</strong> This code predates v0.0.9 alpha, which is when the NMatrix constructor changed. Please check the <a href="https://github.com/SciRuby/nmatrix/wiki/Getting-started#shortcuts">NMatrix Getting Started guide</a> for the most recent information.</p>
 
@@ -158,7 +158,7 @@ vector.pretty_print
   <entry>
     <title type="html"><![CDATA[Spring 2013 SciRuby Fellows Selected]]></title>
     <link href="http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected/"/>
-    <updated>2012-11-28T13:46:00-06:00</updated>
+    <updated>2012-11-28T13:46:00-05:00</updated>
     <id>http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected</id>
     <content type="html"><![CDATA[<p>Last week we selected three excellent candidates for <a href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby fellowships</a>. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of an anonymous contributor. <!--more--></p>
 
@@ -177,7 +177,7 @@ vector.pretty_print
   <entry>
     <title type="html"><![CDATA[SciRuby Receives Ruby Association Grant; Fellowships Available]]></title>
     <link href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/"/>
-    <updated>2012-09-24T13:43:00-05:00</updated>
+    <updated>2012-09-24T13:43:00-04:00</updated>
     <id>http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available</id>
     <content type="html"><![CDATA[<p>We are incredibly pleased to announce that the Ruby Association has awarded us a <a href="http://www.ruby.or.jp/en/news/20120717.html">1,000,000 JPY grant</a>.</p>
 
@@ -248,7 +248,7 @@ calendar of the student's home institution.</li>
   <entry>
     <title type="html"><![CDATA[SciRuby Summer of Code Selection Announced]]></title>
     <link href="http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced/"/>
-    <updated>2012-05-23T18:08:00-05:00</updated>
+    <updated>2012-05-23T18:08:00-04:00</updated>
     <id>http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced</id>
     <content type="html"><![CDATA[<p>We were blown away by the quality of the application pool for our <a href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/">first ever SciRuby Summer of Code, sponsored by Brighter Planet</a>. We received eight exemplary applications for a single placement, and nearly every applicant showed up on at least
  one selection committee member's top-three list.<!--more--></p>
@@ -268,7 +268,7 @@ calendar of the student's home institution.</li>
   <entry>
     <title type="html"><![CDATA[Announcing SciRuby Summer Coding Fellowship]]></title>
     <link href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/"/>
-    <updated>2012-05-08T16:33:00-05:00</updated>
+    <updated>2012-05-08T16:33:00-04:00</updated>
     <id>http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code</id>
     <content type="html"><![CDATA[<p>We are immensely pleased to announce the first ever <strong>SciRuby Summer of Code, sponsored by <a href="http://brighterplanet.com/">Brighter Planet</a></strong>.</p>
 
