@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-01-28T15:08:35-05:00</updated>
+  <updated>2014-02-25T16:59:41-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -14,7 +14,39 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Some Words from GSoC 2013 Alumni]]></title>
+    <title type="html"><![CDATA[Ruby Science Foundation selected for GSoC 2014]]></title>
+    <link href="http://sciruby.com/blog/2014/02/24/gsoc-2014/"/>
+    <updated>2014-02-24T21:45:00-05:00</updated>
+    <id>http://sciruby.com/blog/2014/02/24/gsoc-2014</id>
+    <content type="html"><![CDATA[<p>We&#8217;re excited to announce that the Ruby Science Foundation has been selected as
+a mentoring organization for <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2014">Google Summer of Code 2014</a>!</p>
+
+<p>Last year
+was our first year as a mentoring organization, and we had a great group of
+students working with us on machine learning, timeseries statistics, the
+semantic web, and scientific plotting.</p>
+
+<p>This year we&#8217;ve got a super set of
+possible projects including more flexible matrix computations, automatic Ruby
+interface generation for scientific libraries, a dataframe library for
+structuring and manipulating datasets, interactive plotting, a scientific
+notebook, high-performance minimization and integration libraries, and a
+semantic web datastore backend for scientific computing.</p>
+
+<p>If you&#8217;re interested in applying as a student, learning more, or even
+contributing independent of GSoC, head over to our <a href="https://github.com/SciRuby/sciruby/wiki/Google-Summer-of-Code-2014-Ideas">GSoC 2014 ideas page</a>
+to see what projects we think are great.  Don&#8217;t hesitate to tell us if you&#8217;ve
+got an amazing idea for a different project, too! If you&#8217;re still left
+wondering where to start, check out the <a href="https://github.com/sciruby/nmatrix/issues">issue tracker for NMatrix</a>, the matrix computation
+library used as the basis for a number of our projects, and our top priority at
+the moment.</p>
+
+<p>Good luck to all the GSoC applicants out there, and happy coding!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Some words from GSoC 2013 alumni]]></title>
     <link href="http://sciruby.com/blog/2014/01/28/gsoc-alumni/"/>
     <updated>2014-01-28T16:07:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/01/28/gsoc-alumni</id>
@@ -1370,26 +1402,6 @@ to our Google Group, for example).</p></li>
 
 
 <p>Any more words of wisdom? Stick them in the comments.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[First Post!]]></title>
-    <link href="http://sciruby.com/blog/2011/08/15/first-post/"/>
-    <updated>2011-08-15T19:50:00-04:00</updated>
-    <id>http://sciruby.com/blog/2011/08/15/first-post</id>
-    <content type="html"><![CDATA[<p>I thought I&#8217;d start by introducing myself. I&#8217;m the project director for SciRuby, and I&#8217;m a molecular biology doctoral
- student at the University of Texas. I work in the <a href="http://marcottelab.org/">Marcotte Lab</a>, and actually occupy the
- former desk (and lab hostname) of John Prince, another of the SciRuby project leads. <!--more--></p>
-
-<p>In addition to working as a graduate student, I am a blogger and an offline political activist &#8211; specifically, a
- community organizer. While I have contributed code to SciRuby already, and plan to continue, my main role here derives
- from my community organizing experience: <strong>I want <em>you</em> to get involved.</strong></p>
-
-<p>In that vein, I have written <a href="http://sciruby.com/blog/2011/08/15/the-challenges-of-copyrights/">a fascinating (and humble) precautionary tale</a>.</p>
-
-<p>Oh, and if do you want to get involved, you can find us in #sciruby (Freenode.net), or you can come check out our
-<a href="http://groups.google.com/group/sciruby-dev">Google Group</a>.</p>
 ]]></content>
   </entry>
   
