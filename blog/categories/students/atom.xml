@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Students | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/students/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-02-25T16:59:41-05:00</updated>
+  <updated>2014-06-01T14:04:29-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Introducing the GSoC 2014 D3 Project]]></title>
+    <link href="http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project/"/>
+    <updated>2014-06-02T14:00:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project</id>
+    <content type="html"><![CDATA[<p>Hello. I am Naoki, one of four Google Summer of Code (GSoC) 2014
+students in SciRuby. Let me introduce my project. The goal of the GSoC
+2014 D3 Project is to create a new plotting library for
+SciRuby. <a href="http://d3js.org/">D3.js</a> is the most suitable JavaScript
+library to achieve this goal.</p>
+
+<p>There are several non-Ruby plotting software libraries in the wild,
+like ggplot, matplotlib, and ggplot2. Actually, SciRuby already has
+its own plotting libraries named
+<a href="https://github.com/SciRuby/plotrb">Plotrb</a> and
+<a href="https://github.com/SciRuby/rubyvis">Rubyvis</a>. The main feature of my
+project compared with those software packages is <em>interactivity</em>.
+Interactivity has various meanings here: interactivity when generating
+plots, interactivity when viewing them, and server&ndash;client
+interactivity. My project includes all of those.</p>
+
+<p>My project can be divided into two components, one JavaScript and the
+other Ruby. JavaScript serves as a back-end, and Ruby as a
+front-end. I'm currently working on the former part. Have a look at a
+few examples I've assembled:</p>
+
+<ul>
+<li><a href="http://bl.ocks.org/domitry/b8785f02f36deef567ce">Multiple panes</a></li>
+<li><a href="http://bl.ocks.org/domitry/2f53781449025f772676">Bar chart</a></li>
+<li><a href="http://bl.ocks.org/domitry/e9a914b78f3a576ed3bb">Line</a></li>
+<li><a href="http://bl.ocks.org/domitry/308e27d8d12c1374e61f">Scatter</a></li>
+<li><a href="http://bl.ocks.org/domitry/f215d5ff3bd3f5fec2ad">Another theme</a></li>
+</ul>
+
+
+<p>This project involves a number of challenges, but I believe it to be
+achievable during this Summer of Code. Thank you for reading!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to use NMatrix's shortcuts]]></title>
@@ -262,62 +302,6 @@ calendar of the student's home institution.</li>
 <p>The SciRuby Project is deeply grateful to <a href="http://brighterplanet.com">Brighter Planet</a> for its generous support of our
  relatively new project and this fellowship program. We also wish to thank the applicants, and encourage them to apply
  again next time.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Announcing SciRuby Summer Coding Fellowship]]></title>
-    <link href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/"/>
-    <updated>2012-05-08T16:33:00-04:00</updated>
-    <id>http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code</id>
-    <content type="html"><![CDATA[<p>We are immensely pleased to announce the first ever <strong>SciRuby Summer of Code, sponsored by <a href="http://brighterplanet.com/">Brighter Planet</a></strong>.</p>
-
-<p><img src="http://static.brighterplanet.com/assets/logos/flush-left/inline/green/rasterized/brighter_planet-140.png" alt="Brighter Planet logo" /></p>
-
-<p>The fellowship is intended for undergraduate and graduate science and engineering students interested in going into research.<!--more--></p>
-
-<p>Fellowship tenure is full-time, May 18th through August 18th (dates are flexible). The stipend is $1,500.</p>
-
-<h2>Eligibility and Criteria</h2>
-
-<ul>
-<li>Current enrollment in a graduate or undergraduate program, or completion of such a program within the previous twelve-month period.</li>
-<li>Good working knowledge of C and Ruby, version control (ideally git), and *nix (Linux, Unix, or Mac).</li>
-<li>Completion of an introductory course on algorithms and data structures.</li>
-<li>Demonstrated interest in science/engineering research.</li>
-<li>Initiative and good communication skills.</li>
-<li>Access to equipment (e.g., computer with some sort of *nix-like OS, or at least a terminal for ssh).</li>
-<li>Ideally, U.S. resident status.</li>
-</ul>
-
-
-<h2>To Apply</h2>
-
-<p>Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.</p>
-
-<p>Don't feel that you should limit yourself if you have important things to say; but don't feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.</p>
-
-<ol>
-<li><p><strong>Contact information.</strong> Please provide your email address, GitHub username, and <strong>approximate</strong> physical location.</p></li>
-<li><p>Why do you like Ruby?</p></li>
-<li><p>What do you like about science and why? What area do you like best?</p></li>
-<li><p>Describe your <strong>experience</strong> with the following: Ruby, C, other languages.</p></li>
-<li><p>Describe your <strong>educational background</strong> (school, degree plan, major, past degrees, research area).</p></li>
-<li><p>Are you a current or recently-graduated student?</p></li>
-<li><p>Please describe what you plan to work on for this project. (Check out the <a href="http://github.com/SciRuby/nmatrix/issues">NMatrix</a> and <a href="http://github.com/SciRuby/sciruby/issues">SciRuby</a> issue trackers for ideas.)</p></li>
-<li><p>What would be the outcome of your work over the summer?</p></li>
-<li><p>If selected, you will be making regular demonstrations of you work over the summer. What milestones do you envision for your project?</p></li>
-<li><p>What other projects and/or jobs are you working on this summer? How will you allocate and manage your time?</p></li>
-<li><p>How do you feel about <strong>chunky bacon</strong>?</p></li>
-<li><p>Is there anything else you think we should have asked but didn't?</p></li>
-</ol>
-
-
-<p>Email your answers to sciruby.project on gmail. <em>Please include a resume or curriculum vitae.</em></p>
-
-<h3>Application Deadline</h3>
-
-<p>Applications are now closed. We hope to offer the fellowship again next year.</p>
 ]]></content>
   </entry>
   
