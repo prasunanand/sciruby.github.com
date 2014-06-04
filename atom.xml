@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-01T14:04:24-04:00</updated>
+  <updated>2014-06-04T12:35:24-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Introducing the FFTW SciRuby GSoC project]]></title>
+    <link href="http://sciruby.com/blog/2014/06/04/introducing-the-fftw-sciruby-gsoc-project/"/>
+    <updated>2014-06-04T12:30:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/04/introducing-the-fftw-sciruby-gsoc-project</id>
+    <content type="html"><![CDATA[<p>My name is Magdalen Berns and I am a physics student with a technical
+background in live audio. I am particularly interested in using science
+and technology to improve access for all.</p>
+
+<p>This summer, I will be working on implementing the external library
+appropriately named &#8220;Fastest Fourier Transform in the West&#8221; version 3
+(FFTW3) C and Fortran API in Ruby for this year&#8217;s Google Summer of Code
+(GSoC).</p>
+
+<p>The primary aim of the project is to give SciRuby the capability to
+handle signal analysis, processing and synthesis by performing discrete
+fast Fourier transform operations on NMatrix objects.</p>
+
+<p>After some investigation during the preparation stages of GSoC, it was
+determined that implementing FFTW3 is more desirable than starting from
+scratch in pure Ruby because the FFTW3 API is already extensively used,
+developed, and optimised far beyond what would be achievable in just
+three months. So, putting FFTW3 in the driving seat allows the SciRuby
+project to take advantage of the good work of the FFTW3 developers by
+bringing it to Ruby.</p>
+
+<p>Putting NMatrix to the test with FFTW3 should give users the
+opportunity to test drive NMatrix &mdash; and SciRuby&#8217;s NMatrix developers a
+chance to root out bugs.</p>
+
+<p>Since a gem called ruby-fftw3 already existed to perform FFTW3 operations
+on NArray objects, I forked that repository as a starting point. <a href="https://github.com/thisMagpie/fftw">Things are progressing on my Github fork</a> right now.</p>
+
+<p>My mentor for this project is Colin Fuller who is an exceptionally
+talented programmer &mdash; and he really knows his git too. He has been a
+great help as I adapt to the learning curve of working in C and
+Ruby (languages which I am less familiar with than say, Java or
+JavaScript).</p>
+
+<p>As I work, I intend to share useful gems of information I gather. Those, in addition to my weekly project updates, will appear right here in this blog so others can hopefully benefit.</p>
+
+<p>I have already posted a few useful bits and bobs on
+<a href="http://thismagpie.com">thismagpie.com</a> which relate to my work so far.
+I hope to add those to the SciRuby blog, too, provided
+the readers are interested in that and time permits. Of course, readers here can feel free to have a browse
+of the keywords <a href="http://thismagpie.com/keyword/sciruby">sciruby</a>,
+<a href="http://thismagpie.com/keyword/ruby">ruby</a> and
+<a href="http://thismagpie.com/keyword/git">git</a> on there for the time being.
+I sometimes add posts, manuals and tutorials from external sites where I
+find useful ones on the web too, so watch out for these too.</p>
+
+<p>Please, feel free to watch or follow along as the project comes together
+and those inclined are welcome to share constructive comments and advice
+or raise bugs on the fftw3 issue tracker. Input about my work is very
+welcome as the project progresses. This gem is being written for the
+community, after all!</p>
+
+<p>You can find me on Twitter (Facebook) or GitHub under the username @thisMagpie.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introducing the GSoC 2014 D3 Project]]></title>
@@ -91,7 +152,7 @@ the moment.</p>
     <updated>2014-01-28T16:07:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/01/28/gsoc-alumni</id>
     <content type="html"><![CDATA[<p>In 2013, SciRuby was a mentoring organization for the Google Summer of Code. We
-asked our alumni students:</p>
+asked our alumni:</p>
 
 <p>1) How did you experience GSoC/SciRuby and what has it brought you?</p>
 
@@ -1367,28 +1428,6 @@ dense = n.cast(:dense, :int64)
 <h2>Installation</h2>
 
 <p>As always, if you want to install SciRuby, you should look at the <a href="http://sciruby.com/docs#installation">installation instructions</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Interview with the SciRuby Team]]></title>
-    <link href="http://sciruby.com/blog/2011/08/17/interview-with-the-sciruby-team/"/>
-    <updated>2011-08-17T21:59:00-04:00</updated>
-    <id>http://sciruby.com/blog/2011/08/17/interview-with-the-sciruby-team</id>
-    <content type="html"><![CDATA[<p>We just had an interview published today over at <a href="http://www.floss4science.com/interview-sciruby-team/">Floss for Science</a>,
- and we&#8217;re super excited because it&#8217;s our very first media coverage.<!--more--></p>
-
-<p>If you want to vote it up at <a href="http://www.reddit.com">reddit</a>, that would be outstanding &emdash; or share it however you
- like to share things. Here are the links:</p>
-
-<ul>
-<li><a href="http://www.reddit.com/r/programming/comments/jlh19/interview_sciruby_team/">/r/programming</a></li>
-<li><a href="http://www.reddit.com/r/ruby/comments/jlkur/interview_sciruby_team/">r/ruby</a></li>
-</ul>
-
-
-<p>Already we&#8217;ve had a bunch of new people joining us on IRC (#sciruby on Freenode) and in our
- <a href="http://groups.google.com/group/sciruby-dev">Google Group</a>. Thanks for all your support!</p>
 ]]></content>
   </entry>
   
