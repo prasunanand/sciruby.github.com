@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Students | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/students/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-04T12:35:33-04:00</updated>
+  <updated>2014-06-04T12:49:07-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction to the Minimization and Integration project]]></title>
+    <link href="http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project/"/>
+    <updated>2014-06-04T14:23:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project</id>
+    <content type="html"><![CDATA[<p class="note"><strong>Editor's Note:</strong> We have two students
+working on numerical minimization and integration this summer, Rajat and
+Lahiru. Lahiru will be writing a separate post about his work.</p>
+
+
+<h2>Introduction to the Minimization and Integration Project</h2>
+
+<p>Hi. My name is Rajat Kapoor and I have been selected to work with
+SciRuby for Google Summer of Code 2014.</p>
+
+<p><a href="https://github.com/SciRuby/minimization">Minimization</a> and
+<a href="https://github.com/SciRuby/integration">Integration</a> are two of the
+many available gems in the SciRuby suite. My project this year aims to
+improve these gems to replicate the functionality provided by GNU's
+GSL. I will be trying to implement all the minimization and
+integration algorithms present in GSL in pure Ruby, with improvements
+as needed, so that these functions are easily accesible to all Ruby
+users, while the users which have GSL already installed will have an
+advantage in terms of speedy computations.</p>
+
+<h2>What Minimization and Integration actually mean</h2>
+
+<p>Minimization refers to the process of finding out the minimum of a
+mathematical function whose values might depend on multiple
+variables. Unidimensional minimization restricts these problems to
+functions of one single variable. Integration is the same as the very
+widely used concept in calculus which basically boils down to finding
+the summation of the value of a function at small intervals, when the
+width of the intervals in infinitesimally small. I can bet that you
+knowingly or unknowingly use both these things on a daily basis.</p>
+
+<h2>The plan</h2>
+
+<p>The project can be broken into two major parts: Minimization and
+Integration, as these are two seperate gems.</p>
+
+<p>The Minimization gem can be broken in two parts: unidimensional (or
+univariate) and multidimensional (multivariate). With respect to
+coding, these two can again be broken down into sub-parts: pure Ruby
+implementations and GSL support. The Integration gem will include
+the pure Ruby implementations as well as GSL support. Along with this,
+some support for symbolic integration will be added for JRuby
+users by way of the JScience library.</p>
+
+<h2>Progress</h2>
+
+<p>The pure Ruby implementations of the unidimensional minimization part
+are almost finished. I am also working on the GSL support for the same
+along with it. I plan to finish up any unidimensional minimization
+work by the end of this week and start the work with multidimensional
+minimization methods.</p>
+
+<p>Keep watching this blog for more updates regarding my project.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introducing the FFTW SciRuby GSoC project]]></title>
@@ -272,77 +333,6 @@ vector.pretty_print
 <p>We also want to take a moment to thank <a href="http://www.symora.com">Symora Networks</a> for its assistance. Specifically, the size of the Ruby Association grant is such that the U.S. requires us to apply for tax status, a somewhat expensive process for an open source project. Symora is providing the bulk of the money required for that application. Thanks also go to our many individual donors, who are just as necessary to this process.</p>
 
 <p>And of course, none of this would be possible without the Ruby Association. They provided us not only with financial resources to grow our project, but also with an endorsement of our vision: Ruby needs scientific packages in order to grow as a language.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SciRuby Receives Ruby Association Grant; Fellowships Available]]></title>
-    <link href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/"/>
-    <updated>2012-09-24T13:43:00-04:00</updated>
-    <id>http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available</id>
-    <content type="html"><![CDATA[<p>We are incredibly pleased to announce that the Ruby Association has awarded us a <a href="http://www.ruby.or.jp/en/news/20120717.html">1,000,000 JPY grant</a>.</p>
-
-<p>When we applied, we proposed to build upon our <a href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/">successful SciRuby Summer of Code</a>,
-which we undertook with the support of <a href="http://brighterplanet.com">Brighter Planet</a>. We are pleased to announce applications
-for SciRuby fellowships.<!--more--></p>
-
-<h2>Funding Note</h2>
-
-<p>A million yen translates to around $12,000, which is nearly enough to hire two graduate or undergraduate students
-for an academic term. We would like to hire more than one; but for that, <a href="http://pledgie.com/campaigns/15783">we need your help</a>.</p>
-
-<h2>Fellowship Terms</h2>
-
-<ul>
-<li>We plan to provide each fellow with a monthly stipend competitive with her or his home institution (e.g., if research assistants
-in your graduate program typically receive $1,500 per month, your stipend with us would be $1,500 per month).</li>
-<li>Tenure will be one semester or one quarter (with an option to renew for a second quarter), depending upon the academic
-calendar of the student's home institution.</li>
-<li>Tenure must begin no later than January 2013.</li>
-<li>Fellows are expected to work full-time (forty hours per week) on some element of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>.</li>
-<li>The Ruby Association requires monthly progress reports for stipend payment.</li>
-<li>Fellows will be assigned mentors, but should expect to work relatively independently unless located near a SciRuby mentor.</li>
-</ul>
-
-
-<h2>Requirements</h2>
-
-<ul>
-<li>Fluency in C/C++, Ruby, and the English language.</li>
-<li>Comfort with git and Github.</li>
-<li>An understanding of GDB and Valgrind (or similar debugging tools) as well as RSpec.</li>
-<li>A course of study in the sciences or engineering at an accredited college or university.</li>
-</ul>
-
-
-<h2>To Apply</h2>
-
-<p>Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.</p>
-
-<p>Don't feel that you should limit yourself if you have important things to say; but don't feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.</p>
-
-<ol>
-<li><p><strong>Contact information.</strong> Please provide your email address, GitHub username, and <strong>approximate</strong> physical location.</p></li>
-<li><p>Why do you like Ruby?</p></li>
-<li><p>What do you like about science and why? What area do you like best?</p></li>
-<li><p>Describe your <strong>experience</strong> with the following: Ruby, C/C++, other languages.</p></li>
-<li><p>Describe your <strong>educational background</strong> (school, degree plan, major, past degrees, research area).</p></li>
-<li><p>Please describe what you plan to work on for this project. (Check out the <a href="http://github.com/SciRuby/nmatrix/issues">NMatrix issue tracker</a> for ideas.)</p></li>
-<li><p>What would be the outcome of your work?</p></li>
-<li><p>If selected, you will be providing monthly demonstrations of you work. What milestones do you envision for your project?</p></li>
-<li><p>Please provide contact information for your graduate program or someone who can offer stipend information.</p></li>
-<li><p>Please provide a link to your school's academic calendar.</p></li>
-<li><p>What other responsibilities do you have during your likely fellowship term? How will you allocate and manage your time?</p></li>
-<li><p>How do you feel about <strong>chunky bacon</strong>?</p></li>
-<li><p>Is there anything else you think we should have asked but didn't?</p></li>
-</ol>
-
-
-<p>Email your answers to sciruby.project on gmail. <em>Please include a resume or curriculum vitae.</em></p>
-
-<h3>Application Deadline</h3>
-
-<p>Applications are due by the 31st of October, 2012.</p>
 ]]></content>
   </entry>
   
