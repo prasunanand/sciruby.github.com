@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GSOC | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/gsoc/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-04T12:49:07-04:00</updated>
+  <updated>2014-06-19T16:47:34-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -14,7 +14,61 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Introduction to the Minimization and Integration project]]></title>
+    <title type="html"><![CDATA[Progress on Minimization methods]]></title>
+    <link href="http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/"/>
+    <updated>2014-06-19T01:00:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods</id>
+    <content type="html"><![CDATA[<h2>Current Progress on Minimization Gem</h2>
+
+<p>In the first half of the summer, I plan to introduce some new numerical minimization methods to SciRuby's Minimization gem. As per my proposal, I began by implementing the Powell's multidimensional minimization method. Powell's method has a better convergence in most cases than the Nelder&ndash;Mead algorithm, and is also a multidimensional minimization method which doesn't use any derivative of the function.</p>
+
+<p>I started by studying SciPy and Apache Commons library's Powell's optimizer. I decided to base my implementation on the method from the <a href="http://commons.apache.org/proper/commons-math/">Apache Commons Mathematics Library</a>. Powell's method requires a line minimum searching algorithm, for which I used Brent minimizer (already available in SciRuby).</p>
+
+<p>Having finished with Powell's method, I am now working on the Fletcher--Reeves minimization method &mdash; a gradient method which uses the first derivative of the integrating function.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction: Minimization and Integration (Lahiru)]]></title>
+    <link href="http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration/"/>
+    <updated>2014-06-18T16:45:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration</id>
+    <content type="html"><![CDATA[<p class="note"><strong>Editor's Note:</strong> We have two students
+working on numerical minimization and integration this summer, Rajat and
+Lahiru. Rajat's introductory post appeared two weeks ago.</p>
+
+
+<h2>Introduction </h2>
+
+<p>I'm Lahiru Lasandun and I'm an undergraduate of University of Moratuwa, Sri Lanka. I've been selected for
+Google Summer of Code 2014 for SciRuby's Minimization and Integration projects.</p>
+
+<p>I was working with SciRuby about a month before GSOC started and did some tests on how to enhance the performance of
+these numerical computations. My first idea was to use multi-threading. With the instuctions and guidance of mentors, I
+tested more methods such as Erlang multi-processing, the AKKA package of multi-threading, and finally OpenCL. The final
+decision was to use OpenCL to enhance computation power of these mathematical computations with the support of multi-cores
+and GPUs.</p>
+
+<h2>Minimization Gem</h2>
+
+<p>After GSOC started, I began working on SciRuby's Minimization gem. I proposed multidimensional minimization methods for the
+Minimization gem, which already had plenty of unidimensional minimization methods. I chose two non-gradient
+and two gradient minimization methods as well as simulated annealing.</p>
+
+<h2>Integration Gem</h2>
+
+<p>For Integration, I proposed to replicate some unidimensional integration methods from the GNU Scientific Library, GSL. Additionally, I proposed to add OpenCL support to enhance performance of integration methods.</p>
+
+<h2>Current Progress</h2>
+
+<p>Currently, I am working on Nelder&ndash;Mead multidimensional minimization
+method which is a non-gradient method, including working on the relevant
+test cases.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction to the Minimization and Integration project (Rajat)]]></title>
     <link href="http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project/"/>
     <updated>2014-06-04T14:23:00-04:00</updated>
     <id>http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project</id>
@@ -172,212 +226,6 @@ few examples I've assembled:</p>
 
 <p>This project involves a number of challenges, but I believe it to be
 achievable during this Summer of Code. Thank you for reading!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby Science Foundation selected for GSoC 2014]]></title>
-    <link href="http://sciruby.com/blog/2014/02/24/gsoc-2014/"/>
-    <updated>2014-02-24T21:45:00-05:00</updated>
-    <id>http://sciruby.com/blog/2014/02/24/gsoc-2014</id>
-    <content type="html"><![CDATA[<p>We're excited to announce that the Ruby Science Foundation has been selected as
-a mentoring organization for <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2014">Google Summer of Code 2014</a>!</p>
-
-<p>Last year
-was our first year as a mentoring organization, and we had a great group of
-students working with us on machine learning, timeseries statistics, the
-semantic web, and scientific plotting.</p>
-
-<p>This year we've got a super set of
-possible projects including more flexible matrix computations, automatic Ruby
-interface generation for scientific libraries, a dataframe library for
-structuring and manipulating datasets, interactive plotting, a scientific
-notebook, high-performance minimization and integration libraries, and a
-semantic web datastore backend for scientific computing.</p>
-
-<p>If you're interested in applying as a student, learning more, or even
-contributing independent of GSoC, head over to our <a href="https://github.com/SciRuby/sciruby/wiki/Google-Summer-of-Code-2014-Ideas">GSoC 2014 ideas page</a>
-to see what projects we think are great.  Don't hesitate to tell us if you've
-got an amazing idea for a different project, too! If you're still left
-wondering where to start, check out the <a href="https://github.com/sciruby/nmatrix/issues">issue tracker for NMatrix</a>, the matrix computation
-library used as the basis for a number of our projects, and our top priority at
-the moment.</p>
-
-<p>Good luck to all the GSoC applicants out there, and happy coding!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Some words from GSoC 2013 alumni]]></title>
-    <link href="http://sciruby.com/blog/2014/01/28/gsoc-alumni/"/>
-    <updated>2014-01-28T16:07:00-05:00</updated>
-    <id>http://sciruby.com/blog/2014/01/28/gsoc-alumni</id>
-    <content type="html"><![CDATA[<p>In 2013, SciRuby was a mentoring organization for the Google Summer of Code. We
-asked our alumni:</p>
-
-<p>1) How did you experience GSoC/SciRuby and what has it brought you?</p>
-
-<p>2) What advice would you give new applicants?</p>
-
-<p>Monica Dragan from Romania worked on <a href="https://github.com/monicadragan/GeneValidator">gene validation</a>, see also her
-<a href="http://gene-prediction.blogspot.nl/2013/08/start-using-our-gene-validation-tool.html">blog</a>. Actually, Monica
-was part of a different GSoC organisation,
-<a href="http://informatics.nescent.org/wiki/Phyloinformatics_Summer_of_Code_2013">PhyloSoC</a>,
-but also participated in our Ruby-centric meetings and code reviews. She shared
-her SciRuby GSoC experience:</p>
-
-<p class="note"><strong>Monica:</strong>
-During the GSoC period I developed a bioinformatics tool written in Ruby. First of all I learned a new programming
-language, as I had no experience with Ruby before. On this GSoC occasion I had the opportunity to get in touch with the
-community and I met people passionate about their work, with whom I continued
- the collaboration afterwards. But what I really gained from this experience is that I increased my enthusiasm about
- bioinformatics and I confirmed myself that this is the field I want to focus on in the next years.
-</p>
-
-
-<p>Alberto Arrigoni from Italy worked on <a href="http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/">data mining and machine learning algorithms for Ruby</a> and shared
-his GSoC experience:</p>
-
-<p class="note"><strong>Alberto:</strong>
-As a PhD student in the field of bioinformatics, my GSOC experience was very exciting and useful at different levels. On a training level, I had the
-unique chance to learn more in depth some topics of machine learning I had
-wanted to explore in the past, but never had quite the opportunity or the
-resources. On a more technical level, I appreciated the support of the GSOC
-mentors and the Sciruby community, which counts numerous experts and a very
-active mailing list.
-</p>
-
-
-<p>Ankur Goel from India worked on
-<a href="http://rubygems.org/gems/statsample-timeseries">statsample-timeseries</a> for Ruby.
-Ankur shared,</p>
-
-<p class="note"><strong>Ankur:</strong>
-It was the best learning experience. I learnt quite a lot of statistics while
-working on my TimeSeries extension; after GSoC, I picked up Machine Learning
-course and I was able to relate it to very easily after working on regression
-techniques in GLM extension. I can't thank enough for the opportunity provided
-and the trust endowed by my mentor on me. Learning to write quality code and
-getting reviews was a cherry on cake! 
-</p>
-
-
-<p>Will Strinz from Madison, USA, worked on <a href="http://localhost:4000/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/">RDF generators for Ruby</a> for the
-semantic web:</p>
-
-<p class="note"><strong>Will:</strong>
-GSoC 2013 was a new experience for me in terms of managing my own time,
-planning my own project, and keeping up consistent interaction with my mentors
-across time zones. Despite a decent amount of prior experience with Ruby, it
-was also a challenge and an opportunity for me to really understand the tools
-and practices I knew, and learn to use the ones I wasn't familiar with.
-
-As for what it's brought me, aside from a job I secured partly through skills
-and project portfolio I gained during GSoC, and the power of knowing how to do
-just about any programming task using Ruby, I learned a lot about how to manage
-a project and interact with people in the real world.
-
-Communicating properly and in a timely manner over email and other asynchronous
-services is absolutely critical to the work I do now, and a lot harder than
-people make it out to be. Staying in touch with my mentors and making sure we
-were all on the same page about my project was something I spent a lot of time
-on, and in doing so I gained a lot of comfort with the process.
-
-Additionally, GSoC was my first true experience designing a large piece of
-software, where I couldn't just give up and trash it when the code started
-getting messy or confusing. It really forced me to adopt good practices around
-testing and organization, especially since I had better programmers than myself
-looking over my work.
-
-Software architecture is something you just don't learn in college level CS
-courses, and by the time I'd graduated, I'd started hearing a lot of my CS
-professors saying this too. Some day in the future, maybe soon, there will be
-classes taught about just this subject, but for now there's no better way to
-learn about it than by working on a real project, with some accountability and
-motivation to actually get it done.
-
-
-</p>
-
-
-<p>Our alumni give new GSoC applicants the following advice:</p>
-
-<p class="note"><strong>Monica:</strong>
-GSoC is a great experience that you should try as a student! What is cool about GSoC is that you work on the project you are keen on and manage your time as
- you wish. Also, working remotely involves additional challenges. In the end you improve your experience and get to know a lot of new and great people.
-
-</p>
-
-
-
-
-<p class="note"><strong>Alberto:</strong>
-
-I think one of the best features offered by the GSOC is the possibility to
-collaborate with (and learn from) people who share the same scientific
-interests and have very different backgrounds and skills. Though this may be
-somewhat 'expected' for mentors, I was also lucky to find other GSOC students
-willing to bond and share experiences and opinions. My advice is to be
-cooperative and try to learn as much as possible from/with them!  
-
-</p>
-
-
-
-
-<p class="note"><strong>Ankur:</strong>
-Work really hard. Do your homework before you ask questions or before quoting
-anything in proposal. Writing a good proposal is necessary, and you must really
-be aware of what you are writing - a good research is necessary. SciRuby
-community members are readily available to help you at mailing list and #sciruby channel. A thorough discussion with the mentor will help you out.
-</p>
-
-
-
-
-<p class="note"><strong>Will:</strong>
-To new applicants this year I'd stress one thing above all else; get in
-touch with people on the sciruby mailing list. Introduce yourself as soon as
-possible, and start discussing your project ideas when you have something in
-mind. People on the mailing list are very friendly and helpful, so don't be
-afraid to start a conversation, but also expect constructive criticism of your
-proposals.
-
-Answering any questions or concerns promptly and thoroughly not only shows that
-your know your stuff and are passionate about your project, it also shows that
-you are a good fit for GSoC in general. Don't assume you're in just because
-you've had a good dialogue, but plan and communicate as though you are; don't
-wait for the project to start to fill in details or contact your prospective
-mentors personally.
-
-Once you've submitted a proposal, all of this goes double. The closer you get
-to the deadline, the less time there will be to polish your application and
-respond to questions, so make sure you're doing it quickly and effectively.
-</p>
-
-
-<p>Our SciRuby GSoC alumni added:</p>
-
-<p class="note"><strong>Monica:</strong>
-If I don't join this year, I wish you good luck with the new students!
-</p>
-
-
-
-
-<p class="note"><strong>Ankur:</strong>
-I will be happy to sign up again as student, this year!
-</p>
-
-
-
-
-<p class="note"><strong>Will:</strong>
-I know I've said this already, but GSoC last year was a defining moment in my
-path to becoming a software developer, career-wise sure, but more importantly
-in the coder vs hacker vs computer scientist vs software developer sense. If
-there's anything I can do to get involved this year, I'll be available.<p>
-
 ]]></content>
   </entry>
   

@@ -108,15 +108,23 @@
         <loc>
             http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project/
         </loc>
-        <lastmod>2014-06-04T12:48:41-04:00</lastmod>
+        <lastmod>2014-06-19T16:45:49-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration/</loc>
+        <lastmod>2014-06-19T16:46:31-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/</loc>
+        <lastmod>2014-06-19T16:44:12-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/archives/</loc>
-        <lastmod>2014-06-04T12:48:41-04:00</lastmod>
+        <lastmod>2014-06-19T16:46:31-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/</loc>
-        <lastmod>2014-06-04T12:48:41-04:00</lastmod>
+        <lastmod>2014-06-19T16:46:31-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/docs/</loc>
@@ -124,7 +132,7 @@
     </url>
     <url>
         <loc>http://sciruby.com/</loc>
-        <lastmod>2014-06-04T12:48:41-04:00</lastmod>
+        <lastmod>2014-06-19T16:46:31-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/nmatrix/</loc>

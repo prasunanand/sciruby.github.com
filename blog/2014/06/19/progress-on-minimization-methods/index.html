@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Minimization - SciRuby</title>
+  <title>Progress on Minimization methods - SciRuby</title>
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Category: Minimization">
+  <meta name="description" content="Current Progress on Minimization Gem In the first half of the summer, I plan to introduce some new numerical minimization methods to SciRuby&#8217;s &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sciruby.comblog/categories/minimization/">
+  <link rel="canonical" href="http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -80,64 +80,104 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Minimization</h1>
+    
+      <h1 class="entry-title">Progress on Minimization Methods</h1>
+    
+    
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard"><span class="fn">Lahiru Lasandun</span></span>
+ &bull; 
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-19T01:00:00-04:00" pubdate data-updated="true">Jun 19<span>th</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><h2>Current Progress on Minimization Gem</h2>
 
-  
-  <h2>2014</h2>
+<p>In the first half of the summer, I plan to introduce some new numerical minimization methods to SciRuby&#8217;s Minimization gem. As per my proposal, I began by implementing the Powell&#8217;s multidimensional minimization method. Powell&#8217;s method has a better convergence in most cases than the Nelder&ndash;Mead algorithm, and is also a multidimensional minimization method which doesn&#8217;t use any derivative of the function.</p>
 
-<article>
-  
-<h1><a href="/blog/2014/06/19/progress-on-minimization-methods/">Progress on Minimization methods</a></h1>
-<time datetime="2014-06-19T01:00:00-04:00" pubdate><span class='month'>Jun</span> <span class='day'>19</span> <span class='year'>2014</span></time>
+<p>I started by studying SciPy and Apache Commons library&#8217;s Powell&#8217;s optimizer. I decided to base my implementation on the method from the <a href="http://commons.apache.org/proper/commons-math/">Apache Commons Mathematics Library</a>. Powell&#8217;s method requires a line minimum searching algorithm, for which I used Brent minimizer (already available in SciRuby).</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2014/'>GSOC2014</a>, <a class='category' href='/blog/categories/minimization/'>Minimization</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2014/06/18/introduction-minimization-and-integration/">Introduction: Minimization and Integration (Lahiru)</a></h1>
-<time datetime="2014-06-18T16:45:00-04:00" pubdate><span class='month'>Jun</span> <span class='day'>18</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2014/'>GSOC2014</a>, <a class='category' href='/blog/categories/integration/'>Integration</a>, <a class='category' href='/blog/categories/minimization/'>Minimization</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2014/06/04/introduction-to-the-minimization-and-integration-project/">Introduction to the Minimization and Integration project (Rajat)</a></h1>
-<time datetime="2014-06-04T14:23:00-04:00" pubdate><span class='month'>Jun</span> <span class='day'>04</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/gsl/'>GSL</a>, <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2014/'>GSOC2014</a>, <a class='category' href='/blog/categories/integration/'>Integration</a>, <a class='category' href='/blog/categories/minimization/'>Minimization</a>, <a class='category' href='/blog/categories/students/'>Students</a></span>
-</footer>
-
-
-</article>
-
+<p>Having finished with Powell&#8217;s method, I am now working on the Fletcher&#8211;Reeves minimization method &mdash; a gradient method which uses the first derivative of the integrating function.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Lahiru Lasandun</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-19T01:00:00-04:00" pubdate data-updated="true">Jun 19<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2014/'>GSOC2014</a>, <a class='category' href='/blog/categories/minimization/'>Minimization</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/" data-via="sciruby" data-counturl="http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/06/18/introduction-minimization-and-integration/" title="Previous Post: Introduction: Minimization and Integration (Lahiru)">&laquo; Introduction: Minimization and Integration (Lahiru)</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -242,7 +282,10 @@
       var disqus_shortname = 'sciruby';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/';
+        var disqus_url = 'http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
