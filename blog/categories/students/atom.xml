@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Students | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/students/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-19T16:47:34-04:00</updated>
+  <updated>2014-06-24T15:35:07-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,103 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Updates: Minimization and Integration]]></title>
+    <link href="http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/"/>
+    <updated>2014-06-24T14:32:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration</id>
+    <content type="html"><![CDATA[<h2>Minimization</h2>
+
+<p>The Minimization gem now supports the following unidimensional function minimizations
+provided by GSL. The supported methods include the pure Ruby implementations of:
+1. Newton&ndash;Raphson method
+2. golden section
+3. Brent
+4. quad golden</p>
+
+<p>Of these, the golden section, Brent, and quad golden are also
+available via Minimization's GSL interface (and are thus
+faster). Everything is organized in such a way that the faster C code
+(i.e., GSL) will be executed when GSL is available, but that otherwise
+the Ruby implementation will be used. I still have to beautify the
+code and add documentation.</p>
+
+<h2>Integration</h2>
+
+<p>The Integration gem has been transitioned from Hoe to Bundler. For
+Gauss&ndash;Kronrod quadrature, I have hard-coded the values of nodes
+and weights (for 15, 21, 31, 41, and 61 points) --- which were already
+hardcoded in the case of the Gauss quadrature.</p>
+
+<p>Additionally, I added basic methods like Simpson's three-eighths
+method, Milne's method, Boole's quadrature and open trapeziod.</p>
+
+<p>This week, I will be reviewing a <a href="https://github.com/clbustos/integration/pull/3">pull
+request</a> which aims to
+change the structure of the whole Integration gem.</p>
+
+<p>After that I plan to implement more adaptive methods and incorporate
+the non adaptive methods under a single, Newton&ndash;Cotes function.</p>
+
+<p>Lastly, I am brainstorming on designs for symbolic integration using
+JScience and JRuby.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Progress on Minimization methods]]></title>
+    <link href="http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/"/>
+    <updated>2014-06-19T01:00:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods</id>
+    <content type="html"><![CDATA[<h2>Current Progress on Minimization Gem</h2>
+
+<p>In the first half of the summer, I plan to introduce some new numerical minimization methods to SciRuby's Minimization gem. As per my proposal, I began by implementing the Powell's multidimensional minimization method. Powell's method has a better convergence in most cases than the Nelder&ndash;Mead algorithm, and is also a multidimensional minimization method which doesn't use any derivative of the function.</p>
+
+<p>I started by studying SciPy and Apache Commons library's Powell's optimizer. I decided to base my implementation on the method from the <a href="http://commons.apache.org/proper/commons-math/">Apache Commons Mathematics Library</a>. Powell's method requires a line minimum searching algorithm, for which I used Brent minimizer (already available in SciRuby).</p>
+
+<p>Having finished with Powell's method, I am now working on the Fletcher--Reeves minimization method &mdash; a gradient method which uses the first derivative of the integrating function.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Introduction: Minimization and Integration (Lahiru)]]></title>
+    <link href="http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration/"/>
+    <updated>2014-06-18T16:45:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration</id>
+    <content type="html"><![CDATA[<p class="note"><strong>Editor's Note:</strong> We have two students
+working on numerical minimization and integration this summer, Rajat and
+Lahiru. Rajat's introductory post appeared two weeks ago.</p>
+
+
+<h2>Introduction </h2>
+
+<p>I'm Lahiru Lasandun and I'm an undergraduate of University of Moratuwa, Sri Lanka. I've been selected for
+Google Summer of Code 2014 for SciRuby's Minimization and Integration projects.</p>
+
+<p>I was working with SciRuby about a month before GSOC started and did some tests on how to enhance the performance of
+these numerical computations. My first idea was to use multi-threading. With the instuctions and guidance of mentors, I
+tested more methods such as Erlang multi-processing, the AKKA package of multi-threading, and finally OpenCL. The final
+decision was to use OpenCL to enhance computation power of these mathematical computations with the support of multi-cores
+and GPUs.</p>
+
+<h2>Minimization Gem</h2>
+
+<p>After GSOC started, I began working on SciRuby's Minimization gem. I proposed multidimensional minimization methods for the
+Minimization gem, which already had plenty of unidimensional minimization methods. I chose two non-gradient
+and two gradient minimization methods as well as simulated annealing.</p>
+
+<h2>Integration Gem</h2>
+
+<p>For Integration, I proposed to replicate some unidimensional integration methods from the GNU Scientific Library, GSL. Additionally, I proposed to add OpenCL support to enhance performance of integration methods.</p>
+
+<h2>Current Progress</h2>
+
+<p>Currently, I am working on Nelder&ndash;Mead multidimensional minimization
+method which is a non-gradient method, including working on the relevant
+test cases.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introduction to the Minimization and Integration project (Rajat)]]></title>
@@ -132,207 +229,6 @@ welcome as the project progresses. This gem is being written for the
 community, after all!</p>
 
 <p>You can find me on Twitter (Facebook) or GitHub under the username @thisMagpie.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introducing the GSoC 2014 D3 Project]]></title>
-    <link href="http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project/"/>
-    <updated>2014-06-02T14:00:00-04:00</updated>
-    <id>http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project</id>
-    <content type="html"><![CDATA[<p>Hello. I am Naoki, one of four Google Summer of Code (GSoC) 2014
-students in SciRuby. Let me introduce my project. The goal of the GSoC
-2014 D3 Project is to create a new plotting library for
-SciRuby. <a href="http://d3js.org/">D3.js</a> is the most suitable JavaScript
-library to achieve this goal.</p>
-
-<p>There are several non-Ruby plotting software libraries in the wild,
-like ggplot, matplotlib, and ggplot2. Actually, SciRuby already has
-its own plotting libraries named
-<a href="https://github.com/SciRuby/plotrb">Plotrb</a> and
-<a href="https://github.com/SciRuby/rubyvis">Rubyvis</a>. The main feature of my
-project compared with those software packages is <em>interactivity</em>.
-Interactivity has various meanings here: interactivity when generating
-plots, interactivity when viewing them, and server&ndash;client
-interactivity. My project includes all of those.</p>
-
-<p>My project can be divided into two components, one JavaScript and the
-other Ruby. JavaScript serves as a back-end, and Ruby as a
-front-end. I'm currently working on the former part. Have a look at a
-few examples I've assembled:</p>
-
-<ul>
-<li><a href="http://bl.ocks.org/domitry/b8785f02f36deef567ce">Multiple panes</a></li>
-<li><a href="http://bl.ocks.org/domitry/2f53781449025f772676">Bar chart</a></li>
-<li><a href="http://bl.ocks.org/domitry/e9a914b78f3a576ed3bb">Line</a></li>
-<li><a href="http://bl.ocks.org/domitry/308e27d8d12c1374e61f">Scatter</a></li>
-<li><a href="http://bl.ocks.org/domitry/f215d5ff3bd3f5fec2ad">Another theme</a></li>
-</ul>
-
-
-<p>This project involves a number of challenges, but I believe it to be
-achievable during this Summer of Code. Thank you for reading!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to use NMatrix's shortcuts]]></title>
-    <link href="http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts/"/>
-    <updated>2012-12-07T12:30:00-05:00</updated>
-    <id>http://sciruby.com/blog/2012/12/07/how-to-use-nmatrix-shortcuts</id>
-    <content type="html"><![CDATA[<p class="warning"><strong>Warning:</strong> This code predates v0.0.9 alpha, which is when the NMatrix constructor changed. Please check the <a href="https://github.com/SciRuby/nmatrix/wiki/Getting-started#shortcuts">NMatrix Getting Started guide</a> for the most recent information.</p>
-
-
-<p>John Woods <a href="https://github.com/SciRuby/nmatrix/commit/2b480ce0985affc7218fc341fcb4e5024b30545b">merged my last pull request to NMatrix</a> recently and I wanted to write about why we created these shortcuts and what can be done with them. <!--more--></p>
-
-<h2>The need for shortcuts</h2>
-
-<p>The first iteration of NMatrix shortcuts was written by <a href="https://github.com/dcarrera">Daniel Carrera</a> and sent to the mailing list, where I started working with them. Some discussions, decisions and two pull requests later, we have a working set of methods to create common matrices (<code>zeros</code>, <code>ones</code>, <code>random</code>, etc) and do some cool stuff (<code>column</code> and <code>linspace</code>) very easily.</p>
-
-<p>There are at least two good reasons to have these shortcuts: MATLAB users are going to feel at home, and the shortcuts allow us to prototype and experiment more rapidly. For example, it's dead simple to create an identify matrix when you need one:</p>
-
-<pre><code>&gt;&gt; require 'nmatrix'
-
-&gt;&gt; matrix = NMatrix.identity(3) # 3x3
-=&gt; #&lt;NMatrix:0x007faa5b8cda40shape:[3,3] dtype:float64 stype:dense&gt; 
-&gt;&gt; matrix.pp
-
-# [1.0, 0.0, 0.0]
-# [0.0, 1.0, 0.0]
-# [0.0, 0.0, 1.0]
-</code></pre>
-
-<p>And a random matrix to test some operation:</p>
-
-<pre><code>&gt;&gt; rand_matrix = NMatrix.random(4) # 4x4
-=&gt; #&lt;NMatrix:0x007faa5b01cdd8shape:[4,4] dtype:float64 stype:dense&gt;
-&gt;&gt; rand_matrix.pp
-
-# [0.5933103148378577, 0.8556103970281977, 0.7176768395610358, 0.07160353964395305]
-# [0.8566365570076784, 0.33925854948960343, 0.5994298479703805, 0.6906794137948586]
-# [0.5684593743073485, 0.10273166792035393, 0.46187577773882293, 0.586085963973687]
-# [0.8944982538369494, 0.9896291945923837, 0.8787034784673503, 0.5933103148378577]
-</code></pre>
-
-<h2>Shortcuts available</h2>
-
-<p>The following list is taken from <a href="https://github.com/SciRuby/nmatrix/wiki/NMatrix">NMatrix's wiki</a>. All are class methods on <code>NMatrix</code>.</p>
-
-<pre><code>ones(3,3)                    # A 3x3 matrix of ones.
-zeros(4,4) or zeroes(4,4)    # Creates a matrix of zeros with dimensions as parameters.
-identity(5,5) or eye(5,5)    # A 5x5 identity matrix. Only works with NMatrix.
-seq(8)                       # An 8-vector with a sequence of values from 0 to 7.
-random(6,6)                  # A 6x6 matrix of random values between 0 and 1.
-
-column(2)                    # Return the 2nd column of the original matrix. Only works with NMatrix.
-
-indgen(8)                    # To make IDL users happy. Same as `seq(8, :int32)`.
-findgen(8)                   # Same as `seq(8, :float32)`.
-bindgen(8)                   # Same as `seq(8, :byte)`.
-cindgen(8)                   # Same as `seq(8, :complex64)`.
-
-linspace(0, pi, 100)         # A vector of 100 values from 0 to pi, inclusive. Only works with NVector.
-</code></pre>
-
-<p>The method names are mostly from MATLAB. In the future, when more functionality is added, we'll try to create a more "Ruby-like" feel to the API. But as these shortcuts do very primitive tasks, there isn't any obvious room for improvement. (Feel free to prove us wrong, however!)</p>
-
-<p>I'll create a separate wiki page for the shortcuts to be able to organize and put more information about how to use them. But I want to create a better RDoc documentation for NMatrix — so the full API will probably be referenced there. I'll write a new blog post here when something along these lines is done.</p>
-
-<h2>Examples</h2>
-
-<p>First, let's try normalizing the columns of an NMatrix.</p>
-
-<pre><code>require 'nmatrix'
-
-m = NMatrix.seq(3, :float32)
-m.pp
-
-# [0.0, 1.0, 2.0]
-# [3.0, 4.0, 5.0]
-# [6.0, 7.0, 8.0]
-
-(0 .. m.shape[1] - 1).each do |j|
-  col = m.column(j)
-    norm = Math.sqrt(col.transpose.dot(col)[0, 0])
-    (0 .. m.shape[0] - 1).each { |i| m[i,j] /= norm }
-end
-
-m.pp
-
-# [0.0, 0.12309148907661438, 0.20739033818244934]
-# [0.4472135901451111, 0.4923659563064575, 0.5184758305549622]
-# [0.8944271802902222, 0.861640453338623, 0.8295613527297974]
-
-(0 .. m.shape[1] - 1).each do |j|
-  col = m.column(j)
-  puts Math.sqrt(col.transpose.dot(col)[0,0])
-end
-
-# 0.9999999701976772
-# 1.0
-# 1.0
-</code></pre>
-
-<p>Unfortunately, slice by reference isn't working on <code>HEAD</code>, or we could make a few additional improvements (see issue <a href="https://github.com/SciRuby/nmatrix/issues/51">#51</a>).</p>
-
-<p>The other thing that I've wanted to do is to use <code>linspace</code> to generate points for plotting sines, cosines, etc. Here is an example:</p>
-
-<pre><code>require 'nmatrix'
-
-vector = NVector.linspace(0, Math::PI, 10)
-vector.pretty_print
-
-# 0.0
-# 0.3490658503988659
-# 0.6981317007977318
-# 1.0471975511965976
-# 1.3962634015954636
-# 1.7453292519943295
-# 2.0943951023931953
-# 2.443460952792061
-# 2.792526803190927
-# 3.141592653589793
-
-10.times do |i|
-  vector[k, 0] = Math::sin(vector[k, 0])
-end
-
-vector.pretty_print
-
-# 0.0
-# 0.3420201433256687
-# 0.6427876096865393
-# 0.8660254037844386
-# 0.984807753012208
-# 0.984807753012208
-# 0.8660254037844388
-# 0.6427876096865395
-# 0.3420201433256689
-# 1.2246467991473532e-16
-</code></pre>
-
-<p>These results show a happy result, in that we are able to use NMatrix for simple tasks already. Of course, there are problems to be solved, e.g. slice by reference, inversion for all dtypes, eigenvalues. But it's going somewhere, it's growing.</p>
-
-<p>I hope that by this time next year we'll have a very mature linear algebra library (and much more).</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Spring 2013 SciRuby Fellows Selected]]></title>
-    <link href="http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected/"/>
-    <updated>2012-11-28T13:46:00-05:00</updated>
-    <id>http://sciruby.com/blog/2012/11/28/spring-2013-sciruby-fellows-selected</id>
-    <content type="html"><![CDATA[<p>Last week we selected three excellent candidates for <a href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby fellowships</a>. We were incredibly pleased to be able to offer so many fellowships, made possible in part by the generosity of an anonymous contributor. <!--more--></p>
-
-<p><a href="http://github.com/agarie">Carlos Agarie</a> will be working half-time starting immediately on providing certain critical functionality to NMatrix and on improving our documentation. Specifically, matrix inversions and determinant calculations both depend upon BLAS, and in some cases CLAPACK. However, the CLAPACK interface is unavailable to most Mac users; and neither BLAS nor LAPACK provides rational support, which is on the NMatrix roadmap. Carlos is a Brazilian exchange student at Embry-Riddle Aeronautical University in Arizona.</p>
-
-<p><a href="http://github.com/masaomi">Masaomi "Masa" Hatakeyama</a> is a post-doctoral researcher at the University of Zurich. He is devoting ten hours per week initially to adding NMatrix support to Ruby/GSL, while also improving the NMatrix unit tests. His work is critical to interoperability between NMatrix and the other SciRuby projects.</p>
-
-<p>Finally, <a href="http://github.com/ryanmt">Ryan Taylor</a> is a biochemistry doctoral candidate at Brigham Young University in the United States. Ryan will be working full-time starting in January on NMatrix, and plans to contribute functionality essential to any matrix library---such as factorizations and decompositions; computations of trace, exponentials, square roots, norms, and tensors; basic statistics; transforms; and solvers.</p>
-
-<p>We also want to take a moment to thank <a href="http://www.symora.com">Symora Networks</a> for its assistance. Specifically, the size of the Ruby Association grant is such that the U.S. requires us to apply for tax status, a somewhat expensive process for an open source project. Symora is providing the bulk of the money required for that application. Thanks also go to our many individual donors, who are just as necessary to this process.</p>
-
-<p>And of course, none of this would be possible without the Ruby Association. They provided us not only with financial resources to grow our project, but also with an endorsement of our vision: Ruby needs scientific packages in order to grow as a language.</p>
 ]]></content>
   </entry>
   

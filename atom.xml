@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-19T16:47:29-04:00</updated>
+  <updated>2014-06-24T15:35:07-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Updates: Minimization and Integration]]></title>
+    <link href="http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/"/>
+    <updated>2014-06-24T14:32:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration</id>
+    <content type="html"><![CDATA[<h2>Minimization</h2>
+
+<p>The Minimization gem now supports the following unidimensional function minimizations
+provided by GSL. The supported methods include the pure Ruby implementations of:
+1. Newton&ndash;Raphson method
+2. golden section
+3. Brent
+4. quad golden</p>
+
+<p>Of these, the golden section, Brent, and quad golden are also
+available via Minimization&#8217;s GSL interface (and are thus
+faster). Everything is organized in such a way that the faster C code
+(i.e., GSL) will be executed when GSL is available, but that otherwise
+the Ruby implementation will be used. I still have to beautify the
+code and add documentation.</p>
+
+<h2>Integration</h2>
+
+<p>The Integration gem has been transitioned from Hoe to Bundler. For
+Gauss&ndash;Kronrod quadrature, I have hard-coded the values of nodes
+and weights (for 15, 21, 31, 41, and 61 points) &#8212; which were already
+hardcoded in the case of the Gauss quadrature.</p>
+
+<p>Additionally, I added basic methods like Simpson&#8217;s three-eighths
+method, Milne&#8217;s method, Boole&#8217;s quadrature and open trapeziod.</p>
+
+<p>This week, I will be reviewing a <a href="https://github.com/clbustos/integration/pull/3">pull
+request</a> which aims to
+change the structure of the whole Integration gem.</p>
+
+<p>After that I plan to implement more adaptive methods and incorporate
+the non adaptive methods under a single, Newton&ndash;Cotes function.</p>
+
+<p>Lastly, I am brainstorming on designs for symbolic integration using
+JScience and JRuby.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Progress on Minimization methods]]></title>
@@ -1282,62 +1325,6 @@ Little of this would be possible without them.</p>
 <p>The SciRuby Project is deeply grateful to <a href="http://brighterplanet.com">Brighter Planet</a> for its generous support of our
  relatively new project and this fellowship program. We also wish to thank the applicants, and encourage them to apply
  again next time.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Announcing SciRuby Summer Coding Fellowship]]></title>
-    <link href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/"/>
-    <updated>2012-05-08T16:33:00-04:00</updated>
-    <id>http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code</id>
-    <content type="html"><![CDATA[<p>We are immensely pleased to announce the first ever <strong>SciRuby Summer of Code, sponsored by <a href="http://brighterplanet.com/">Brighter Planet</a></strong>.</p>
-
-<p><img src="http://static.brighterplanet.com/assets/logos/flush-left/inline/green/rasterized/brighter_planet-140.png" alt="Brighter Planet logo" /></p>
-
-<p>The fellowship is intended for undergraduate and graduate science and engineering students interested in going into research.<!--more--></p>
-
-<p>Fellowship tenure is full-time, May 18th through August 18th (dates are flexible). The stipend is $1,500.</p>
-
-<h2>Eligibility and Criteria</h2>
-
-<ul>
-<li>Current enrollment in a graduate or undergraduate program, or completion of such a program within the previous twelve-month period.</li>
-<li>Good working knowledge of C and Ruby, version control (ideally git), and *nix (Linux, Unix, or Mac).</li>
-<li>Completion of an introductory course on algorithms and data structures.</li>
-<li>Demonstrated interest in science/engineering research.</li>
-<li>Initiative and good communication skills.</li>
-<li>Access to equipment (e.g., computer with some sort of *nix-like OS, or at least a terminal for ssh).</li>
-<li>Ideally, U.S. resident status.</li>
-</ul>
-
-
-<h2>To Apply</h2>
-
-<p>Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.</p>
-
-<p>Don&#8217;t feel that you should limit yourself if you have important things to say; but don&#8217;t feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.</p>
-
-<ol>
-<li><p><strong>Contact information.</strong> Please provide your email address, GitHub username, and <strong>approximate</strong> physical location.</p></li>
-<li><p>Why do you like Ruby?</p></li>
-<li><p>What do you like about science and why? What area do you like best?</p></li>
-<li><p>Describe your <strong>experience</strong> with the following: Ruby, C, other languages.</p></li>
-<li><p>Describe your <strong>educational background</strong> (school, degree plan, major, past degrees, research area).</p></li>
-<li><p>Are you a current or recently-graduated student?</p></li>
-<li><p>Please describe what you plan to work on for this project. (Check out the <a href="http://github.com/SciRuby/nmatrix/issues">NMatrix</a> and <a href="http://github.com/SciRuby/sciruby/issues">SciRuby</a> issue trackers for ideas.)</p></li>
-<li><p>What would be the outcome of your work over the summer?</p></li>
-<li><p>If selected, you will be making regular demonstrations of you work over the summer. What milestones do you envision for your project?</p></li>
-<li><p>What other projects and/or jobs are you working on this summer? How will you allocate and manage your time?</p></li>
-<li><p>How do you feel about <strong>chunky bacon</strong>?</p></li>
-<li><p>Is there anything else you think we should have asked but didn&#8217;t?</p></li>
-</ol>
-
-
-<p>Email your answers to sciruby.project on gmail. <em>Please include a resume or curriculum vitae.</em></p>
-
-<h3>Application Deadline</h3>
-
-<p>Applications are now closed. We hope to offer the fellowship again next year.</p>
 ]]></content>
   </entry>
   

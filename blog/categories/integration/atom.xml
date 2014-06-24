@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Integration | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/integration/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-19T16:47:34-04:00</updated>
+  <updated>2014-06-24T15:35:07-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Updates: Minimization and Integration]]></title>
+    <link href="http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/"/>
+    <updated>2014-06-24T14:32:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration</id>
+    <content type="html"><![CDATA[<h2>Minimization</h2>
+
+<p>The Minimization gem now supports the following unidimensional function minimizations
+provided by GSL. The supported methods include the pure Ruby implementations of:
+1. Newton&ndash;Raphson method
+2. golden section
+3. Brent
+4. quad golden</p>
+
+<p>Of these, the golden section, Brent, and quad golden are also
+available via Minimization's GSL interface (and are thus
+faster). Everything is organized in such a way that the faster C code
+(i.e., GSL) will be executed when GSL is available, but that otherwise
+the Ruby implementation will be used. I still have to beautify the
+code and add documentation.</p>
+
+<h2>Integration</h2>
+
+<p>The Integration gem has been transitioned from Hoe to Bundler. For
+Gauss&ndash;Kronrod quadrature, I have hard-coded the values of nodes
+and weights (for 15, 21, 31, 41, and 61 points) --- which were already
+hardcoded in the case of the Gauss quadrature.</p>
+
+<p>Additionally, I added basic methods like Simpson's three-eighths
+method, Milne's method, Boole's quadrature and open trapeziod.</p>
+
+<p>This week, I will be reviewing a <a href="https://github.com/clbustos/integration/pull/3">pull
+request</a> which aims to
+change the structure of the whole Integration gem.</p>
+
+<p>After that I plan to implement more adaptive methods and incorporate
+the non adaptive methods under a single, Newton&ndash;Cotes function.</p>
+
+<p>Lastly, I am brainstorming on designs for symbolic integration using
+JScience and JRuby.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introduction: Minimization and Integration (Lahiru)]]></title>
