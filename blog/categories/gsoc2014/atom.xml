@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GSOC2014 | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/gsoc2014/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-24T15:38:24-04:00</updated>
+  <updated>2014-06-24T15:40:06-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -51,7 +51,7 @@ Method, Milne's Method, Boole's Quadrature and Open Trapezoid.</p>
 <p>This week, I will be reviewing a <a href="https://github.com/clbustos/integration/pull/3">pull request</a> which aims to change the structure of the whole Integration gem.</p>
 
 <p>After that I plan to implement more adaptive methods and incorporate
-the non adaptive methods under a single Newton&ndash;Cotes function.</p>
+the non-adaptive methods under a single Newton&ndash;Cotes function.</p>
 
 <p>Lastly, I am brainstorming designs for symbolic integration using
 JScience and JRuby.</p>
