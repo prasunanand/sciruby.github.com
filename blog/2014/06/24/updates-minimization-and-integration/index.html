@@ -116,13 +116,17 @@ provided by GSL. The supported methods include the &hellip;">
 <div class="entry-content"><h2>Minimization</h2>
 
 <p>The Minimization gem now supports the following unidimensional function minimizations
-provided by GSL. The supported methods include the pure Ruby implementations of:
-1. Newton&ndash;Raphson method
-2. golden section
-3. Brent
-4. quad golden</p>
+provided by GSL. The supported methods include the pure Ruby implementations of:</p>
 
-<p>Of these, the golden section, Brent, and quad golden are also
+<ol>
+<li>Newton&ndash;Raphson</li>
+<li>Golden Section</li>
+<li>Brent</li>
+<li>Quad Golden</li>
+</ol>
+
+
+<p>Of these, the Golden Section, Brent, and Quad Golden are also
 available via Minimization&#8217;s GSL interface (and are thus
 faster). Everything is organized in such a way that the faster C code
 (i.e., GSL) will be executed when GSL is available, but that otherwise
@@ -132,21 +136,19 @@ code and add documentation.</p>
 <h2>Integration</h2>
 
 <p>The Integration gem has been transitioned from Hoe to Bundler. For
-Gauss&ndash;Kronrod quadrature, I have hard-coded the values of nodes
+Gauss&ndash;Kronrod Quadrature, I have hard-coded the values of nodes
 and weights (for 15, 21, 31, 41, and 61 points) &#8212; which were already
 hardcoded in the case of the Gauss quadrature.</p>
 
-<p>Additionally, I added basic methods like Simpson&#8217;s three-eighths
-method, Milne&#8217;s method, Boole&#8217;s quadrature and open trapeziod.</p>
+<p>Additionally, I added basic methods like Simpson&#8217;s Three-Eighths
+Method, Milne&#8217;s Method, Boole&#8217;s Quadrature and Open Trapezoid.</p>
 
-<p>This week, I will be reviewing a <a href="https://github.com/clbustos/integration/pull/3">pull
-request</a> which aims to
-change the structure of the whole Integration gem.</p>
+<p>This week, I will be reviewing a <a href="https://github.com/clbustos/integration/pull/3">pull request</a> which aims to change the structure of the whole Integration gem.</p>
 
 <p>After that I plan to implement more adaptive methods and incorporate
-the non adaptive methods under a single, Newton&ndash;Cotes function.</p>
+the non adaptive methods under a single Newton&ndash;Cotes function.</p>
 
-<p>Lastly, I am brainstorming on designs for symbolic integration using
+<p>Lastly, I am brainstorming designs for symbolic integration using
 JScience and JRuby.</p>
 </div>
 
