@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-24T15:40:06-04:00</updated>
+  <updated>2014-07-02T17:11:43-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,82 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The progress of GSoC D3 Project]]></title>
+    <link href="http://sciruby.com/blog/2014/07/02/progress-of-d3-project/"/>
+    <updated>2014-07-02T17:09:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/07/02/progress-of-d3-project</id>
+    <content type="html"><![CDATA[<p>This week is the half-way point of this year&#8217;s Google Summer of Code. Let me report the progress during the term.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="alt text" /></p>
+
+<h2>Progress on the front-end library</h2>
+
+<p>I am developing <a href="https://github.com/domitry/Nyaplot">Nyaplot</a> as the front-end library for my work.</p>
+
+<p>One topic on Nyaplot is API design. That is a difficult problem since each plotting library has very different methods for creating plots. For example, matplotlib and Bokeh are both written in Python, but their demo code is written in very different styles. After discussing with my mentor, I decided to implement the function-based API.</p>
+
+<p>As an exmaple of that API, here is a minimal working example for generating bar charts with Nyaplot:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;nyaplot&#39;</span>
+</span><span class='line'><span class="n">plot</span> <span class="o">=</span> <span class="no">Nyaplot</span><span class="o">::</span><span class="no">Plot</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">plot</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="ss">:bar</span><span class="p">,</span> <span class="o">[</span><span class="s1">&#39;nya1&#39;</span><span class="p">,</span> <span class="s1">&#39;nya2&#39;</span><span class="p">,</span> <span class="s1">&#39;nya3&#39;</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">plot</span><span class="o">.</span><span class="n">show</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you want to change options (e.g., color or title), put the return value of Nyaplot::Plot.add into a variable and call its methods.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bar</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="ss">:bar</span><span class="p">,</span> <span class="o">[</span><span class="s1">&#39;nya1&#39;</span><span class="p">,</span> <span class="s1">&#39;nya2&#39;</span><span class="p">,</span> <span class="s1">&#39;nya3&#39;</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">bar</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;the number of cats&quot;</span><span class="p">)</span> <span class="c1"># name the bar chart</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>IRuby integration</h2>
+
+<p>Interaction with <a href="https://github.com/minad/iruby">IRuby</a> is a priority for Nyaplot. IRuby is a web-based Ruby lab notebook-like environment, based on IPython, which is also useful for fast prototyping.</p>
+
+<p>The image on top of this blog post is a hyperbolic spiral which I generated with Nyaplot in
+IRuby. <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">Have a look at the notebook</a> on nbviewer, an IRuby and IPython notebook hosting services.</p>
+
+<h2>Progress on the back-end library</h2>
+
+<p>Nyaplot uses <a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs</a> as its back-end library. I spent a lot of time to implement interactivity among multiple panes to Nyaplotjs. See <a href="http://www.domitry.com/gsoc/">an example</a>.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/top.png" alt="alt text" /></p>
+
+<p>The input data source is a TSV file of 2,044 lines. Multiple-pane interactivity is especially important when visualizing such a large dataset.</p>
+
+<p>Have a look at the radio buttons beside the Venn diagram. The left three panels decide which set to put into each of 3 circles (VENN1, VENN2, VENN3). The right panel decides which data in each area (overlapping area, non-overlapping area, and all) to use in the other two panes.</p>
+
+<p>The gray box on the histogram decides the range of PNR values. If you select the
+range 0.3 to 0.7 with it, the right bar chart will reflect that and show how many
+of the selected data are in that range.</p>
+
+<p>Nyaplotjs provides this interactivity using an event handler connected to a dataframe object. That
+allows us to handle unidirectional update method (e.g., histogram updates bar chart, but bar chart does not update histogram).</p>
+
+<h2>Conclusion</h2>
+
+<p>I finished the first half term of Google Summer of Code 2014, but I still have a lot of
+things to do. I would like to continue to add interactivity to both the front-end and back-end libraries.</p>
+
+<p>I am developing those two libraries in separate repositories on GitHub. If you are interested, feel free to raise issues or send pull-requests, even during the GSoC term.</p>
+
+<ul>
+<li><a href="https://github.com/domitry/Nyaplot">Nyaplot - GitHub</a></li>
+<li><a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs - GitHub</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Updates: Minimization and Integration]]></title>
@@ -1307,26 +1383,6 @@ in a <a href="http://github.com/SciRuby/rb-gsl">fork</a>. We plan to release fix
 
 <p>We want to again thank <a href="http://brighterplanet.com">Brighter Planet</a> for their support of our summer coding fellowship.
 Little of this would be possible without them.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SciRuby Summer of Code Selection Announced]]></title>
-    <link href="http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced/"/>
-    <updated>2012-05-23T18:08:00-04:00</updated>
-    <id>http://sciruby.com/blog/2012/05/23/sciruby-summer-of-code-selection-announced</id>
-    <content type="html"><![CDATA[<p>We were blown away by the quality of the application pool for our <a href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/">first ever SciRuby Summer of Code, sponsored by Brighter Planet</a>. We received eight exemplary applications for a single placement, and nearly every applicant showed up on at least
- one selection committee member&#8217;s top-three list.<!--more--></p>
-
-<p>I am pleased to report that we have selected <a href="https://github.com/chriswailes">Chris Wailes</a>, a doctoral student in Computer
- Science at the University of Colorado at Boulder, to be the recipient of our fellowship this year.</p>
-
-<p>Chris plans to contribute to NMatrix, by adding parallel computing support and/or by creating a Ruby domain-specific language for
- linear algebra.</p>
-
-<p>The SciRuby Project is deeply grateful to <a href="http://brighterplanet.com">Brighter Planet</a> for its generous support of our
- relatively new project and this fellowship program. We also wish to thank the applicants, and encourage them to apply
- again next time.</p>
 ]]></content>
   </entry>
   

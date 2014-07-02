@@ -9,8 +9,7 @@
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Minimization The Minimization gem now supports the following unidimensional function minimizations
-provided by GSL. The supported methods include the &hellip;">
+  <meta name="description" content="This week is the half-way point of this year&#8217;s Google Summer of Code. Let me report the progress during the term. Progress on the front-end &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,114 @@ provided by GSL. The supported methods include the &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/02/progress-of-d3-project/">The Progress of GSoC D3 Project</a></h1>
+    
+    
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard"><span class="fn">Naoki Nishida</span></span>
+ &bull; 
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-02T17:09:00-04:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This week is the half-way point of this year&#8217;s Google Summer of Code. Let me report the progress during the term.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="alt text" /></p>
+
+<h2>Progress on the front-end library</h2>
+
+<p>I am developing <a href="https://github.com/domitry/Nyaplot">Nyaplot</a> as the front-end library for my work.</p>
+
+<p>One topic on Nyaplot is API design. That is a difficult problem since each plotting library has very different methods for creating plots. For example, matplotlib and Bokeh are both written in Python, but their demo code is written in very different styles. After discussing with my mentor, I decided to implement the function-based API.</p>
+
+<p>As an exmaple of that API, here is a minimal working example for generating bar charts with Nyaplot:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;nyaplot&#39;</span>
+</span><span class='line'><span class="n">plot</span> <span class="o">=</span> <span class="no">Nyaplot</span><span class="o">::</span><span class="no">Plot</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">plot</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="ss">:bar</span><span class="p">,</span> <span class="o">[</span><span class="s1">&#39;nya1&#39;</span><span class="p">,</span> <span class="s1">&#39;nya2&#39;</span><span class="p">,</span> <span class="s1">&#39;nya3&#39;</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">plot</span><span class="o">.</span><span class="n">show</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you want to change options (e.g., color or title), put the return value of Nyaplot::Plot.add into a variable and call its methods.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bar</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="ss">:bar</span><span class="p">,</span> <span class="o">[</span><span class="s1">&#39;nya1&#39;</span><span class="p">,</span> <span class="s1">&#39;nya2&#39;</span><span class="p">,</span> <span class="s1">&#39;nya3&#39;</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">bar</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;the number of cats&quot;</span><span class="p">)</span> <span class="c1"># name the bar chart</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>IRuby integration</h2>
+
+<p>Interaction with <a href="https://github.com/minad/iruby">IRuby</a> is a priority for Nyaplot. IRuby is a web-based Ruby lab notebook-like environment, based on IPython, which is also useful for fast prototyping.</p>
+
+<p>The image on top of this blog post is a hyperbolic spiral which I generated with Nyaplot in
+IRuby. <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">Have a look at the notebook</a> on nbviewer, an IRuby and IPython notebook hosting services.</p>
+
+<h2>Progress on the back-end library</h2>
+
+<p>Nyaplot uses <a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs</a> as its back-end library. I spent a lot of time to implement interactivity among multiple panes to Nyaplotjs. See <a href="http://www.domitry.com/gsoc/">an example</a>.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/top.png" alt="alt text" /></p>
+
+<p>The input data source is a TSV file of 2,044 lines. Multiple-pane interactivity is especially important when visualizing such a large dataset.</p>
+
+<p>Have a look at the radio buttons beside the Venn diagram. The left three panels decide which set to put into each of 3 circles (VENN1, VENN2, VENN3). The right panel decides which data in each area (overlapping area, non-overlapping area, and all) to use in the other two panes.</p>
+
+<p>The gray box on the histogram decides the range of PNR values. If you select the
+range 0.3 to 0.7 with it, the right bar chart will reflect that and show how many
+of the selected data are in that range.</p>
+
+<p>Nyaplotjs provides this interactivity using an event handler connected to a dataframe object. That
+allows us to handle unidirectional update method (e.g., histogram updates bar chart, but bar chart does not update histogram).</p>
+
+<h2>Conclusion</h2>
+
+<p>I finished the first half term of Google Summer of Code 2014, but I still have a lot of
+things to do. I would like to continue to add interactivity to both the front-end and back-end libraries.</p>
+
+<p>I am developing those two libraries in separate repositories on GitHub. If you are interested, feel free to raise issues or send pull-requests, even during the GSoC term.</p>
+
+<ul>
+<li><a href="https://github.com/domitry/Nyaplot">Nyaplot - GitHub</a></li>
+<li><a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs - GitHub</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1019,69 +1126,6 @@ any questions on <a href="http://github.com/SciRuby/statsample-glm/issues">the S
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/01/call-for-funding-more-women-needed-in-open-source-science-software/">Call for Funding: More Women Needed in Open Source Science Software</a></h1>
-    
-    
-      <p class="meta">
-        
-  
-
-<span class="byline author vcard"><span class="fn">John Woods</span></span>
- &bull; 
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-11-01T16:24:00-04:00" pubdate data-updated="true">Nov 1<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://www.ncwit.org/blog/did-you-know-demographics-technical-women">Women make up 51% of the American workforce, and yet only 20% of software engineers are female.</a> Worldwide,
-the situation is similar. <a href="http://www.networkworld.com/community/node/58218">In open source software engineering, the statistics are worse: only 1.5&ndash;5% are female.</a></p>
-
-<p>One of the organizations which presented at the Google Summer of Code Mentor Summit was the <a href="http://gnome.org/opw/">GNOME Foundation&#8217;s Outreach Program for Women</a> (OPW). OPW is
-similar to GSoC, except that OPW doesn&#8217;t require its applicants to be
-students &mdash; or know how to program when the coding period begins. The pay is competitive with GSoC. And of course,
-only women can apply.</p>
-
-<p>In the process of our Google Code-In 2013 application, I recruited several female mentors to work with female GCI
-students &mdash; not a requirement, but I think it helps to have supportive people involved with whom one can identify. Unfortunately,
-we weren&#8217;t selected for the Code-In (not too disappointing given <a href="https://groups.google.com/forum/#!topic/gci-announce/P73dzsxKdsM">the several venerable and accomplished organizations that were chosen</a>). But we want to have another go, this
-time by applying for the Outreach Program for Women.</p>
-
-<p>Here&#8217;s where we need your help.</p>
-
-<p>Work for a company that might want to support this goal? Show this to your boss. Have him or her get in touch with
-us (sciruby.project at gmail dot com).</p>
-
-<p>If you don&#8217;t work for such a company, but would still like to help, you can also get in touch at the same email address.
-As a general rule of thumb, <a href="https://pledgie.com/campaigns/15783">you can always donate via Pledgie</a>, even if you don&#8217;t
-have access to tons of money.</p>
-
-<p>By the way, <a href="/blog/2013/10/25/mentoring-future-computational-power-women-for-gci-2013/">here&#8217;s a blog post by one of our mentors, Anna Belak</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1103,6 +1147,10 @@ have access to tons of money.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/02/progress-of-d3-project/">The progress of GSoC D3 Project</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/24/updates-minimization-and-integration/">Updates: Minimization and Integration</a>
       </li>
     
@@ -1116,10 +1164,6 @@ have access to tons of money.</p>
     
       <li class="post">
         <a href="/blog/2014/06/04/introduction-to-the-minimization-and-integration-project/">Introduction to the Minimization and Integration project (Rajat)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/04/introducing-the-fftw-sciruby-gsoc-project/">Introducing the FFTW SciRuby GSoC project</a>
       </li>
     
   </ul>

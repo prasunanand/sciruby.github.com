@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GSOC | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/gsoc/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-06-24T15:40:06-04:00</updated>
+  <updated>2014-07-02T17:11:43-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The progress of GSoC D3 Project]]></title>
+    <link href="http://sciruby.com/blog/2014/07/02/progress-of-d3-project/"/>
+    <updated>2014-07-02T17:09:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/07/02/progress-of-d3-project</id>
+    <content type="html"><![CDATA[<p>This week is the half-way point of this year's Google Summer of Code. Let me report the progress during the term.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="alt text" /></p>
+
+<h2>Progress on the front-end library</h2>
+
+<p>I am developing <a href="https://github.com/domitry/Nyaplot">Nyaplot</a> as the front-end library for my work.</p>
+
+<p>One topic on Nyaplot is API design. That is a difficult problem since each plotting library has very different methods for creating plots. For example, matplotlib and Bokeh are both written in Python, but their demo code is written in very different styles. After discussing with my mentor, I decided to implement the function-based API.</p>
+
+<p>As an exmaple of that API, here is a minimal working example for generating bar charts with Nyaplot:</p>
+
+<p><code>ruby
+require 'nyaplot'
+plot = Nyaplot::Plot.new
+plot.add(:bar, ['nya1', 'nya2', 'nya3'],[10,20,30])
+plot.show
+</code>
+If you want to change options (e.g., color or title), put the return value of Nyaplot::Plot.add into a variable and call its methods.</p>
+
+<p><code>ruby
+bar = plot.add(:bar, ['nya1', 'nya2', 'nya3'],[10,20,30])
+bar.title("the number of cats") # name the bar chart
+</code></p>
+
+<h2>IRuby integration</h2>
+
+<p>Interaction with <a href="https://github.com/minad/iruby">IRuby</a> is a priority for Nyaplot. IRuby is a web-based Ruby lab notebook-like environment, based on IPython, which is also useful for fast prototyping.</p>
+
+<p>The image on top of this blog post is a hyperbolic spiral which I generated with Nyaplot in
+IRuby. <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">Have a look at the notebook</a> on nbviewer, an IRuby and IPython notebook hosting services.</p>
+
+<h2>Progress on the back-end library</h2>
+
+<p>Nyaplot uses <a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs</a> as its back-end library. I spent a lot of time to implement interactivity among multiple panes to Nyaplotjs. See <a href="http://www.domitry.com/gsoc/">an example</a>.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/top.png" alt="alt text" /></p>
+
+<p>The input data source is a TSV file of 2,044 lines. Multiple-pane interactivity is especially important when visualizing such a large dataset.</p>
+
+<p>Have a look at the radio buttons beside the Venn diagram. The left three panels decide which set to put into each of 3 circles (VENN1, VENN2, VENN3). The right panel decides which data in each area (overlapping area, non-overlapping area, and all) to use in the other two panes.</p>
+
+<p>The gray box on the histogram decides the range of PNR values. If you select the
+range 0.3 to 0.7 with it, the right bar chart will reflect that and show how many
+of the selected data are in that range.</p>
+
+<p>Nyaplotjs provides this interactivity using an event handler connected to a dataframe object. That
+allows us to handle unidirectional update method (e.g., histogram updates bar chart, but bar chart does not update histogram).</p>
+
+<h2>Conclusion</h2>
+
+<p>I finished the first half term of Google Summer of Code 2014, but I still have a lot of
+things to do. I would like to continue to add interactivity to both the front-end and back-end libraries.</p>
+
+<p>I am developing those two libraries in separate repositories on GitHub. If you are interested, feel free to raise issues or send pull-requests, even during the GSoC term.</p>
+
+<ul>
+<li><a href="https://github.com/domitry/Nyaplot">Nyaplot - GitHub</a></li>
+<li><a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs - GitHub</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Updates: Minimization and Integration]]></title>
@@ -170,67 +239,6 @@ work by the end of this week and start the work with multidimensional
 minimization methods.</p>
 
 <p>Keep watching this blog for more updates regarding my project.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introducing the FFTW SciRuby GSoC project]]></title>
-    <link href="http://sciruby.com/blog/2014/06/04/introducing-the-fftw-sciruby-gsoc-project/"/>
-    <updated>2014-06-04T12:30:00-04:00</updated>
-    <id>http://sciruby.com/blog/2014/06/04/introducing-the-fftw-sciruby-gsoc-project</id>
-    <content type="html"><![CDATA[<p>My name is Magdalen Berns and I am a physics student with a technical
-background in live audio. I am particularly interested in using science
-and technology to improve access for all.</p>
-
-<p>This summer, I will be working on implementing the external library
-appropriately named "Fastest Fourier Transform in the West" version 3
-(FFTW3) C and Fortran API in Ruby for this year's Google Summer of Code
-(GSoC).</p>
-
-<p>The primary aim of the project is to give SciRuby the capability to
-handle signal analysis, processing and synthesis by performing discrete
-fast Fourier transform operations on NMatrix objects.</p>
-
-<p>After some investigation during the preparation stages of GSoC, it was
-determined that implementing FFTW3 is more desirable than starting from
-scratch in pure Ruby because the FFTW3 API is already extensively used,
-developed, and optimised far beyond what would be achievable in just
-three months. So, putting FFTW3 in the driving seat allows the SciRuby
-project to take advantage of the good work of the FFTW3 developers by
-bringing it to Ruby.</p>
-
-<p>Putting NMatrix to the test with FFTW3 should give users the
-opportunity to test drive NMatrix &mdash; and SciRuby's NMatrix developers a
-chance to root out bugs.</p>
-
-<p>Since a gem called ruby-fftw3 already existed to perform FFTW3 operations
-on NArray objects, I forked that repository as a starting point. <a href="https://github.com/thisMagpie/fftw">Things are progressing on my Github fork</a> right now.</p>
-
-<p>My mentor for this project is Colin Fuller who is an exceptionally
-talented programmer &mdash; and he really knows his git too. He has been a
-great help as I adapt to the learning curve of working in C and
-Ruby (languages which I am less familiar with than say, Java or
-JavaScript).</p>
-
-<p>As I work, I intend to share useful gems of information I gather. Those, in addition to my weekly project updates, will appear right here in this blog so others can hopefully benefit.</p>
-
-<p>I have already posted a few useful bits and bobs on
-<a href="http://thismagpie.com">thismagpie.com</a> which relate to my work so far.
-I hope to add those to the SciRuby blog, too, provided
-the readers are interested in that and time permits. Of course, readers here can feel free to have a browse
-of the keywords <a href="http://thismagpie.com/keyword/sciruby">sciruby</a>,
-<a href="http://thismagpie.com/keyword/ruby">ruby</a> and
-<a href="http://thismagpie.com/keyword/git">git</a> on there for the time being.
-I sometimes add posts, manuals and tutorials from external sites where I
-find useful ones on the web too, so watch out for these too.</p>
-
-<p>Please, feel free to watch or follow along as the project comes together
-and those inclined are welcome to share constructive comments and advice
-or raise bugs on the fftw3 issue tracker. Input about my work is very
-welcome as the project progresses. This gem is being written for the
-community, after all!</p>
-
-<p>You can find me on Twitter (Facebook) or GitHub under the username @thisMagpie.</p>
 ]]></content>
   </entry>
   

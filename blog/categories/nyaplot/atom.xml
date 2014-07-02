@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: D3 | SciRuby]]></title>
-  <link href="http://sciruby.com/blog/categories/d3/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Nyaplot | SciRuby]]></title>
+  <link href="http://sciruby.com/blog/categories/nyaplot/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
   <updated>2014-07-02T17:11:43-04:00</updated>
   <id>http://sciruby.com/</id>
@@ -79,46 +79,6 @@ things to do. I would like to continue to add interactivity to both the front-en
 <li><a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs - GitHub</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introducing the GSoC 2014 D3 Project]]></title>
-    <link href="http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project/"/>
-    <updated>2014-06-02T14:00:00-04:00</updated>
-    <id>http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project</id>
-    <content type="html"><![CDATA[<p>Hello. I am Naoki, one of four Google Summer of Code (GSoC) 2014
-students in SciRuby. Let me introduce my project. The goal of the GSoC
-2014 D3 Project is to create a new plotting library for
-SciRuby. <a href="http://d3js.org/">D3.js</a> is the most suitable JavaScript
-library to achieve this goal.</p>
-
-<p>There are several non-Ruby plotting software libraries in the wild,
-like ggplot, matplotlib, and ggplot2. Actually, SciRuby already has
-its own plotting libraries named
-<a href="https://github.com/SciRuby/plotrb">Plotrb</a> and
-<a href="https://github.com/SciRuby/rubyvis">Rubyvis</a>. The main feature of my
-project compared with those software packages is <em>interactivity</em>.
-Interactivity has various meanings here: interactivity when generating
-plots, interactivity when viewing them, and server&ndash;client
-interactivity. My project includes all of those.</p>
-
-<p>My project can be divided into two components, one JavaScript and the
-other Ruby. JavaScript serves as a back-end, and Ruby as a
-front-end. I'm currently working on the former part. Have a look at a
-few examples I've assembled:</p>
-
-<ul>
-<li><a href="http://bl.ocks.org/domitry/b8785f02f36deef567ce">Multiple panes</a></li>
-<li><a href="http://bl.ocks.org/domitry/2f53781449025f772676">Bar chart</a></li>
-<li><a href="http://bl.ocks.org/domitry/e9a914b78f3a576ed3bb">Line</a></li>
-<li><a href="http://bl.ocks.org/domitry/308e27d8d12c1374e61f">Scatter</a></li>
-<li><a href="http://bl.ocks.org/domitry/f215d5ff3bd3f5fec2ad">Another theme</a></li>
-</ul>
-
-
-<p>This project involves a number of challenges, but I believe it to be
-achievable during this Summer of Code. Thank you for reading!</p>
 ]]></content>
   </entry>
   
