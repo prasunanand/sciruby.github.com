@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-07-02T17:19:01-04:00</updated>
+  <updated>2014-07-02T17:44:05-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,47 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Integration | Usage]]></title>
+    <link href="http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/"/>
+    <updated>2014-07-02T17:43:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements</id>
+    <content type="html"><![CDATA[<h2>Numerical Integration</h2>
+
+<p>Integration is the process of finding the summation of the value of a function at small intervals, when the width of the intervals is infinitesimally small.
+As there is no such thing as &#8220;infinitesimally small interval&#8221;, there are several other methods which help us to approximate the values of integrals.</p>
+
+<p>Numerical integration is one such technique which helps us to estimate the value of the definite integral of a function over an interval.
+Numerical integration is based on the principle of evaluating the values of a function at specific points in the interval and then taking the product of those values with a corresponding weight, which is a standard constant specific to the method being used.</p>
+
+<h2>Integration Gem</h2>
+
+<p>The Integration gem is now equipped with a host of additional algorithms for approximating the integral of a function ranging from the simple ones like Simpson&#8217;s method to the more complex ones like Gauss&ndash;Kronrod and Adaptive Quadrature method.</p>
+
+<h2>Example</h2>
+
+<p>Let us say you need to find out the integral of a function <code>5*x**2 -7*Math.cos(x)</code> over the interval <code>(0,1)</code>.
+We can solve this using the following snippet using the Integration gem:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Integration</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,{</span><span class="ss">:method</span><span class="o">=&gt;</span><span class="ss">:simpson</span><span class="p">})</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="mi">5</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span><span class="mi">7</span><span class="o">*</span><span class="no">Math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)}</span>
+</span><span class='line'><span class="c1"># =&gt; -4.223630227110514</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We see that the actual value of this integral is <code>-4.2236302269886088799000849584</code>, which is pretty close to the value estimated by the integration gem.
+Instead of <code>{:method=&gt;:simpson}</code> in the above code, you can use any one of these implemented methods:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rectangle</span><span class="p">,</span><span class="ss">:trapezoid</span><span class="p">,</span><span class="ss">:simpson</span><span class="p">,</span> <span class="ss">:adaptive_quadrature</span> <span class="p">,</span> <span class="ss">:gauss</span><span class="p">,</span> <span class="ss">:romberg</span><span class="p">,</span> <span class="ss">:monte_carlo</span><span class="p">,</span> <span class="ss">:gauss_kronrod</span><span class="p">,</span> <span class="ss">:simpson3by8</span><span class="p">,</span> <span class="ss">:boole</span><span class="p">,</span> <span class="ss">:open_trapezoid</span><span class="p">,</span> <span class="ss">:milne</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Each of these algorithms gives similar results &mdash; except if the function has rapid changes in the interval of integration, as is the nature of numerical integration.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The progress of the GSoC D3/Visualization Project]]></title>
@@ -1351,38 +1392,6 @@ calendar of the student&#8217;s home institution.</li>
 <h3>Application Deadline</h3>
 
 <p>Applications are due by the 31st of October, 2012.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Major Refactoring in the Pipeline]]></title>
-    <link href="http://sciruby.com/blog/2012/07/31/major-refactoring-in-the-pipeline/"/>
-    <updated>2012-07-31T16:23:00-04:00</updated>
-    <id>http://sciruby.com/blog/2012/07/31/major-refactoring-in-the-pipeline</id>
-    <content type="html"><![CDATA[<p>Activity has picked up enormously on <a href="http://groups.google.com/group/sciruby-dev">our listserv</a> over the last few weeks,
-which makes us all very happy.</p>
-
-<p><a href="https://github.com/chriswailes">Chris Wailes</a> and I have been working on a major refactoring of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>,
-our replacement for NArray. You may recall that we released our first alpha (0.0.1) back in April, and that we&#8217;ve been
-relatively silent since then.<!--more--></p>
-
-<p>We&#8217;re pleased to announce that our second alpha, NMatrix v0.0.2, should be available as a gem by mid-August.</p>
-
-<p>Our first alpha was a proof of concept. The second alpha is the framework upon which we will build an empire of chunky
-bacon.</p>
-
-<p>Chris came up with the idea to convert all of NMatrix&#8217;s Ruby/C template code into C++ templates, and we&#8217;ve been working
-on that steadily. These are cleaner and easier to maintain than the C parser-based templates I wrote a few months ago.</p>
-
-<p>In addition, I have incorporated basic slicing, contributed by <a href="http://github.com/flipback">Aleksey Timin</a>, who has been
-absolutely essential to our growing project.</p>
-
-<p>One major hiccup has been that NMatrix and NArray conflict with one another when both are included (particularly poor
-planning on my part). This means that Ruby/GSL can&#8217;t work with NMatrix without some modifications &#8211; which are underway
-in a <a href="http://github.com/SciRuby/rb-gsl">fork</a>. We plan to release fixes for Ruby/GSL and Statsample as soon as possible.</p>
-
-<p>We want to again thank <a href="http://brighterplanet.com">Brighter Planet</a> for their support of our summer coding fellowship.
-Little of this would be possible without them.</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GSOC2014 | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/gsoc2014/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-07-02T17:19:01-04:00</updated>
+  <updated>2014-07-02T17:44:05-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Integration | Usage]]></title>
+    <link href="http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/"/>
+    <updated>2014-07-02T17:43:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements</id>
+    <content type="html"><![CDATA[<h2>Numerical Integration</h2>
+
+<p>Integration is the process of finding the summation of the value of a function at small intervals, when the width of the intervals is infinitesimally small.
+As there is no such thing as "infinitesimally small interval", there are several other methods which help us to approximate the values of integrals.</p>
+
+<p>Numerical integration is one such technique which helps us to estimate the value of the definite integral of a function over an interval.
+Numerical integration is based on the principle of evaluating the values of a function at specific points in the interval and then taking the product of those values with a corresponding weight, which is a standard constant specific to the method being used.</p>
+
+<h2>Integration Gem</h2>
+
+<p>The Integration gem is now equipped with a host of additional algorithms for approximating the integral of a function ranging from the simple ones like Simpson's method to the more complex ones like Gauss&ndash;Kronrod and Adaptive Quadrature method.</p>
+
+<h2>Example</h2>
+
+<p>Let us say you need to find out the integral of a function <code>5*x**2 -7*Math.cos(x)</code> over the interval <code>(0,1)</code>.
+We can solve this using the following snippet using the Integration gem:</p>
+
+<p>```ruby
+Integration.integrate(0,1,{:method=>:simpson}) {|x| 5<em>x**2 -7</em>Math.cos(x)}</p>
+
+<h1>=> -4.223630227110514</h1>
+
+<p>```</p>
+
+<p>We see that the actual value of this integral is <code>-4.2236302269886088799000849584</code>, which is pretty close to the value estimated by the integration gem.
+Instead of <code>{:method=&gt;:simpson}</code> in the above code, you can use any one of these implemented methods:</p>
+
+<p><code>ruby
+rectangle,:trapezoid,:simpson, :adaptive_quadrature , :gauss, :romberg, :monte_carlo, :gauss_kronrod, :simpson3by8, :boole, :open_trapezoid, :milne
+</code></p>
+
+<p>Each of these algorithms gives similar results &mdash; except if the function has rapid changes in the interval of integration, as is the nature of numerical integration.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The progress of the GSoC D3/Visualization Project]]></title>
@@ -178,67 +218,6 @@ and two gradient minimization methods as well as simulated annealing.</p>
 <p>Currently, I am working on Nelder&ndash;Mead multidimensional minimization
 method which is a non-gradient method, including working on the relevant
 test cases.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introduction to the Minimization and Integration project (Rajat)]]></title>
-    <link href="http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project/"/>
-    <updated>2014-06-04T14:23:00-04:00</updated>
-    <id>http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project</id>
-    <content type="html"><![CDATA[<p class="note"><strong>Editor's Note:</strong> We have two students
-working on numerical minimization and integration this summer, Rajat and
-Lahiru. Lahiru will be writing a separate post about his work.</p>
-
-
-<h2>Introduction to the Minimization and Integration Project</h2>
-
-<p>Hi. My name is Rajat Kapoor and I have been selected to work with
-SciRuby for Google Summer of Code 2014.</p>
-
-<p><a href="https://github.com/SciRuby/minimization">Minimization</a> and
-<a href="https://github.com/SciRuby/integration">Integration</a> are two of the
-many available gems in the SciRuby suite. My project this year aims to
-improve these gems to replicate the functionality provided by GNU's
-GSL. I will be trying to implement all the minimization and
-integration algorithms present in GSL in pure Ruby, with improvements
-as needed, so that these functions are easily accesible to all Ruby
-users, while the users which have GSL already installed will have an
-advantage in terms of speedy computations.</p>
-
-<h2>What Minimization and Integration actually mean</h2>
-
-<p>Minimization refers to the process of finding out the minimum of a
-mathematical function whose values might depend on multiple
-variables. Unidimensional minimization restricts these problems to
-functions of one single variable. Integration is the same as the very
-widely used concept in calculus which basically boils down to finding
-the summation of the value of a function at small intervals, when the
-width of the intervals in infinitesimally small. I can bet that you
-knowingly or unknowingly use both these things on a daily basis.</p>
-
-<h2>The plan</h2>
-
-<p>The project can be broken into two major parts: Minimization and
-Integration, as these are two seperate gems.</p>
-
-<p>The Minimization gem can be broken in two parts: unidimensional (or
-univariate) and multidimensional (multivariate). With respect to
-coding, these two can again be broken down into sub-parts: pure Ruby
-implementations and GSL support. The Integration gem will include
-the pure Ruby implementations as well as GSL support. Along with this,
-some support for symbolic integration will be added for JRuby
-users by way of the JScience library.</p>
-
-<h2>Progress</h2>
-
-<p>The pure Ruby implementations of the unidimensional minimization part
-are almost finished. I am also working on the GSL support for the same
-along with it. I plan to finish up any unidimensional minimization
-work by the end of this week and start the work with multidimensional
-minimization methods.</p>
-
-<p>Keep watching this blog for more updates regarding my project.</p>
 ]]></content>
   </entry>
   

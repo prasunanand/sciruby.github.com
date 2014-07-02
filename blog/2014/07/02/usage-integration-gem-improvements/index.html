@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Updates: Minimization and Integration - SciRuby</title>
+  <title>Integration | Usage - SciRuby</title>
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Minimization The Minimization gem now supports the following unidimensional function minimizations
-provided by GSL. The supported methods include the &hellip;">
+  <meta name="description" content="Numerical Integration Integration is the process of finding the summation of the value of a function at small intervals, when the width of the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ provided by GSL. The supported methods include the &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/">
+  <link rel="canonical" href="http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -85,7 +84,7 @@ provided by GSL. The supported methods include the &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Updates: Minimization and Integration</h1>
+      <h1 class="entry-title">Integration | Usage</h1>
     
     
       <p class="meta">
@@ -106,50 +105,46 @@ provided by GSL. The supported methods include the &hellip;">
   
 
 
-<time datetime="2014-06-24T14:32:00-04:00" pubdate data-updated="true">Jun 24<span>th</span>, 2014</time>
+<time datetime="2014-07-02T17:43:00-04:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h2>Minimization</h2>
+<div class="entry-content"><h2>Numerical Integration</h2>
 
-<p>The Minimization gem now supports the following unidimensional function minimizations
-provided by GSL. The supported methods include the pure Ruby implementations of:</p>
+<p>Integration is the process of finding the summation of the value of a function at small intervals, when the width of the intervals is infinitesimally small.
+As there is no such thing as &#8220;infinitesimally small interval&#8221;, there are several other methods which help us to approximate the values of integrals.</p>
 
-<ol>
-<li>Newton&ndash;Raphson</li>
-<li>Golden Section</li>
-<li>Brent</li>
-<li>Quad Golden</li>
-</ol>
+<p>Numerical integration is one such technique which helps us to estimate the value of the definite integral of a function over an interval.
+Numerical integration is based on the principle of evaluating the values of a function at specific points in the interval and then taking the product of those values with a corresponding weight, which is a standard constant specific to the method being used.</p>
+
+<h2>Integration Gem</h2>
+
+<p>The Integration gem is now equipped with a host of additional algorithms for approximating the integral of a function ranging from the simple ones like Simpson&#8217;s method to the more complex ones like Gauss&ndash;Kronrod and Adaptive Quadrature method.</p>
+
+<h2>Example</h2>
+
+<p>Let us say you need to find out the integral of a function <code>5*x**2 -7*Math.cos(x)</code> over the interval <code>(0,1)</code>.
+We can solve this using the following snippet using the Integration gem:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Integration</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,{</span><span class="ss">:method</span><span class="o">=&gt;</span><span class="ss">:simpson</span><span class="p">})</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="mi">5</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span><span class="mi">7</span><span class="o">*</span><span class="no">Math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)}</span>
+</span><span class='line'><span class="c1"># =&gt; -4.223630227110514</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Of these, the Golden Section, Brent, and Quad Golden are also
-available via Minimization&#8217;s GSL interface (and are thus
-faster). Everything is organized in such a way that the faster C code
-(i.e., GSL) will be executed when GSL is available, but that otherwise
-the Ruby implementation will be used. I still have to beautify the
-code and add documentation.</p>
+<p>We see that the actual value of this integral is <code>-4.2236302269886088799000849584</code>, which is pretty close to the value estimated by the integration gem.
+Instead of <code>{:method=&gt;:simpson}</code> in the above code, you can use any one of these implemented methods:</p>
 
-<h2>Integration</h2>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rectangle</span><span class="p">,</span><span class="ss">:trapezoid</span><span class="p">,</span><span class="ss">:simpson</span><span class="p">,</span> <span class="ss">:adaptive_quadrature</span> <span class="p">,</span> <span class="ss">:gauss</span><span class="p">,</span> <span class="ss">:romberg</span><span class="p">,</span> <span class="ss">:monte_carlo</span><span class="p">,</span> <span class="ss">:gauss_kronrod</span><span class="p">,</span> <span class="ss">:simpson3by8</span><span class="p">,</span> <span class="ss">:boole</span><span class="p">,</span> <span class="ss">:open_trapezoid</span><span class="p">,</span> <span class="ss">:milne</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>The Integration gem has been transitioned from Hoe to Bundler. For
-Gauss&ndash;Kronrod Quadrature, I have hard-coded the values of nodes
-and weights (for 15, 21, 31, 41, and 61 points) &#8212; which were already
-hardcoded in the case of the Gauss quadrature.</p>
 
-<p>Additionally, I added basic methods like Simpson&#8217;s Three-Eighths
-Method, Milne&#8217;s Method, Boole&#8217;s Quadrature and Open Trapezoid.</p>
-
-<p>This week, I will be reviewing a <a href="https://github.com/clbustos/integration/pull/3">pull request</a> which aims to change the structure of the whole Integration gem.</p>
-
-<p>After that I plan to implement more adaptive methods and incorporate
-the non-adaptive methods under a single Newton&ndash;Cotes function.</p>
-
-<p>Lastly, I am brainstorming designs for symbolic integration using
-JScience and JRuby.</p>
+<p>Each of these algorithms gives similar results &mdash; except if the function has rapid changes in the interval of integration, as is the nature of numerical integration.</p>
 </div>
 
 
@@ -172,12 +167,12 @@ JScience and JRuby.</p>
   
 
 
-<time datetime="2014-06-24T14:32:00-04:00" pubdate data-updated="true">Jun 24<span>th</span>, 2014</time>
+<time datetime="2014-07-02T17:43:00-04:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/gsl/'>GSL</a>, <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2014/'>GSOC2014</a>, <a class='category' href='/blog/categories/integration/'>Integration</a>, <a class='category' href='/blog/categories/minimization/'>Minimization</a>, <a class='category' href='/blog/categories/students/'>Students</a>
+    <a class='category' href='/blog/categories/gsoc/'>GSOC</a>, <a class='category' href='/blog/categories/gsoc2014/'>GSOC2014</a>, <a class='category' href='/blog/categories/integration/'>Integration</a>, <a class='category' href='/blog/categories/students/'>Students</a>
   
 </span>
 
@@ -186,7 +181,7 @@ JScience and JRuby.</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/" data-via="sciruby" data-counturl="http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/" data-via="sciruby" data-counturl="http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/" >Tweet</a>
   
   
   
@@ -197,10 +192,8 @@ JScience and JRuby.</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/19/progress-on-minimization-methods/" title="Previous Post: Progress on Minimization methods">&laquo; Progress on Minimization methods</a>
+        <a class="basic-alignment left" href="/blog/2014/07/02/progress-of-d3-project/" title="Previous Post: The progress of the GSoC D3/Visualization Project">&laquo; The progress of the GSoC D3/Visualization Project</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/02/progress-of-d3-project/" title="Next Post: The progress of the GSoC D3/Visualization Project">The progress of the GSoC D3/Visualization Project &raquo;</a>
       
     </p>
   </footer>
@@ -316,8 +309,8 @@ JScience and JRuby.</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/';
-        var disqus_url = 'http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/';
+        var disqus_identifier = 'http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/';
+        var disqus_url = 'http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/';
         var disqus_script = 'embed.js';
       
     (function () {
