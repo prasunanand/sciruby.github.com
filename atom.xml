@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-07-02T17:44:05-04:00</updated>
+  <updated>2014-07-02T17:46:06-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Integration | Usage]]></title>
+    <title type="html"><![CDATA[Usage: Integration Gem Improvements]]></title>
     <link href="http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/"/>
     <updated>2014-07-02T17:43:00-04:00</updated>
     <id>http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements</id>
