@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-07-02T17:46:06-04:00</updated>
+  <updated>2014-07-09T17:10:31-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,80 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Nyaplot internal event handler]]></title>
+    <link href="http://sciruby.com/blog/2014/07/09/nyaplot-internal-event-handler/"/>
+    <updated>2014-07-09T17:01:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/07/09/nyaplot-internal-event-handler</id>
+    <content type="html"><![CDATA[<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/multiple_panes.png" alt="Nyaplot multi-pane example" /></p>
+
+<h2>Introduction</h2>
+
+<p>Last week I implemented the multiple panes interactivity to the
+front-end of Nyaplot. You can see the demo on <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">this notebook</a>.</p>
+
+<p>Skip over single pane demo, and have a look at the paragraph &#8216;Multiple
+panes demo&#8217; at the bottom. In this example, the histogram and bar chart are
+created individually, and then thrown into one instance of
+Nyaplot::Frame. After running <code>frame.show</code>, both of the diagrams
+appear in one out-put box on the notebook. When you click the
+histogram, bar chart refrects that and change its height.</p>
+
+<p>In this article I will explain about the event handler of Nyaplot,
+which allows for interactivity among panes.</p>
+
+<h2>The Trick</h2>
+
+<p>The trick is actually hidden in Nyaplot::DataFrame. In this example,
+both of the two diagrams are generated from columns in one DataFrame.
+When Nyaplot receives a column object (instance of <code>Nyaplot::Series</code>,
+defined
+<a href="https://github.com/domitry/nyaplot/blob/master/lib/nyaplot/data.rb#L115">here</a>), it
+internally find its source data frame and remembers its location.</p>
+
+<p>Consequently, Nyaplot can find that histogram and bar chart are
+sharing their data source, and allows them to interact with each other.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/table.png" alt="Nyaplot::DataFrame Example" /></p>
+
+<h2>Implementation</h2>
+
+<p>Before explaining the event handler, I want to outline Nyaplot&#8217;s
+diagram rendering procedure. In the back-end JavaScript library,
+diagrams, such as histograms, fetch column data from data frames and generate
+their SVG DOM nodes dynamically (<a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L20">source code</a>).</p>
+
+<p>The key is <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/utils/dataframe.js">a data frame written in JavaScript</a>. After mouse events
+coming from a filter (such as the gray box on the plot area) are
+handled, the histogram <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L96">registers its filter function to the data frame and instructs all diagrams to update their SVG DOM objects</a>. The bar chart <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/bar.js#L54">updates its SVG from data filtered by the new function</a>.</p>
+
+<p>As you can see, Nyaplot&#8217;s inner workings are fairly simple; and these
+workings are common to all diagrams supported by Nyaplot. So not only
+the histogram and bar chart, but other diagrams as well, can behave
+interactively (e.g., <a href="http://www.domitry.com/gsoc/multi_pane2.html">histogram, bar, and Venn example</a>).</p>
+
+<h2>Conclusion</h2>
+
+<p>Despite, or perhaps because of, the relative simplicity of the
+structure, the event handler functions well. The actual interactivity
+in Nyaplot is based on the data frame object, both in the
+Ruby front-end and the JavaScript back-end. As a result, handling
+events in DataFrame is both natural and efficient for Nyaplot.</p>
+
+<h2>Additional Information</h2>
+
+<p>Nyaplot and its back-end library Nyaplotjs are being developed on GitHub.</p>
+
+<ul>
+<li><a href="https://github.com/domitry/nyaplot">Nyaplot on GitHub</a></li>
+<li><a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs on GitHub</a></li>
+</ul>
+
+
+<p>If you are interesed, feel free to try it and raise issues or send pull-requests.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Usage: Integration Gem Improvements]]></title>
@@ -61,7 +135,7 @@ Instead of <code>{:method=&gt;:simpson}</code> in the above code, you can use an
     <id>http://sciruby.com/blog/2014/07/02/progress-of-d3-project</id>
     <content type="html"><![CDATA[<p>This week is the half-way point of this year&#8217;s Google Summer of Code. Let me report the progress during the term.</p>
 
-<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="alt text" /></p>
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="Example Nyaplot chart" /></p>
 
 <h2>Progress on the front-end library</h2>
 
@@ -1321,77 +1395,6 @@ vector.pretty_print
  if you have any problems.</p>
 
 <p>Finally, if you&#8217;re a student, you should consider applying to be a <a href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby Fellow</a> this winter or spring.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SciRuby Receives Ruby Association Grant; Fellowships Available]]></title>
-    <link href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/"/>
-    <updated>2012-09-24T13:43:00-04:00</updated>
-    <id>http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant&#8211;fellowships-available</id>
-    <content type="html"><![CDATA[<p>We are incredibly pleased to announce that the Ruby Association has awarded us a <a href="http://www.ruby.or.jp/en/news/20120717.html">1,000,000 JPY grant</a>.</p>
-
-<p>When we applied, we proposed to build upon our <a href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/">successful SciRuby Summer of Code</a>,
-which we undertook with the support of <a href="http://brighterplanet.com">Brighter Planet</a>. We are pleased to announce applications
-for SciRuby fellowships.<!--more--></p>
-
-<h2>Funding Note</h2>
-
-<p>A million yen translates to around $12,000, which is nearly enough to hire two graduate or undergraduate students
-for an academic term. We would like to hire more than one; but for that, <a href="http://pledgie.com/campaigns/15783">we need your help</a>.</p>
-
-<h2>Fellowship Terms</h2>
-
-<ul>
-<li>We plan to provide each fellow with a monthly stipend competitive with her or his home institution (e.g., if research assistants
-in your graduate program typically receive $1,500 per month, your stipend with us would be $1,500 per month).</li>
-<li>Tenure will be one semester or one quarter (with an option to renew for a second quarter), depending upon the academic
-calendar of the student&#8217;s home institution.</li>
-<li>Tenure must begin no later than January 2013.</li>
-<li>Fellows are expected to work full-time (forty hours per week) on some element of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>.</li>
-<li>The Ruby Association requires monthly progress reports for stipend payment.</li>
-<li>Fellows will be assigned mentors, but should expect to work relatively independently unless located near a SciRuby mentor.</li>
-</ul>
-
-
-<h2>Requirements</h2>
-
-<ul>
-<li>Fluency in C/C++, Ruby, and the English language.</li>
-<li>Comfort with git and Github.</li>
-<li>An understanding of GDB and Valgrind (or similar debugging tools) as well as RSpec.</li>
-<li>A course of study in the sciences or engineering at an accredited college or university.</li>
-</ul>
-
-
-<h2>To Apply</h2>
-
-<p>Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.</p>
-
-<p>Don&#8217;t feel that you should limit yourself if you have important things to say; but don&#8217;t feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.</p>
-
-<ol>
-<li><p><strong>Contact information.</strong> Please provide your email address, GitHub username, and <strong>approximate</strong> physical location.</p></li>
-<li><p>Why do you like Ruby?</p></li>
-<li><p>What do you like about science and why? What area do you like best?</p></li>
-<li><p>Describe your <strong>experience</strong> with the following: Ruby, C/C++, other languages.</p></li>
-<li><p>Describe your <strong>educational background</strong> (school, degree plan, major, past degrees, research area).</p></li>
-<li><p>Please describe what you plan to work on for this project. (Check out the <a href="http://github.com/SciRuby/nmatrix/issues">NMatrix issue tracker</a> for ideas.)</p></li>
-<li><p>What would be the outcome of your work?</p></li>
-<li><p>If selected, you will be providing monthly demonstrations of you work. What milestones do you envision for your project?</p></li>
-<li><p>Please provide contact information for your graduate program or someone who can offer stipend information.</p></li>
-<li><p>Please provide a link to your school&#8217;s academic calendar.</p></li>
-<li><p>What other responsibilities do you have during your likely fellowship term? How will you allocate and manage your time?</p></li>
-<li><p>How do you feel about <strong>chunky bacon</strong>?</p></li>
-<li><p>Is there anything else you think we should have asked but didn&#8217;t?</p></li>
-</ol>
-
-
-<p>Email your answers to sciruby.project on gmail. <em>Please include a resume or curriculum vitae.</em></p>
-
-<h3>Application Deadline</h3>
-
-<p>Applications are due by the 31st of October, 2012.</p>
 ]]></content>
   </entry>
   

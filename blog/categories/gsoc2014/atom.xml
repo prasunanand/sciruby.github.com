@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GSOC2014 | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/gsoc2014/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-07-02T17:46:06-04:00</updated>
+  <updated>2014-07-09T17:10:31-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,80 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Nyaplot internal event handler]]></title>
+    <link href="http://sciruby.com/blog/2014/07/09/nyaplot-internal-event-handler/"/>
+    <updated>2014-07-09T17:01:00-04:00</updated>
+    <id>http://sciruby.com/blog/2014/07/09/nyaplot-internal-event-handler</id>
+    <content type="html"><![CDATA[<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/multiple_panes.png" alt="Nyaplot multi-pane example" /></p>
+
+<h2>Introduction</h2>
+
+<p>Last week I implemented the multiple panes interactivity to the
+front-end of Nyaplot. You can see the demo on <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">this notebook</a>.</p>
+
+<p>Skip over single pane demo, and have a look at the paragraph 'Multiple
+panes demo' at the bottom. In this example, the histogram and bar chart are
+created individually, and then thrown into one instance of
+Nyaplot::Frame. After running <code>frame.show</code>, both of the diagrams
+appear in one out-put box on the notebook. When you click the
+histogram, bar chart refrects that and change its height.</p>
+
+<p>In this article I will explain about the event handler of Nyaplot,
+which allows for interactivity among panes.</p>
+
+<h2>The Trick</h2>
+
+<p>The trick is actually hidden in Nyaplot::DataFrame. In this example,
+both of the two diagrams are generated from columns in one DataFrame.
+When Nyaplot receives a column object (instance of <code>Nyaplot::Series</code>,
+defined
+<a href="https://github.com/domitry/nyaplot/blob/master/lib/nyaplot/data.rb#L115">here</a>), it
+internally find its source data frame and remembers its location.</p>
+
+<p>Consequently, Nyaplot can find that histogram and bar chart are
+sharing their data source, and allows them to interact with each other.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/table.png" alt="Nyaplot::DataFrame Example" /></p>
+
+<h2>Implementation</h2>
+
+<p>Before explaining the event handler, I want to outline Nyaplot's
+diagram rendering procedure. In the back-end JavaScript library,
+diagrams, such as histograms, fetch column data from data frames and generate
+their SVG DOM nodes dynamically (<a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L20">source code</a>).</p>
+
+<p>The key is <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/utils/dataframe.js">a data frame written in JavaScript</a>. After mouse events
+coming from a filter (such as the gray box on the plot area) are
+handled, the histogram <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L96">registers its filter function to the data frame and instructs all diagrams to update their SVG DOM objects</a>. The bar chart <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/bar.js#L54">updates its SVG from data filtered by the new function</a>.</p>
+
+<p>As you can see, Nyaplot's inner workings are fairly simple; and these
+workings are common to all diagrams supported by Nyaplot. So not only
+the histogram and bar chart, but other diagrams as well, can behave
+interactively (e.g., <a href="http://www.domitry.com/gsoc/multi_pane2.html">histogram, bar, and Venn example</a>).</p>
+
+<h2>Conclusion</h2>
+
+<p>Despite, or perhaps because of, the relative simplicity of the
+structure, the event handler functions well. The actual interactivity
+in Nyaplot is based on the data frame object, both in the
+Ruby front-end and the JavaScript back-end. As a result, handling
+events in DataFrame is both natural and efficient for Nyaplot.</p>
+
+<h2>Additional Information</h2>
+
+<p>Nyaplot and its back-end library Nyaplotjs are being developed on GitHub.</p>
+
+<ul>
+<li><a href="https://github.com/domitry/nyaplot">Nyaplot on GitHub</a></li>
+<li><a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs on GitHub</a></li>
+</ul>
+
+
+<p>If you are interesed, feel free to try it and raise issues or send pull-requests.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Usage: Integration Gem Improvements]]></title>
@@ -60,7 +134,7 @@ rectangle,:trapezoid,:simpson, :adaptive_quadrature , :gauss, :romberg, :monte_c
     <id>http://sciruby.com/blog/2014/07/02/progress-of-d3-project</id>
     <content type="html"><![CDATA[<p>This week is the half-way point of this year's Google Summer of Code. Let me report the progress during the term.</p>
 
-<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="alt text" /></p>
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="Example Nyaplot chart" /></p>
 
 <h2>Progress on the front-end library</h2>
 
@@ -179,45 +253,6 @@ JScience and JRuby.</p>
 <p>I started by studying SciPy and Apache Commons library's Powell's optimizer. I decided to base my implementation on the method from the <a href="http://commons.apache.org/proper/commons-math/">Apache Commons Mathematics Library</a>. Powell's method requires a line minimum searching algorithm, for which I used Brent minimizer (already available in SciRuby).</p>
 
 <p>Having finished with Powell's method, I am now working on the Fletcher--Reeves minimization method &mdash; a gradient method which uses the first derivative of the integrating function.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Introduction: Minimization and Integration (Lahiru)]]></title>
-    <link href="http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration/"/>
-    <updated>2014-06-18T16:45:00-04:00</updated>
-    <id>http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration</id>
-    <content type="html"><![CDATA[<p class="note"><strong>Editor's Note:</strong> We have two students
-working on numerical minimization and integration this summer, Rajat and
-Lahiru. Rajat's introductory post appeared two weeks ago.</p>
-
-
-<h2>Introduction </h2>
-
-<p>I'm Lahiru Lasandun and I'm an undergraduate of University of Moratuwa, Sri Lanka. I've been selected for
-Google Summer of Code 2014 for SciRuby's Minimization and Integration projects.</p>
-
-<p>I was working with SciRuby about a month before GSOC started and did some tests on how to enhance the performance of
-these numerical computations. My first idea was to use multi-threading. With the instuctions and guidance of mentors, I
-tested more methods such as Erlang multi-processing, the AKKA package of multi-threading, and finally OpenCL. The final
-decision was to use OpenCL to enhance computation power of these mathematical computations with the support of multi-cores
-and GPUs.</p>
-
-<h2>Minimization Gem</h2>
-
-<p>After GSOC started, I began working on SciRuby's Minimization gem. I proposed multidimensional minimization methods for the
-Minimization gem, which already had plenty of unidimensional minimization methods. I chose two non-gradient
-and two gradient minimization methods as well as simulated annealing.</p>
-
-<h2>Integration Gem</h2>
-
-<p>For Integration, I proposed to replicate some unidimensional integration methods from the GNU Scientific Library, GSL. Additionally, I proposed to add OpenCL support to enhance performance of integration methods.</p>
-
-<h2>Current Progress</h2>
-
-<p>Currently, I am working on Nelder&ndash;Mead multidimensional minimization
-method which is a non-gradient method, including working on the relevant
-test cases.</p>
 ]]></content>
   </entry>
   

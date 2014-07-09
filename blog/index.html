@@ -9,7 +9,8 @@
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="Numerical Integration Integration is the process of finding the summation of the value of a function at small intervals, when the width of the &hellip;">
+  <meta name="description" content="Introduction Last week I implemented the multiple panes interactivity to the
+front-end of Nyaplot. You can see the demo on this notebook. Skip over &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,112 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/09/nyaplot-internal-event-handler/">The Nyaplot Internal Event Handler</a></h1>
+    
+    
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard"><span class="fn">Naoki Nishida</span></span>
+ &bull; 
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-09T17:01:00-04:00" pubdate data-updated="true">Jul 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/multiple_panes.png" alt="Nyaplot multi-pane example" /></p>
+
+<h2>Introduction</h2>
+
+<p>Last week I implemented the multiple panes interactivity to the
+front-end of Nyaplot. You can see the demo on <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">this notebook</a>.</p>
+
+<p>Skip over single pane demo, and have a look at the paragraph &#8216;Multiple
+panes demo&#8217; at the bottom. In this example, the histogram and bar chart are
+created individually, and then thrown into one instance of
+Nyaplot::Frame. After running <code>frame.show</code>, both of the diagrams
+appear in one out-put box on the notebook. When you click the
+histogram, bar chart refrects that and change its height.</p>
+
+<p>In this article I will explain about the event handler of Nyaplot,
+which allows for interactivity among panes.</p>
+
+<h2>The Trick</h2>
+
+<p>The trick is actually hidden in Nyaplot::DataFrame. In this example,
+both of the two diagrams are generated from columns in one DataFrame.
+When Nyaplot receives a column object (instance of <code>Nyaplot::Series</code>,
+defined
+<a href="https://github.com/domitry/nyaplot/blob/master/lib/nyaplot/data.rb#L115">here</a>), it
+internally find its source data frame and remembers its location.</p>
+
+<p>Consequently, Nyaplot can find that histogram and bar chart are
+sharing their data source, and allows them to interact with each other.</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/table.png" alt="Nyaplot::DataFrame Example" /></p>
+
+<h2>Implementation</h2>
+
+<p>Before explaining the event handler, I want to outline Nyaplot&#8217;s
+diagram rendering procedure. In the back-end JavaScript library,
+diagrams, such as histograms, fetch column data from data frames and generate
+their SVG DOM nodes dynamically (<a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L20">source code</a>).</p>
+
+<p>The key is <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/utils/dataframe.js">a data frame written in JavaScript</a>. After mouse events
+coming from a filter (such as the gray box on the plot area) are
+handled, the histogram <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L96">registers its filter function to the data frame and instructs all diagrams to update their SVG DOM objects</a>. The bar chart <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/bar.js#L54">updates its SVG from data filtered by the new function</a>.</p>
+
+<p>As you can see, Nyaplot&#8217;s inner workings are fairly simple; and these
+workings are common to all diagrams supported by Nyaplot. So not only
+the histogram and bar chart, but other diagrams as well, can behave
+interactively (e.g., <a href="http://www.domitry.com/gsoc/multi_pane2.html">histogram, bar, and Venn example</a>).</p>
+
+<h2>Conclusion</h2>
+
+<p>Despite, or perhaps because of, the relative simplicity of the
+structure, the event handler functions well. The actual interactivity
+in Nyaplot is based on the data frame object, both in the
+Ruby front-end and the JavaScript back-end. As a result, handling
+events in DataFrame is both natural and efficient for Nyaplot.</p>
+
+<h2>Additional Information</h2>
+
+<p>Nyaplot and its back-end library Nyaplotjs are being developed on GitHub.</p>
+
+<ul>
+<li><a href="https://github.com/domitry/nyaplot">Nyaplot on GitHub</a></li>
+<li><a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs on GitHub</a></li>
+</ul>
+
+
+<p>If you are interesed, feel free to try it and raise issues or send pull-requests.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -190,7 +297,7 @@ Instead of <code>{:method=&gt;:simpson}</code> in the above code, you can use an
 
   <div class="entry-content"><p>This week is the half-way point of this year&#8217;s Google Summer of Code. Let me report the progress during the term.</p>
 
-<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="alt text" /></p>
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="Example Nyaplot chart" /></p>
 
 <h2>Progress on the front-end library</h2>
 
@@ -780,212 +887,6 @@ the moment.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/gsoc-alumni/">Some Words From GSoC 2013 Alumni</a></h1>
-    
-    
-      <p class="meta">
-        
-  
-
-<span class="byline author vcard"><span class="fn">Pjotr Prins</span></span>
- &bull; 
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T16:07:00-05:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In 2013, SciRuby was a mentoring organization for the Google Summer of Code. We
-asked our alumni:</p>
-
-<p>1) How did you experience GSoC/SciRuby and what has it brought you?</p>
-
-<p>2) What advice would you give new applicants?</p>
-
-<p>Monica Dragan from Romania worked on <a href="https://github.com/monicadragan/GeneValidator">gene validation</a>, see also her
-<a href="http://gene-prediction.blogspot.nl/2013/08/start-using-our-gene-validation-tool.html">blog</a>. Actually, Monica
-was part of a different GSoC organisation,
-<a href="http://informatics.nescent.org/wiki/Phyloinformatics_Summer_of_Code_2013">PhyloSoC</a>,
-but also participated in our Ruby-centric meetings and code reviews. She shared
-her SciRuby GSoC experience:</p>
-
-<p class="note"><strong>Monica:</strong>
-During the GSoC period I developed a bioinformatics tool written in Ruby. First of all I learned a new programming
-language, as I had no experience with Ruby before. On this GSoC occasion I had the opportunity to get in touch with the
-community and I met people passionate about their work, with whom I continued
- the collaboration afterwards. But what I really gained from this experience is that I increased my enthusiasm about
- bioinformatics and I confirmed myself that this is the field I want to focus on in the next years.
-</p>
-
-
-<p>Alberto Arrigoni from Italy worked on <a href="http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/">data mining and machine learning algorithms for Ruby</a> and shared
-his GSoC experience:</p>
-
-<p class="note"><strong>Alberto:</strong>
-As a PhD student in the field of bioinformatics, my GSOC experience was very exciting and useful at different levels. On a training level, I had the
-unique chance to learn more in depth some topics of machine learning I had
-wanted to explore in the past, but never had quite the opportunity or the
-resources. On a more technical level, I appreciated the support of the GSOC
-mentors and the Sciruby community, which counts numerous experts and a very
-active mailing list.
-</p>
-
-
-<p>Ankur Goel from India worked on
-<a href="http://rubygems.org/gems/statsample-timeseries">statsample-timeseries</a> for Ruby.
-Ankur shared,</p>
-
-<p class="note"><strong>Ankur:</strong>
-It was the best learning experience. I learnt quite a lot of statistics while
-working on my TimeSeries extension; after GSoC, I picked up Machine Learning
-course and I was able to relate it to very easily after working on regression
-techniques in GLM extension. I can&#8217;t thank enough for the opportunity provided
-and the trust endowed by my mentor on me. Learning to write quality code and
-getting reviews was a cherry on cake! 
-</p>
-
-
-<p>Will Strinz from Madison, USA, worked on <a href="http://localhost:4000/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/">RDF generators for Ruby</a> for the
-semantic web:</p>
-
-<p class="note"><strong>Will:</strong>
-GSoC 2013 was a new experience for me in terms of managing my own time,
-planning my own project, and keeping up consistent interaction with my mentors
-across time zones. Despite a decent amount of prior experience with Ruby, it
-was also a challenge and an opportunity for me to really understand the tools
-and practices I knew, and learn to use the ones I wasn&#8217;t familiar with.
-
-As for what it&#8217;s brought me, aside from a job I secured partly through skills
-and project portfolio I gained during GSoC, and the power of knowing how to do
-just about any programming task using Ruby, I learned a lot about how to manage
-a project and interact with people in the real world.
-
-Communicating properly and in a timely manner over email and other asynchronous
-services is absolutely critical to the work I do now, and a lot harder than
-people make it out to be. Staying in touch with my mentors and making sure we
-were all on the same page about my project was something I spent a lot of time
-on, and in doing so I gained a lot of comfort with the process.
-
-Additionally, GSoC was my first true experience designing a large piece of
-software, where I couldn&#8217;t just give up and trash it when the code started
-getting messy or confusing. It really forced me to adopt good practices around
-testing and organization, especially since I had better programmers than myself
-looking over my work.
-
-Software architecture is something you just don&#8217;t learn in college level CS
-courses, and by the time I&#8217;d graduated, I&#8217;d started hearing a lot of my CS
-professors saying this too. Some day in the future, maybe soon, there will be
-classes taught about just this subject, but for now there&#8217;s no better way to
-learn about it than by working on a real project, with some accountability and
-motivation to actually get it done.
-
-
-</p>
-
-
-<p>Our alumni give new GSoC applicants the following advice:</p>
-
-<p class="note"><strong>Monica:</strong>
-GSoC is a great experience that you should try as a student! What is cool about GSoC is that you work on the project you are keen on and manage your time as
- you wish. Also, working remotely involves additional challenges. In the end you improve your experience and get to know a lot of new and great people.
-
-</p>
-
-
-
-
-<p class="note"><strong>Alberto:</strong>
-
-I think one of the best features offered by the GSOC is the possibility to
-collaborate with (and learn from) people who share the same scientific
-interests and have very different backgrounds and skills. Though this may be
-somewhat &#8216;expected&#8217; for mentors, I was also lucky to find other GSOC students
-willing to bond and share experiences and opinions. My advice is to be
-cooperative and try to learn as much as possible from/with them!  
-
-</p>
-
-
-
-
-<p class="note"><strong>Ankur:</strong>
-Work really hard. Do your homework before you ask questions or before quoting
-anything in proposal. Writing a good proposal is necessary, and you must really
-be aware of what you are writing - a good research is necessary. SciRuby
-community members are readily available to help you at mailing list and #sciruby channel. A thorough discussion with the mentor will help you out.
-</p>
-
-
-
-
-<p class="note"><strong>Will:</strong>
-To new applicants this year I&#8217;d stress one thing above all else; get in
-touch with people on the sciruby mailing list. Introduce yourself as soon as
-possible, and start discussing your project ideas when you have something in
-mind. People on the mailing list are very friendly and helpful, so don&#8217;t be
-afraid to start a conversation, but also expect constructive criticism of your
-proposals.
-
-Answering any questions or concerns promptly and thoroughly not only shows that
-your know your stuff and are passionate about your project, it also shows that
-you are a good fit for GSoC in general. Don&#8217;t assume you&#8217;re in just because
-you&#8217;ve had a good dialogue, but plan and communicate as though you are; don&#8217;t
-wait for the project to start to fill in details or contact your prospective
-mentors personally.
-
-Once you&#8217;ve submitted a proposal, all of this goes double. The closer you get
-to the deadline, the less time there will be to polish your application and
-respond to questions, so make sure you&#8217;re doing it quickly and effectively.
-</p>
-
-
-<p>Our SciRuby GSoC alumni added:</p>
-
-<p class="note"><strong>Monica:</strong>
-If I don&#8217;t join this year, I wish you good luck with the new students!
-</p>
-
-
-
-
-<p class="note"><strong>Ankur:</strong>
-I will be happy to sign up again as student, this year!
-</p>
-
-
-
-
-<p class="note"><strong>Will:</strong>
-I know I&#8217;ve said this already, but GSoC last year was a defining moment in my
-path to becoming a software developer, career-wise sure, but more importantly
-in the coder vs hacker vs computer scientist vs software developer sense. If
-there&#8217;s anything I can do to get involved this year, I&#8217;ll be available.<p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1007,6 +908,10 @@ there&#8217;s anything I can do to get involved this year, I&#8217;ll be availab
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/09/nyaplot-internal-event-handler/">The Nyaplot internal event handler</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/02/usage-integration-gem-improvements/">Usage: Integration Gem Improvements</a>
       </li>
     
@@ -1020,10 +925,6 @@ there&#8217;s anything I can do to get involved this year, I&#8217;ll be availab
     
       <li class="post">
         <a href="/blog/2014/06/19/progress-on-minimization-methods/">Progress on Minimization methods</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/18/introduction-minimization-and-integration/">Introduction: Minimization and Integration (Lahiru)</a>
       </li>
     
   </ul>
