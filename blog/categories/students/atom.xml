@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Students | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/students/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-07-22T13:40:45-04:00</updated>
+  <updated>2014-07-22T13:41:10-04:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -41,7 +41,7 @@ which allows for interactivity among panes.</p>
 both of the two diagrams are generated from columns in one DataFrame.
 When Nyaplot receives a column object (instance of <code>Nyaplot::Series</code>,
 defined
-<a href="https://github.com/domitry/nyaplot/blob/master/lib/nyaplot/data.rb#L115">here</a>), it
+<a href="https://github.com/domitry/nyaplot/blob/93ee183b935a7deafa388f2a198792e86914d550/lib/nyaplot/data.rb#L130">here</a>), it
 internally find its source data frame and remembers its location.</p>
 
 <p>Consequently, Nyaplot can find that histogram and bar chart are
@@ -54,11 +54,11 @@ sharing their data source, and allows them to interact with each other.</p>
 <p>Before explaining the event handler, I want to outline Nyaplot's
 diagram rendering procedure. In the back-end JavaScript library,
 diagrams, such as histograms, fetch column data from data frames and generate
-their SVG DOM nodes dynamically (<a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L20">source code</a>).</p>
+their SVG DOM nodes dynamically (<a href="https://github.com/domitry/Nyaplotjs/blob/0aa104aed467f39da89ba3ed72be5f159a0261b8/src/view/diagrams/histogram.js#L20">source code</a>).</p>
 
-<p>The key is <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/utils/dataframe.js">a data frame written in JavaScript</a>. After mouse events
+<p>The key is <a href="https://github.com/domitry/Nyaplotjs/blob/0aa104aed467f39da89ba3ed72be5f159a0261b8/src/utils/dataframe.js">a data frame written in JavaScript</a>. After mouse events
 coming from a filter (such as the gray box on the plot area) are
-handled, the histogram <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/histogram.js#L96">registers its filter function to the data frame and instructs all diagrams to update their SVG DOM objects</a>. The bar chart <a href="https://github.com/domitry/Nyaplotjs/blob/master/src/view/diagrams/bar.js#L54">updates its SVG from data filtered by the new function</a>.</p>
+handled, the histogram <a href="https://github.com/domitry/Nyaplotjs/blob/0aa104aed467f39da89ba3ed72be5f159a0261b8/src/view/diagrams/histogram.js#L96">registers its filter function to the data frame and instructs all diagrams to update their SVG DOM objects</a>. The bar chart <a href="https://github.com/domitry/Nyaplotjs/blob/0aa104aed467f39da89ba3ed72be5f159a0261b8/src/view/diagrams/bar.js#L54">updates its SVG from data filtered by the new function</a>.</p>
 
 <p>As you can see, Nyaplot's inner workings are fairly simple; and these
 workings are common to all diagrams supported by Nyaplot. So not only
