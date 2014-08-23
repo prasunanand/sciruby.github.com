@@ -9,7 +9,8 @@
   <meta name="author" content="SciRuby">
 
   
-  <meta name="description" content="This week is the half-way point of this year&#8217;s Google Summer of Code. Let me report the progress during the term. Progress on the front-end &hellip;">
+  <meta name="description" content="This week is the half-way point of this year&#8217;s Google Summer of
+Code. Let me report the progress during the term. Progress on the front-end &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -112,17 +113,25 @@
   </header>
 
 
-<div class="entry-content"><p>This week is the half-way point of this year&#8217;s Google Summer of Code. Let me report the progress during the term.</p>
+<div class="entry-content"><p>This week is the half-way point of this year&#8217;s Google Summer of
+Code. Let me report the progress during the term.</p>
 
-<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="Example Nyaplot chart" /></p>
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="Example Nyaplot chart of a spiral" /></p>
 
-<h2>Progress on the front-end library</h2>
+<h2>Progress on the front-end library I am developing</h2>
 
-<p>I am developing <a href="https://github.com/domitry/Nyaplot">Nyaplot</a> as the front-end library for my work.</p>
+<p><a href="https://github.com/domitry/Nyaplot">Nyaplot</a> as the front-end library
+for my work.</p>
 
-<p>One topic on Nyaplot is API design. That is a difficult problem since each plotting library has very different methods for creating plots. For example, matplotlib and Bokeh are both written in Python, but their demo code is written in very different styles. After discussing with my mentor, I decided to implement the function-based API.</p>
+<p>One topic on Nyaplot is API design. That is a difficult problem since
+each plotting library has very different methods for creating
+plots. For example, matplotlib and Bokeh are both written in Python,
+but their demo code is written in very different styles. After
+discussing with my mentor, I decided to implement the function-based
+API.</p>
 
-<p>As an exmaple of that API, here is a minimal working example for generating bar charts with Nyaplot:</p>
+<p>As an exmaple of that API, here is a minimal working example for
+generating bar charts with Nyaplot:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -135,7 +144,8 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>If you want to change options (e.g., color or title), put the return value of Nyaplot::Plot.add into a variable and call its methods.</p>
+<p>If you want to change options (<em>e.g.</em>, color or title), put the return
+value of <code>Nyaplot::Plot.add</code> into a variable and call its methods.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -146,34 +156,52 @@
 
 <h2>IRuby integration</h2>
 
-<p>Interaction with <a href="https://github.com/minad/iruby">IRuby</a> is a priority for Nyaplot. IRuby is a web-based Ruby lab notebook-like environment, based on IPython, which is also useful for fast prototyping.</p>
+<p>Interaction with <a href="https://github.com/minad/iruby">IRuby</a> is a priority
+for Nyaplot. IRuby is a web-based Ruby lab notebook-like environment,
+based on IPython, which is also useful for fast prototyping.</p>
 
-<p>The image on top of this blog post is a hyperbolic spiral which I generated with Nyaplot in
-IRuby. <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">Have a look at the notebook</a> on nbviewer, an IRuby and IPython notebook hosting services.</p>
+<p>The image at the top of this blog post is a hyperbolic spiral which I
+generated with Nyaplot in IRuby. <a href="http://nbviewer.ipython.org/github/domitry/Nyaplot/blob/master/examples/notebook/Introduction.ipynb">Have a look at the
+notebook</a>
+on nbviewer, an IRuby and IPython notebook hosting services.</p>
 
 <h2>Progress on the back-end library</h2>
 
-<p>Nyaplot uses <a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs</a> as its back-end library. I spent a lot of time to implement interactivity among multiple panes to Nyaplotjs. See <a href="http://www.domitry.com/gsoc/">an example</a>.</p>
+<p>Nyaplot uses <a href="https://github.com/domitry/Nyaplotjs">Nyaplotjs</a> as its
+back-end library. I spent a lot of time working to implement
+interactivity among multiple panes to Nyaplotjs. <a href="http://www.domitry.com/gsoc/multi_pane2.html">See an
+example here.</a></p>
 
-<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/top.png" alt="alt text" /></p>
+<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/top.png" alt="Three-pane interactivity screenshot" /></p>
 
-<p>The input data source is a TSV file of 2,044 lines. Multiple-pane interactivity is especially important when visualizing such a large dataset.</p>
+<p>The input data source is a TSV file of 2,044 lines. Multiple-pane
+interactivity is especially important when visualizing such a large
+dataset.</p>
 
-<p>Have a look at the radio buttons beside the Venn diagram. The left three panels decide which set to put into each of 3 circles (VENN1, VENN2, VENN3). The right panel decides which data in each area (overlapping area, non-overlapping area, and all) to use in the other two panes.</p>
+<p>Have a look at the radio buttons beside the Venn diagram. The left
+three panels decide which set to put into each of three circles
+(VENN1, VENN2, VENN3). The right panel decides which data in each area
+(overlapping area, non-overlapping area, and all) to use in the other
+two panes.</p>
 
-<p>The gray box on the histogram decides the range of PNR values. If you select the
-range 0.3 to 0.7 with it, the right bar chart will reflect that and show how many
-of the selected data are in that range.</p>
+<p>The gray box on the histogram decides the range of PNR values. If you
+select the range 0.3 to 0.7 with it, the right bar chart will reflect
+that and show how many of the selected data are in that range.</p>
 
-<p>Nyaplotjs provides this interactivity using an event handler connected to a dataframe object. That
-allows us to handle unidirectional update method (e.g., histogram updates bar chart, but bar chart does not update histogram).</p>
+<p>Nyaplotjs provides this interactivity using an event handler connected
+to a dataframe object. That allows us to handle unidirectional update
+method (<em>e.g.</em>, histogram updates bar chart, but bar chart does not
+update histogram).</p>
 
 <h2>Conclusion</h2>
 
-<p>I finished the first half term of Google Summer of Code 2014, but I still have a lot of
-things to do. I would like to continue to add interactivity to both the front-end and back-end libraries.</p>
+<p>I finished the first half term of Google Summer of Code 2014, but I
+still have a lot of things to do. I would like to continue to add
+interactivity to both the front-end and back-end libraries.</p>
 
-<p>I am developing those two libraries in separate repositories on GitHub. If you are interested, feel free to raise issues or send pull-requests, even during the GSoC term.</p>
+<p>I am developing those two libraries in separate repositories on
+GitHub. If you are interested, feel free to raise issues or send
+pull-requests, even during the GSoC term.</p>
 
 <ul>
 <li><a href="https://github.com/domitry/Nyaplot">Nyaplot - GitHub</a></li>
@@ -257,6 +285,10 @@ things to do. I would like to continue to add interactivity to both the front-en
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/23/nyaplot-interactive-plots-generateor-with-ruby/">Nyaplot: interactive plots generateor with Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/28/benchmarks-for-integration-gem/">Benchmarks for Integration Gem</a>
       </li>
     
@@ -270,10 +302,6 @@ things to do. I would like to continue to add interactivity to both the front-en
     
       <li class="post">
         <a href="/blog/2014/07/02/progress-of-d3-project/">The progress of the GSoC D3/Visualization Project</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/24/updates-minimization-and-integration/">Updates: Minimization and Integration</a>
       </li>
     
   </ul>

@@ -124,7 +124,7 @@
     </url>
     <url>
         <loc>http://sciruby.com/blog/2014/07/02/progress-of-d3-project/</loc>
-        <lastmod>2014-07-22T13:38:40-04:00</lastmod>
+        <lastmod>2014-08-23T18:33:08-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/</loc>
@@ -136,15 +136,21 @@
     </url>
     <url>
         <loc>http://sciruby.com/blog/2014/07/28/benchmarks-for-integration-gem/</loc>
-        <lastmod>2014-08-23T18:09:07-04:00</lastmod>
+        <lastmod>2014-08-23T18:11:08-04:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://sciruby.com/blog/2014/08/23/nyaplot-interactive-plots-generateor-with-ruby/
+        </loc>
+        <lastmod>2014-08-23T18:33:08-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/archives/</loc>
-        <lastmod>2014-08-23T18:09:07-04:00</lastmod>
+        <lastmod>2014-08-23T18:33:08-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/blog/</loc>
-        <lastmod>2014-08-23T18:09:07-04:00</lastmod>
+        <lastmod>2014-08-23T18:33:08-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/docs/</loc>
@@ -152,7 +158,7 @@
     </url>
     <url>
         <loc>http://sciruby.com/</loc>
-        <lastmod>2014-08-23T18:09:07-04:00</lastmod>
+        <lastmod>2014-08-23T18:33:08-04:00</lastmod>
     </url>
     <url>
         <loc>http://sciruby.com/nmatrix/</loc>
