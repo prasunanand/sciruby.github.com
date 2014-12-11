@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Nyaplot | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/nyaplot/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-12-11T10:37:50-05:00</updated>
+  <updated>2014-12-11T10:39:41-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Nyaplot: interactive plots generateor with Ruby]]></title>
+    <title type="html"><![CDATA[Nyaplot: interactive plots generator with Ruby]]></title>
     <link href="http://sciruby.com/blog/2014/08/23/nyaplot-interactive-plots-generateor-with-ruby/"/>
     <updated>2014-08-23T10:07:00-04:00</updated>
     <id>http://sciruby.com/blog/2014/08/23/nyaplot-interactive-plots-generateor-with-ruby</id>
