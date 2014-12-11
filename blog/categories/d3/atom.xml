@@ -4,7 +4,7 @@
   <title><![CDATA[Category: D3 | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/d3/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-08-23T18:33:19-04:00</updated>
+  <updated>2014-12-11T10:37:50-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -24,17 +24,16 @@
 <h2>Introduction</h2>
 
 <p>Three months of GSoC 2014 term was over this week and finally I
-released my product <a href="http://rubygems.org/gems/nyaplot">Nyaplot as a
-gem</a>. This blog post was written to
-introduce Nyaplot version 0.1.1.</p>
+released my product <a href="http://rubygems.org/gems/nyaplot">Nyaplot as a gem</a>.
+This blog post was written to introduce Nyaplot version 0.1.1.</p>
 
-<h2>Feature</h2>
+<h2>Features</h2>
 
 <p>There are various plotting libraries in the world as ggplot2 from R
 community and <a href="https://github.com/zuhao/plotrb">Plotrb</a> and
 <a href="https://github.com/clbustos/rubyvis">Rubyvis</a> from Ruby.  The
 features of Nyaplot compared with those libraries are
-<strong>interactivity</strong>, <strong>simplicity</strong>, and <strong>extendibility</strong>.</p>
+<strong>interactivity</strong>, <strong>simplicity</strong>, and <strong>extensibility</strong>.</p>
 
 <p>Interactivity is the main theme of my D3 project in GSoC 2014. You can
 soon find the aforementioned interactivity by clicking plots with your
@@ -42,12 +41,11 @@ mouse or trackpad. This feature is also available on browsers bundled
 with Android or iOS thanks to technologies like SVG and WebGL.</p>
 
 <p>However, the word 'interactivity' is not limited to situations like
-the above. You can explore that for yourself by using Nyaplot in <a href="https://github.com/minad/iruby">IRuby
-notebook</a>. Various modules prepared
+the above. You can explore that for yourself by using Nyaplot in <a href="https://github.com/minad/iruby">IRuby notebook</a>. Various
+modules prepared
 by Nyaplot help you to create plots interactively in the notebook.
 You can also publish the result quickly by uploading the notebook to
-your Dropbox storage, a gist or pastebin, or somewhere else. <a href="http://nbviewer.ipython.org/gist/mgiraldo/a68b53175ce5892531bc">Here is an
-example</a>
+your Dropbox storage, a gist or pastebin, or somewhere else. <a href="http://nbviewer.ipython.org/gist/mgiraldo/a68b53175ce5892531bc">Here is an example</a>
 which Mauricio Giraldo created and published on gist.</p>
 
 <p>Simplicity is also an important element.  Many plotting libraries has
@@ -75,26 +73,24 @@ After that, find example code from
 <code>ruby</code> command.  These scripts will generate some plots with Nyaplot
 and export them as html files to current directory.</p>
 
-<p>In addition, I strongly recommend you to install <a href="https://github.com/minad/iruby">IRuby
-notebook</a> at the same time. IRuby is a
+<p>In addition, I strongly recommend you to install <a href="https://github.com/minad/iruby">IRuby notebook</a> at
+the same time. IRuby is a
 web-based, interactive Ruby environment and is useful for quickly
 creating plots with Nyaplot. The introduction video embedded at the
 top of this post was also created on IRuby.</p>
 
 <p>IRuby depends on some software outside of Ruby-ecosystem, so its
-installation method is a bit complicated. Please read <a href="https://github.com/domitry/nyaplot#install-iruby-notebook">the description
-in README</a>
+installation method is a bit complicated. Please read <a href="https://github.com/domitry/nyaplot#install-iruby-notebook">the description in the readme</a>
 to learn more.</p>
 
 <h2>Usage</h2>
 
 <p>I already wrote tutorials, so I'd like to limit the role of this
 paragraph to the introduction of the basic usage. You can skip
-reading this paragraph and find details on <em><a href="http://nbviewer.ipython.org/github/domitry/nyaplot/blob/master/examples/notebook/Index.ipynb">Tutorial on
-nbviewer</a></em>
-and <em><a href="http://rubydoc.info/gems/nyaplot/0.1.1/frames">Documents</a></em>.</p>
+reading this paragraph and find details in <a href="http://nbviewer.ipython.org/github/domitry/nyaplot/blob/master/examples/notebook/Index.ipynb">the nbviewer tutorial</a>
+and <a href="http://rubydoc.info/gems/nyaplot/0.1.1/frames">documentation</a>.</p>
 
-<p>The minimum code to create Scatter plot is as shown below:</p>
+<p>The minimum code to create a scatter plot is as shown below:</p>
 
 <p><code>ruby
 plot = Nyaplot::Plot.new
@@ -120,8 +116,7 @@ sc.color(color)
 qualitative data.</p>
 
 <p>If you execute this code in IRuby notebook, you can check if you favor
-the colorset through html-table based interface. <a href="http://nbviewer.ipython.org/github/domitry/nyaplot/blob/master/examples/notebook/Colors.ipynb">See the
-tutorial to learn more.</a></p>
+the colorset through html-table based interface. <a href="http://nbviewer.ipython.org/github/domitry/nyaplot/blob/master/examples/notebook/Colors.ipynb">See the tutorial to learn more.</a></p>
 
 <p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/colors.png" alt="Nyaplot::Colors" /></p>
 
@@ -256,9 +251,9 @@ Code. Let me report the progress during the term.</p>
 
 <p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/nyaoplot_top.png" alt="Example Nyaplot chart of a spiral" /></p>
 
-<h2>Progress on the front-end library I am developing</h2>
+<h2>Progress on the front-end library</h2>
 
-<p><a href="https://github.com/domitry/Nyaplot">Nyaplot</a> as the front-end library
+<p>I am developing <a href="https://github.com/domitry/Nyaplot">Nyaplot</a> as the front-end library
 for my work.</p>
 
 <p>One topic on Nyaplot is API design. That is a difficult problem since
