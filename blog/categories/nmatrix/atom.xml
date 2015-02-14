@@ -4,7 +4,7 @@
   <title><![CDATA[Category: NMatrix | SciRuby]]></title>
   <link href="http://sciruby.com/blog/categories/nmatrix/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2014-12-11T10:39:41-05:00</updated>
+  <updated>2015-02-14T15:25:54-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[NMatrix's first beta release (belated announcement)]]></title>
+    <link href="http://sciruby.com/blog/2015/02/14/nmatrix-beta-released-belated-announcement/"/>
+    <updated>2015-02-14T14:56:00-05:00</updated>
+    <id>http://sciruby.com/blog/2015/02/14/nmatrix-beta-released-belated-announcement</id>
+    <content type="html"><![CDATA[<p>Almost two months ago, in December, we <a href="https://rubygems.org/gems/nmatrix">release our first beta of NMatrix</a>, our
+linear algebra library for the Ruby language.</p>
+
+<p>Rather than discussing what NMatrix has (which you can find in the <a href="https://github.com/SciRuby/nmatrix/blob/master/README.rdoc">readme</a>),
+I want to take this opportunity to discuss where we'd like it to go in the future. Think of this as our roadmap to 1.0.</p>
+
+<h2>External Library Requirements</h2>
+
+<p>NMatrix currently has an extremely limited set of Ruby gem dependencies &mdash; essentially only packable, which is
+needed for some of the I/O functionality &mdash; but as with other linear algebra libraries, its native library
+requirements can be problematic.</p>
+
+<p>Specifically, NMatrix requires ATLAS &mdash; which is virtually impossible to install on many Macs, and is no longer
+readily available with Yosemite &mdash; and also likes to have LAPACK around. Moreover, some would prefer to use other
+math libraries with NMatrix.</p>
+
+<p>There are several partial solutions. The clearest is that any components of NMatrix which require external non-standard
+libraries need to be abstracted into separate gems &mdash; such as <tt>nmatrix-atlas</tt> and <tt>nmatrix-io</tt> &mdash; and
+that these components should be interchangeable with others. NMatrix then needs to be able to fall back on either native
+C/C++ or Ruby implementations of certain functionalities.</p>
+
+<p>To this end, a number of simple LAPACK and CBLAS functions have been implemented in NMatrix, with volunteers working on
+a few others (the list is available in the README). <a href="https://github.com/SciRuby/sciruby/wiki/Google-Summer-of-Code-2015-Ideas#abstraction-of-atlascblasclapack-or-openblas-into-a-separate-gem">One of our proposed Google Summer of Code 2015 project ideas</a> involves
+breaking up NMatrix into several gems.</p>
+
+<p>The end result will be a much simpler installation process, and more freedom of choice.</p>
+
+<h2>Removal of Unnecessary Features</h2>
+
+<p>We thought it would be quite clever to include rational number support in NMatrix, including three types (32-bit, 64-bit,
+and 128-bit). Unfortunately, these types increase compilation time by about 30% (back-of-the-envelope calculation), and
+aren't particularly useful since most matrix operations with rationals as inputs give irrational-valued matrices
+as their outputs. The inclusion of rational types also complicates the codebase.</p>
+
+<p>Additionally, rationals are computationally problematic; what happens if there is overflow? Ruby handles overflow gracefully
+in its own rational type, which NMatrix users would still be able to utilize via the <tt>:object</tt> dtype.</p>
+
+<h2>You</h2>
+
+<p>The biggest change going forward is that NMatrix development needs to support actual use-cases. In the past, we've aimed
+to flesh out support for sparse storage formats, as well as math operations for the dense storage-type. It is folly to
+develop features no one wants to use. Future core development, then, will aim to make NMatrix's current feature set more
+usable.</p>
+
+<p>That means that future non-core development depends on you. What would you like to see in NMatrix? What would make it
+more useful for you?</p>
+
+<p>If you want to become involved, now is a good time. We're getting ready to submit a Google Summer of Code application
+(our third, I believe), and we're in need of students &mdash; <em>and especially mentors</em>. Please consider joining
+our <a href="https://groups.google.com/forum/#!forum/sciruby-dev">mailing list</a> and adding yourself as a mentor on the
+<a href="https://github.com/SciRuby/sciruby/wiki/Google-Summer-of-Code-2015-Ideas">ideas page</a>.</p>
+
+<p>Thanks so much for your support!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Introducing the FFTW SciRuby GSoC project]]></title>
@@ -359,77 +420,6 @@ vector.pretty_print
  if you have any problems.</p>
 
 <p>Finally, if you're a student, you should consider applying to be a <a href="/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/">SciRuby Fellow</a> this winter or spring.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SciRuby Receives Ruby Association Grant; Fellowships Available]]></title>
-    <link href="http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available/"/>
-    <updated>2012-09-24T13:43:00-04:00</updated>
-    <id>http://sciruby.com/blog/2012/09/24/sciruby-receives-ruby-association-grant--fellowships-available</id>
-    <content type="html"><![CDATA[<p>We are incredibly pleased to announce that the Ruby Association has awarded us a <a href="http://www.ruby.or.jp/en/news/20120717.html">1,000,000 JPY grant</a>.</p>
-
-<p>When we applied, we proposed to build upon our <a href="http://sciruby.com/blog/2012/05/08/sciruby-summer-of-code/">successful SciRuby Summer of Code</a>,
-which we undertook with the support of <a href="http://brighterplanet.com">Brighter Planet</a>. We are pleased to announce applications
-for SciRuby fellowships.<!--more--></p>
-
-<h2>Funding Note</h2>
-
-<p>A million yen translates to around $12,000, which is nearly enough to hire two graduate or undergraduate students
-for an academic term. We would like to hire more than one; but for that, <a href="http://pledgie.com/campaigns/15783">we need your help</a>.</p>
-
-<h2>Fellowship Terms</h2>
-
-<ul>
-<li>We plan to provide each fellow with a monthly stipend competitive with her or his home institution (e.g., if research assistants
-in your graduate program typically receive $1,500 per month, your stipend with us would be $1,500 per month).</li>
-<li>Tenure will be one semester or one quarter (with an option to renew for a second quarter), depending upon the academic
-calendar of the student's home institution.</li>
-<li>Tenure must begin no later than January 2013.</li>
-<li>Fellows are expected to work full-time (forty hours per week) on some element of <a href="http://github.com/SciRuby/nmatrix">NMatrix</a>.</li>
-<li>The Ruby Association requires monthly progress reports for stipend payment.</li>
-<li>Fellows will be assigned mentors, but should expect to work relatively independently unless located near a SciRuby mentor.</li>
-</ul>
-
-
-<h2>Requirements</h2>
-
-<ul>
-<li>Fluency in C/C++, Ruby, and the English language.</li>
-<li>Comfort with git and Github.</li>
-<li>An understanding of GDB and Valgrind (or similar debugging tools) as well as RSpec.</li>
-<li>A course of study in the sciences or engineering at an accredited college or university.</li>
-</ul>
-
-
-<h2>To Apply</h2>
-
-<p>Please answer the following questions to the best of your ability. You may provide long or short answers, as you feel is appropriate.</p>
-
-<p>Don't feel that you should limit yourself if you have important things to say; but don't feel that you have to make things up. Sometimes one word is appropriate, sometimes one sentence, and sometimes many paragraphs.</p>
-
-<ol>
-<li><p><strong>Contact information.</strong> Please provide your email address, GitHub username, and <strong>approximate</strong> physical location.</p></li>
-<li><p>Why do you like Ruby?</p></li>
-<li><p>What do you like about science and why? What area do you like best?</p></li>
-<li><p>Describe your <strong>experience</strong> with the following: Ruby, C/C++, other languages.</p></li>
-<li><p>Describe your <strong>educational background</strong> (school, degree plan, major, past degrees, research area).</p></li>
-<li><p>Please describe what you plan to work on for this project. (Check out the <a href="http://github.com/SciRuby/nmatrix/issues">NMatrix issue tracker</a> for ideas.)</p></li>
-<li><p>What would be the outcome of your work?</p></li>
-<li><p>If selected, you will be providing monthly demonstrations of you work. What milestones do you envision for your project?</p></li>
-<li><p>Please provide contact information for your graduate program or someone who can offer stipend information.</p></li>
-<li><p>Please provide a link to your school's academic calendar.</p></li>
-<li><p>What other responsibilities do you have during your likely fellowship term? How will you allocate and manage your time?</p></li>
-<li><p>How do you feel about <strong>chunky bacon</strong>?</p></li>
-<li><p>Is there anything else you think we should have asked but didn't?</p></li>
-</ol>
-
-
-<p>Email your answers to sciruby.project on gmail. <em>Please include a resume or curriculum vitae.</em></p>
-
-<h3>Application Deadline</h3>
-
-<p>Applications are due by the 31st of October, 2012.</p>
 ]]></content>
   </entry>
   
