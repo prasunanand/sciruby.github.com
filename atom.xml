@@ -4,7 +4,7 @@
   <title><![CDATA[SciRuby]]></title>
   <link href="http://sciruby.com/atom.xml" rel="self"/>
   <link href="http://sciruby.com/"/>
-  <updated>2015-02-14T15:25:54-05:00</updated>
+  <updated>2016-04-30T17:10:43-05:00</updated>
   <id>http://sciruby.com/</id>
   <author>
     <name><![CDATA[SciRuby]]></name>
@@ -14,9 +14,1039 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Statistical linear mixed models in Ruby with mixed_models (GSoC2015)]]></title>
+    <link href="http://sciruby.com/blog/2015/08/19/gsoc-2015-mixed-models/"/>
+    <updated>2015-08-19T12:00:00-05:00</updated>
+    <id>http://sciruby.com/blog/2015/08/19/gsoc-2015-mixed-models</id>
+    <content type="html"><![CDATA[<p>Google Summer of Code 2015 is coming to an end. During this summer, I have learned too many things to list here about statistical modeling, Ruby and software development in general, and I had a lot of fun in the process!</p>
+
+<h2>Linear mixed models</h2>
+
+<p>My GSoC project is the Ruby gem <a href="https://github.com/agisga/mixed_models">mixed_models</a>. Mixed models are statistical models which predict the value of a response variable as a result of fixed and random effects. The gem in its current version can be used to fit statistical linear mixed models and perform statistical inference on the model parameters as well as to predict future observations. A number of tutorials/examples in IRuby notebook format are accessible from the <code>mixed_models</code> <a href="https://github.com/agisga/mixed_models">github repository</a>.</p>
+
+<p>Linear mixed models are implemented in the class <code>LMM</code>. The constructor method <code>LMM#initialize</code> provides a flexible model specification interface, where an arbitrary covariance structure of the random effects terms can be passed as a <code>Proc</code> or a block.</p>
+
+<p>A convenient user-friendly interface to the basic model fitting algorithm is <code>LMM#from_formula</code>, which uses the formula language of the R mixed models package <code>lme4</code> for model specification. With the <code>#from_formula</code> method, the user can conveniently fit models with categorical predictor variables, interaction fixed or random effects, as well as multiple crossed or nested random effects, all with just one line of code.</p>
+
+<p>Examples are given in the sections below.</p>
+
+<h3>Implementation</h3>
+
+<p>The parameter estimation in <code>LMM#initialize</code> is largely based on the approach developed by the authors of the R mixed models package <code>lme4</code>, which is delineated in the <code>lme4</code> <a href="https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf">vignette</a>. I have tried to make the code of the model fitting algorithm in <code>LMM#initialize</code> easy to read, especially compared to the corresponding implementation in <code>lme4</code>.</p>
+
+<p>The <code>lme4</code> code is largely written in C++, which is integrated in R via the packages <code>Rcpp</code> and <code>RcppEigen</code>. It uses <a href="https://developer.nvidia.com/cholmod">CHOLMOD</a> code for various sparse matrix tricks, and it involves passing pointers to C++ object to R (and vice versa) many times, and passing different R environments from function to function. All this makes the <code>lme4</code> code rather hard to read. Even Douglas Bates, the main developer of <code>lme4</code>, admits that <a href="https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html">&#8220;The end result is confusing (my fault entirely) and fragile&#8221;</a>, because of all the utilized performance improvements. I have analyzed the <code>lme4</code> code in three blog posts (<a href="http://agisga.github.io/Dissect_lmer_part1/">part 1</a>, <a href="http://agisga.github.io/Dissect_lmer_part2/">part 2</a> and <a href="http://agisga.github.io/Dissect_lmer_part3/">part 3</a>) before starting to work on my gem <code>mixed_models</code>.</p>
+
+<p>The method <code>LMM#initialize</code> is written in a more functional style, which makes the code shorter and (I find) easier to follow.  All matrix calculations are performed using the gem <a href="https://github.com/SciRuby/nmatrix"><code>nmatrix</code></a>, which has a quite intuitive syntax and contributes to the overall code readability as well.
+The Ruby gem loses with respect to memory consumption and speed in comparison to <code>lme4</code>, because it is written in pure Ruby and does not utilize any sparse matrix tricks. However, for the same reasons the <code>mixed_models</code> code is much shorter and easier to read than <code>lme4</code>. Moreover, the linear mixed model formulation in <code>mixed_models</code> is a little bit more general, because it does not assume that the random effects covariance matrix is sparse. More about the implementation of <code>LMM#initialize</code> can be found in <a href="http://agisga.github.io/First-linear-mixed-model-fit/">this blog post</a>.</p>
+
+<h3>Other existing tools</h3>
+
+<p>Popular existing software packages for mixed models include the R package <a href="https://cran.r-project.org/web/packages/lme4/index.html"><code>lme4</code></a> (which is arguably the standard software for linear mixed models), the R package <a href="https://cran.r-project.org/web/packages/nlme/index.html"><code>nlme</code></a> (an older package developed by the same author as <code>lme4</code>, still widely used), Python&#8217;s <a href="https://github.com/statsmodels/statsmodels/blob/master/statsmodels/regression/mixed_linear_model.py"><code>statmodels</code></a>, and the Julia package <a href="https://github.com/dmbates/MixedModels.jl"><code>MixedModels.jl</code></a>.</p>
+
+<p>Below, I give a couple of examples illustrating some of the capabilities of <code>mixed_models</code> and explore how it compares to the alternatives.</p>
+
+<h3>A usage example and discussion</h3>
+
+<p>As an example, we use <a href="http://archive.ics.uci.edu/ml/datasets/BlogFeedback">data</a> from the UCI machine learning repository, which originate from blog posts from various sources in 2010-2012, in order to model (the logarithm of) the number of comments that a blog post receives. The linear predictors are the text length, the log-transform of the average number of comments at the hosting website, the average number of trackbacks at the hosting website, and the parent blog posts. We assume a random effect on the number of comments due to the day of the week on which the blog post was published. In <code>mixed_models</code> this model can be fit with</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="n">formula</span><span class="p">:</span> <span class="s2">&quot;log_comments ~ log_host_comments_avg + host_trackbacks_avg + length + has_parent_with_comments + (1 | day)&quot;</span><span class="p">,</span>
+</span><span class='line'>                              <span class="n">data</span><span class="p">:</span> <span class="n">blog_data</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and we can display some information about the estimated fixed effects with</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">puts</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">fix_ef_summary</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>which produces the following output:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>                                         <span class="n">coef</span>                       <span class="n">sd</span>                  <span class="n">z_score</span>            <span class="no">WaldZ_p_value</span>
+</span><span class='line'>           <span class="n">intercept</span>       <span class="mi">1</span><span class="o">.</span><span class="mi">2847896684307731</span>     <span class="mi">0</span><span class="o">.</span><span class="mo">0303</span><span class="mi">80582281933178</span>        <span class="mi">42</span><span class="o">.</span><span class="mi">28983027737477</span>                      <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
+</span><span class='line'>   <span class="n">log_host_comments_avg</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">415586319225577</span>     <span class="mi">0</span><span class="o">.</span><span class="mo">007</span><span class="mi">848368759350875</span>        <span class="mi">52</span><span class="o">.</span><span class="mi">95193586953086</span>                      <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
+</span><span class='line'> <span class="n">host_trackbacks_avg</span>     <span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mo">075515</span><span class="mi">88997745964</span>     <span class="mi">0</span><span class="o">.</span><span class="mo">010</span><span class="mi">915623834434068</span>       <span class="o">-</span><span class="mi">6</span><span class="o">.</span><span class="mi">918146971979714</span>    <span class="mi">4</span><span class="o">.</span><span class="mi">575895218295045</span><span class="n">e</span><span class="o">-</span><span class="mi">12</span>
+</span><span class='line'>              <span class="n">length</span>   <span class="mi">1</span><span class="o">.</span><span class="mi">8245853808280765</span><span class="n">e</span><span class="o">-</span><span class="mo">05</span>    <span class="mi">2</span><span class="o">.</span><span class="mi">981631039432429</span><span class="n">e</span><span class="o">-</span><span class="mo">06</span>        <span class="mi">6</span><span class="o">.</span><span class="mi">119420400102211</span>    <span class="mi">9</span><span class="o">.</span><span class="mi">391631916599863</span><span class="n">e</span><span class="o">-</span><span class="mi">10</span>
+</span><span class='line'><span class="n">has_parent_with_comments</span>      <span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">4616662830553772</span>      <span class="mi">0</span><span class="o">.</span><span class="mi">13936886611993773</span>      <span class="o">-</span><span class="mi">3</span><span class="o">.</span><span class="mi">3125496095955715</span>    <span class="mi">0</span><span class="o">.</span><span class="mo">000</span><span class="mi">9244972814528296</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can also display the estimated random effects coefficients and the random effects standard deviation,</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Random effects coefficients:&quot;</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">ran_ef</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Random effects correlation structure:&quot;</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">ran_ef_summary</span><span class="o">.</span><span class="n">inspect</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>which produces</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Random</span> <span class="n">effects</span> <span class="n">coefficients</span><span class="p">:</span>
+</span><span class='line'><span class="p">{</span><span class="ss">:intercept_fr</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:intercept_mo</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:intercept_sa</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:intercept_su</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:intercept_th</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:intercept_tu</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:intercept_we</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">}</span>
+</span><span class='line'><span class="no">Random</span> <span class="n">effects</span> <span class="n">standard</span> <span class="n">deviation</span><span class="p">:</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">#&lt;Daru::DataFrame:70278348234580 @name = 8e11a27f-81b0-48a0-9771-085a8f30693d @size = 1&gt;</span>
+</span><span class='line'>                  <span class="n">day</span>
+</span><span class='line'>       <span class="n">day</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Interestingly, the estimates of the random effects coefficients and standard deviation are all zero!
+That is, we have a singular fit. Thus, our results imply that the day of the week on which a blog post is published has no effect on the number of comments that the blog post will receive.</p>
+
+<p>It is worth pointing out that such a model fit with a singular covariance matrix is problematic with the current version of Python&#8217;s <code>statmodels</code> (described as &#8220;numerically challenging&#8221; in the <a href="http://statsmodels.sourceforge.net/devel/mixed_linear.html">documentation</a>) and the R package <code>nlme</code> (&#8220;Singular covariance matrices correspond to infinite parameter values&#8221;, a <a href="https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html">mailing list reply</a> by Douglas Bates, the author of <code>nlme</code>). However, <code>mixed_models</code>, <code>lme4</code> and <code>MixedModels.jl</code> can handle singular fits without problems.
+In fact, like <code>mixed_models</code> above, <code>lme4</code> estimates the random effects coefficients and standard deviation to be zero, as we can see from the following R output:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='rconsole'><span class='line'><span class="gp">&gt; </span>mod <span class="o">&lt;-</span> lmer<span class="p">(</span>log_comments ~ log_host_comments_avg <span class="o">+</span> host_trackbacks_avg <span class="o">+</span> length <span class="o">+</span> has_parent_with_comments <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span>day<span class="p">),</span> data <span class="o">=</span> df<span class="p">)</span>
+</span><span class='line'><span class="go">Warning message:</span>
+</span><span class='line'><span class="go">Some predictor variables are on very different scales: consider rescaling </span>
+</span><span class='line'><span class="gp">&gt; </span>ranef<span class="p">(</span>mod<span class="p">)</span>
+</span><span class='line'><span class="go">$day</span>
+</span><span class='line'><span class="go">   (Intercept)</span>
+</span><span class='line'><span class="go">fr           0</span>
+</span><span class='line'><span class="go">mo           0</span>
+</span><span class='line'><span class="go">sa           0</span>
+</span><span class='line'><span class="go">su           0</span>
+</span><span class='line'><span class="go">th           0</span>
+</span><span class='line'><span class="go">tu           0</span>
+</span><span class='line'><span class="go">we           0</span>
+</span><span class='line'>
+</span><span class='line'><span class="gp">&gt; </span>VarCorr<span class="p">(</span>mod<span class="p">)</span>
+</span><span class='line'><span class="go"> Groups   Name        Std.Dev.</span>
+</span><span class='line'><span class="go"> day      (Intercept) 0.0000  </span>
+</span><span class='line'><span class="go"> Residual             1.2614</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unfortunately, <code>mixed_models</code> is rather slow when applied to such a large data set (<code>blog_data</code> is a data frame of size 22435&times;8), especially when compared to <code>lme4</code> which uses many sparse matrix tricks and is mostly written in C++ (integrated in R via <code>Rcpp</code>) to speed up computation. The difference in performance between <code>mixed_models</code> and <code>lme4</code> is on the order of hours for large data, and Julia&#8217;s <code>MixedModels.jl</code> promises to be even faster than <code>lme4</code>. However, there is no noticeable difference in performance speed for smaller data sets.</p>
+
+<p><a href="http://nbviewer.ipython.org/github/agisga/mixed_models/blob/master/notebooks/blog_data.ipynb">The full data analysis of the blog post data can be found in this IRuby notebook</a>.</p>
+
+<h3>A second example and statistical inference on the parameter estimates</h3>
+
+<p>Often, the experimental design or the data suggests a linear mixed model whose random effects are associated with multiple grouping factors. A specification of multiple random effects terms which correspond to multiple grouping factors is often referred to as <em>crossed random effect</em>, or <em>nested random effects</em> if the corresponding grouping factors are nested in each other.
+A good reference on such models is <a href="http://lme4.r-forge.r-project.org/book/Ch2.pdf">Chapter 2</a> of Douglas Bates&#8217; <code>lme4</code> book.</p>
+
+<p>Like <code>lme4</code>, <code>mixed_models</code> is particularly well suited for models with crossed or nested random effects. The current release of <code>statmodels</code>, however, does not support crossed or nested random effects (according to the <a href="http://statsmodels.sourceforge.net/devel/mixed_linear.html">documentation</a>).</p>
+
+<p>As an example we fit a linear mixed model with nested random effects to a data frame with 100 rows, of the form:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#&lt;Daru::DataFrame:69912847885160 @name = 2b161c5d-00de-4240-be50-8fa84f3aed24 @size = 5&gt;</span>
+</span><span class='line'>                    <span class="n">a</span>          <span class="n">b</span>          <span class="n">x</span>          <span class="n">y</span>
+</span><span class='line'>         <span class="mi">0</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mi">0</span><span class="o">.</span><span class="mi">38842531</span> <span class="mi">5</span><span class="o">.</span><span class="mi">10364866</span>
+</span><span class='line'>         <span class="mi">1</span>         <span class="n">a3</span>         <span class="n">b2</span> <span class="mi">0</span><span class="o">.</span><span class="mi">44622300</span> <span class="mi">6</span><span class="o">.</span><span class="mi">23307061</span>
+</span><span class='line'>         <span class="mi">2</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mi">1</span><span class="o">.</span><span class="mi">54993657</span> <span class="mi">12</span><span class="o">.</span><span class="mi">2050404</span>
+</span><span class='line'>         <span class="mi">3</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mi">1</span><span class="o">.</span><span class="mi">52786614</span> <span class="mi">12</span><span class="o">.</span><span class="mo">00675</span><span class="mi">95</span>
+</span><span class='line'>         <span class="mi">4</span>         <span class="n">a3</span>         <span class="n">b2</span> <span class="mi">0</span><span class="o">.</span><span class="mi">76011212</span> <span class="mi">8</span><span class="o">.</span><span class="mi">20054527</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We consider the following model:</p>
+
+<ul>
+<li>We take <code>y</code> to be the response and <code>x</code> its predictor.</li>
+<li>We consider the factor <code>b</code> to be nested within the factor <code>a</code>.</li>
+<li>We assume that the intercept varies due to variable <code>a</code>; that is, a different (random) intercept term for each level of <code>a</code>.</li>
+<li>Moreover, we assume that the intercept varies due to the factor <code>b</code> which is nested in <code>a</code>; that is, different (random) intercept for each combination of levels of <code>a</code> and <code>b</code>.</li>
+</ul>
+
+
+<p>That is, mathematically the model can be expressed as</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">y</span> <span class="o">=</span> <span class="n">beta_0</span> <span class="o">+</span> <span class="n">beta_1</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gamma</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">delta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>where <code>gamma(a) ~ N(0, phi**2)</code> and <code>delta(a,b) ~ N(0, psi**2)</code> are normally distributed random variables which assume different realizations for different values of <code>a</code> and <code>b</code>, and where <code>epsilon</code> is a random Gaussian noise term with variance <code>sigma**2</code>. The goal is to estimate the parameters <code>beta_0</code>, <code>beta_1</code>, <code>phi</code>, <code>psi</code> and <code>sigma</code>.</p>
+
+<p>We fit this model in <code>mixed_models</code>, and display the estimated random effects correlation structure with</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mod</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="n">formula</span><span class="p">:</span> <span class="s2">&quot;y ~ x + (1|a) + (1|a:b)&quot;</span><span class="p">,</span>
+</span><span class='line'>                       <span class="n">data</span><span class="p">:</span> <span class="n">df</span><span class="p">,</span> <span class="n">reml</span><span class="p">:</span> <span class="kp">false</span><span class="p">)</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">mod</span><span class="o">.</span><span class="n">ran_ef_summary</span><span class="o">.</span><span class="n">inspect</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>which produces the output</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>                <span class="n">a</span>    <span class="n">a_and_b</span>
+</span><span class='line'>     <span class="n">a</span> <span class="mi">1</span><span class="o">.</span><span class="mi">34108300</span>        <span class="kp">nil</span>
+</span><span class='line'>   <span class="n">a_and_b</span>        <span class="kp">nil</span> <span class="mi">0</span><span class="o">.</span><span class="mi">97697500</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The correlation between the factor <code>a</code> and the nested random effect <code>a_and_b</code> is denoted as <code>nil</code>, because the random effects in the model at hand are assumed to be independent.</p>
+
+<p>An advantage of <code>mixed_models</code> over some other tools is the simplicity with which p-values and confidence intervals for the parameter estimates can be calculated using a multitude of available methods. Such methods include a likelihood ratio test implementation, multiple bootstrap based methods (which run in parallel by default), and methods based on the Wald Z statistic.</p>
+
+<p>We can compute five types of 95% confidence intervals for the fixed effects coefficients with the following line of code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mod</span><span class="o">.</span><span class="n">fix_ef_conf_int</span><span class="p">(</span><span class="nb">method</span><span class="p">:</span> <span class="ss">:all</span><span class="p">,</span> <span class="n">nsim</span><span class="p">:</span> <span class="mi">1000</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>which yields the result</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>                                      <span class="n">intercept</span>                                        <span class="n">x</span>
+</span><span class='line'><span class="n">wald_z</span> <span class="o">[-</span><span class="mi">1</span><span class="o">.</span><span class="mo">0442515623151203</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">433416817887737</span><span class="o">]</span>   <span class="o">[</span><span class="mi">4</span><span class="o">.</span><span class="mi">302419420148841</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="mo">03</span><span class="mi">8899876985704</span><span class="o">]</span>
+</span><span class='line'><span class="n">boot_basic</span> <span class="o">[-</span><span class="mi">0</span><span class="o">.</span><span class="mi">9676586601496888</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">486799230544233</span><span class="o">]</span>    <span class="o">[</span><span class="mi">4</span><span class="o">.</span><span class="mi">30540212917657</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="mo">02</span><span class="mi">8701160534481</span><span class="o">]</span>
+</span><span class='line'> <span class="n">boot_norm</span> <span class="o">[-</span><span class="mi">1</span><span class="o">.</span><span class="mo">05755200</span><span class="mi">80398213</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">4667867000424115</span>   <span class="o">[</span><span class="mi">4</span><span class="o">.</span><span class="mi">295959190826356</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="mo">0433</span><span class="mi">82379744274</span><span class="o">]</span>
+</span><span class='line'><span class="n">boot_t</span> <span class="o">[-</span><span class="mi">0</span><span class="o">.</span><span class="mi">9676586601496886</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">486799230544233</span><span class="o">]</span>    <span class="o">[</span><span class="mi">4</span><span class="o">.</span><span class="mi">30540212917657</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="mo">02</span><span class="mi">8701160534481</span><span class="o">]</span>
+</span><span class='line'> <span class="n">boot_perc</span> <span class="o">[-</span><span class="mi">1</span><span class="o">.</span><span class="mi">0976339749716164</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">3568239157223054</span>   <span class="o">[</span><span class="mi">4</span><span class="o">.</span><span class="mi">312618136600064</span><span class="p">,</span> <span class="mi">5</span><span class="o">.</span><span class="mo">035</span><span class="mi">917167957975</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For example, we see here that the intercept term is likely not significantly different from zero. We could proceed now by performing hypotheses tests using <code>#fix_ef_p</code> or <code>#likelihood_ratio_test</code>, or by refitting a model without an intercept using <code>#drop_fix_ef</code>.</p>
+
+<p>We can also test the nested random effect for significance, in order to decide whether we should drop that term from the model to reduce model complexity. We can use a bootstrap based version of likelihood ratio test as follows.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mod</span><span class="o">.</span><span class="n">ran_ef_p</span><span class="p">(</span><span class="n">variable</span><span class="p">:</span> <span class="ss">:intercept</span><span class="p">,</span> <span class="n">grouping</span><span class="p">:</span> <span class="o">[</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>             <span class="nb">method</span><span class="p">:</span> <span class="ss">:bootstrap</span><span class="p">,</span> <span class="n">nsim</span><span class="p">:</span> <span class="mi">1000</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We get a p-value of 9.99e-4, suggesting that we probably should keep the term <code>(1|a:b)</code> in the model formula.</p>
+
+<h3>A third example &mdash; a less conventional model fit</h3>
+
+<p>Another advantage of <code>mixed_models</code> against comparable tools is the ease of fitting models with arbitrary covariance structures of the random effects, which are not covered by the formula interface of <code>lme4</code>. This can be done in a user-friendly manner by providing a block or a <code>Proc</code> to the <code>LMM</code> constructor. This unique feature of the Ruby language makes the implementation and usage of the method incredibly convenient. A danger of allowing for arbitrary covariance structures is, of course, that such a flexibility gives the user the freedom to specify degenerate and computationally unstable  models.</p>
+
+<p>As an example we look at an application to genetics, namely to SNP data (<a href="https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism">single-nucleotide polymorphism</a>) with known pedigree structures (family relationships of the subjects). The family information is prior knowledge that we can model in the random effects of a linear mixed effects model.</p>
+
+<p>We model the quantitative trait <code>y</code> (a vector of length 1200) as</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">y</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">,</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>where <code>X</code> is a <code>1200 x 130</code> matrix containing the genotypes (i.e. 130 SNPs for each of the 1200 subjects); <code>epsilon</code> is a vector of independent random noise terms with variances equal to <code>sigma**2</code>; <code>beta</code> is a vector of unknown fixed effects coefficients measuring the contribution of each SNP to the quantitative trait <code>y</code>; and <code>b</code> is a vector of random effects.</p>
+
+<p>If we denote the kinship matrix by <code>K</code>, then we can express the probability distribution of <code>b</code> as <code>b ~ N(0, delta**2 * 2 * K)</code>, where we multiply <code>K</code> by <code>2</code> because the diagonal of <code>K</code> is constant <code>0.5</code>, and where <code>delta**2</code> is a unknown scaling factor.</p>
+
+<p>The goal is to estimate the unknown parameters <code>beta</code>, <code>sigma</code>, and <code>delta</code>, and to determine which of the fixed effects coefficients are significantly different from 0 (i.e. which SNPs are possibly causing the variability in the trait <code>y</code>).</p>
+
+<p>In order to specify the covariance structure of the random effects, we need to pass a block or <code>Proc</code> that produces the upper triangular Cholesky factor of the covariance matrix of the random effects from an input Array. In this example, that would be the multiplication of the prior known Cholesky factor of the kinship matrix with a scaling factor.</p>
+
+<p>Having all the model matrices and vectors, we compute the Cholesky factor of the kinship matrix and fit the model with</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># upper triangulat Cholesky factor</span>
+</span><span class='line'><span class="n">kinship_mat_cholesky_factor</span> <span class="o">=</span> <span class="n">kinship_mat</span><span class="o">.</span><span class="n">factorize_cholesky</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Fit the model</span>
+</span><span class='line'><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="n">zt</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span>
+</span><span class='line'>                    <span class="n">x_col_names</span><span class="p">:</span> <span class="n">x_names</span><span class="p">,</span>
+</span><span class='line'>                    <span class="n">start_point</span><span class="p">:</span> <span class="o">[</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'>                    <span class="n">lower_bound</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">th</span><span class="o">|</span> <span class="n">kinship_mat_cholesky_factor</span> <span class="o">*</span> <span class="n">th</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then we can use the available hypotheses test and confidence interval methods to determine which SNPs are significant predictors of the quantitative trait. Out of the 130 SNPs in the model, we find 24 to be significant as linear predictors.</p>
+
+<p>See <a href="http://agisga.github.io/mixed_models_applied_to_family_SNP_data/">this blog post</a> for a full analysis of this data with <code>mixed_models</code>.</p>
+
+<h2>Room for improvement and future work</h2>
+
+<ul>
+<li><p>Writing the formula language interpretation code used by <code>LMM#from_formula</code> from scratch was not easy. Much of the code can be reorganized to be easier to read and to use in other projects. Possibly, the formula interface should be separated out, similar to how it is done with the Python package <a href="https://github.com/pydata/patsy">patsy</a>. Also, some shortcut symbols (namely <code>*</code>, <code>/</code>, and <code>||</code>) in the model specification formula language are currently not implemented.</p></li>
+<li><p>I plan to add linear mixed models for high-dimensional data (i.e. more predictors than observations) to <code>mixed_models</code>, because that work would be in line with my current PhD research.</p></li>
+<li><p>I plan to add generalized linear mixed models capabilities to <code>mixed_models</code>, which can be used to fit mixed models to discrete data (such as binary or count data).</p></li>
+</ul>
+
+
+<h2>Acknowledgement</h2>
+
+<p>I want to thank Google and the <a href="sciruby.com">Ruby Science Foundation</a> for giving me this excellent opportunity! I especially want to thank <a href="http://thebird.nl/">Pjotr Prins</a> who was my mentor for the project for much helpful advice and suggestions as well as his prompt responses to any of my concerns. I also want to thank my fellow GSoC participants <a href="https://github.com/wlevine">Will</a>, <a href="https://github.com/dilcom">Ivan</a>, and <a href="https://github.com/v0dro">Sameer</a> for their help with certain aspects of my project.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GSoC 2015: New NMatrix gems for advanced linear algebra features]]></title>
+    <link href="http://sciruby.com/blog/2015/08/19/gsoc-2015-nmatrix/"/>
+    <updated>2015-08-19T09:57:00-05:00</updated>
+    <id>http://sciruby.com/blog/2015/08/19/gsoc-2015-nmatrix</id>
+    <content type="html"><![CDATA[<p>My Google Summer of Code project was working on the <a href="https://github.com/SciRuby/nmatrix">NMatrix project</a>, moving
+functionality that depends on external libraries from the core <code>nmatrix</code>
+gem to optional plugin gems. NMatrix is a Ruby library for linear algebra,
+used by many other projects.
+In addition to the code that was part of
+NMatrix proper, NMatrix previously required the <a href="http://math-atlas.sourceforge.net/">ATLAS library</a>, which
+implemented fast versions of common matrix operations like multiplication
+and inversion, as well as more advanced operations like eigenvalue
+decomposition and Cholesky decomposition.</p>
+
+<p>There were two separate but related motivations for my project. The
+first was to simplify the NMatrix installation
+process. ATLAS can be difficult to install, so the installation
+process for NMatrix was complicated, especially on
+OS X, and may have discouraged people from using NMatrix.
+The second motivation was that by separating out the ATLAS code from the
+main NMatrix code, it would be easier to add new linear algebra backends
+which provide similar features. Indeed, I implemented a second backend this
+summer.</p>
+
+<p>The end result of my summer&#8217;s work:</p>
+
+<ul>
+<li>The core <code>nmatrix</code> gem does not depend on any external linear matrix
+libraries. It provides non-optimized implementations of common matrix
+operations.</li>
+<li>All code that requires ATLAS has been moved into the new <code>nmatrix-atlas</code>
+gem, so that
+those who are only interested in the core functionality are not required to
+install ATLAS. <code>nmatrix-atlas</code> provides optimized implementations of common matrix
+operations, as well as advanced functions not available in <code>nmatrix</code>.
+I wrote a blog post describing the setup for <a href="http://wlevine.github.io/2015/06/15/releasing-multiple-gems-with-c-extensions-from-the-same-repository.html">releasing multiple gems from the same repository</a>, which this required.</li>
+<li>A new gem <code>nmatrix-lapacke</code>, which provides the same features as
+<code>nmatrix-atlas</code>, but instead of depending specifically on the ATLAS
+library, requires any generic <a href="https://en.wikipedia.org/wiki/LAPACK">LAPACK</a> and
+<a href="https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms">BLAS</a>
+implementation. This should be easier to use for many users as they may
+already have LAPACK installed (it comes pre-installed with OS X and is
+commonly used in Linux systems), but not ATLAS.</li>
+<li>The installation procedure is simplified, especially for those installing
+just the <code>nmatrix</code> gem. Compare the <a href="https://github.com/SciRuby/nmatrix/wiki/Installation">new installation instructions</a>
+to the <a href="https://github.com/SciRuby/nmatrix/wiki/Installation/2ac41c62d35c79468d3d8169be0ccba238c3c921">old ones</a>.</li>
+</ul>
+
+
+<p>The one deviation from my original proposal was that I originally intended to remove
+all the ATLAS code and release only the <code>nmatrix-lapacke</code> plugin, so that we
+would only have one interface to the advanced linear algebra functions, but I
+decided to keep the ATLAS code, since the <code>nmatrix-lapacke</code> code is new and
+has not had a chance to be thoroughly tested.</p>
+
+<h3>Usage</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;nmatrix&#39;</span>
+</span><span class='line'><span class="c1"># create a 3-by-3 matrix</span>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="o">]</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="ss">:float64</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#invert it using non-optimized NMatrix-internal implementation</span>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">invert!</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;nmatrix&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;nmatrix/atlas&#39;</span> <span class="c1">#or require &#39;nmatrix/lapacke&#39;</span>
+</span><span class='line'><span class="c1"># create a 3-by-3 matrix</span>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="o">]</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="ss">:float64</span><span class="p">)</span>
+</span><span class='line'><span class="c1">#invert it using optimized implementation provided by ATLAS</span>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">invert!</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For advanced functions not provided by the core <code>nmatrix</code> gem, for example
+<a href="http://sciruby.com/nmatrix/docs/NMatrix.html#method-i-gesvd"><code>gesvd</code></a>, <code>nmatrix-atlas</code> and <code>nmatrix-lapacke</code>
+provide a common interface:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;nmatrix&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;nmatrix/atlas&#39;</span>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'><span class="n">dtype</span><span class="p">:</span> <span class="n">dtype</span><span class="p">)</span>
+</span><span class='line'><span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">gesvd</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#Identical to the above, except for the require</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;nmatrix&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;nmatrix/lapacke&#39;</span>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span>
+</span><span class='line'><span class="n">dtype</span><span class="p">:</span> <span class="n">dtype</span><span class="p">)</span>
+</span><span class='line'><span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">gesvd</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If the developer wants to use an advanced feature, but does not care
+whether the user is using <code>nmatrix-atlas</code>
+or <code>nmatrix-lapacke</code>, they can <code>require nmatrix/lapack_plugin</code>, which will
+require whichever of the two is available, instead of being forced to
+choose between the two.</p>
+
+<p>As a fun test of the new gems, I did a very simple benchmark, just
+testing how long it took to invert a
+1500-by-1500 matrix in place using <code>NMatix#invert!</code>:</p>
+
+<ul>
+<li><code>nmatrix</code> (no external libraries): 3.67s</li>
+<li><code>nmatrix-atlas</code>: 0.96s</li>
+<li><code>nmatrix-lapacke</code> with ATLAS: 0.99s</li>
+<li><code>nmatrix-lapacke</code> with OpenBLAS (multithreading enabled): 0.39s</li>
+<li><code>nmatrix-lapacke</code> with reference implementations of LAPACK and BLAS: 3.72s</li>
+</ul>
+
+
+<p>This is not supposed to be a thorough or realistic benchmark (performance will
+depend on your system, on how you built the libraries, and on the exact
+functions that you use), but there
+are still a few interesting conclusions we can draw from it:</p>
+
+<ul>
+<li>Performance is much better using the two highly optimized libraries
+(ATLAS and OpenBLAS) than using either the NMatrix
+internal implementation or the reference implementation.</li>
+<li>When using ATLAS, performance is similar whether using <code>nmatrix-atlas</code>
+and <code>nmatrix-lapacke</code> (this means we could consider deprecating
+the <code>nmatix-atlas</code> gem).</li>
+</ul>
+
+
+<p>Overall, my summer has been productive. I implemented everything that I
+proposed and feedback from testers so far has been positive.
+I plan to stay involved with NMatrix, especially to follow up on any issues
+related to my changes.
+Although I won&#8217;t be a student next summer, I would certainly consider
+participating in Google Summer of Code in the future as a mentor.
+I&#8217;d like to
+thank my mentor John Woods and the rest of the SciRuby community for support
+and feedback throughout the summer.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GnuplotRB and GSoC 2015]]></title>
+    <link href="http://sciruby.com/blog/2015/08/18/gnuplotrb-project/"/>
+    <updated>2015-08-18T23:26:00-05:00</updated>
+    <id>http://sciruby.com/blog/2015/08/18/gnuplotrb-project</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>This summer I&#8217;ve been participating in Google Summer of Code
+ with <a href="https://github.com/dilcom/gnuplotrb">GnuplotRB project</a> (plotting tool for Ruby users based on <a href="http://www.gnuplot.info/">Gnuplot</a>)
+ for <a href="http://sciruby.com/">SciRuby</a>. GSoC is almost over and I&#8217;m releasing v0.3.1 of GnuplotRB as a <a href="https://rubygems.org/gems/gnuplotrb/">gem</a>.
+ In this blog post I want to introduce the gem and highlight some of its capabilities.</p>
+
+<h2>Features</h2>
+
+<p>There are several existing plotting tools for Ruby such as Nyaplot, Plotrb, Rubyvis
+ and Gnuplot gem. However they are not designed for large datasets and have fewer
+ plotting styles and options than Gnuplot. Gnuplot gem was developed long ago and nowadays consists
+ mostly of hacks and does not support modern Gnuplot features such as multiplot.</p>
+
+<p>Therefore my goal was to develop new gem for Gnuplot which would allow full use of its
+ features in Ruby. I was inspired to build an easy-to-use interface for the most commonly
+ used features of Gnuplot and allow users to customize their plots with
+ Gnuplot options as easily as possible in Rubyesque way.</p>
+
+<!--more-->
+
+
+<h3>2D and 3D plots</h3>
+
+<p>The main feature of every plotting tool is its ability to plot graphs. GnuplotRB allows you
+ to plot both mathematical formula  and (huge) sets of data. GnuplotRB supports plotting
+ 2D graphs (<code>GnuplotRB::Plot</code> class)  in Cartesian/parametric/polar coordinates and 3D
+ graphs (<code>GnuplotRB::Splot</code> class) &mdash; in Cartesian/cylindrical/spherical coordinates.</p>
+
+<p>There are vast of plotting styles supported by GnuplotRB:</p>
+
+<ul>
+<li><code>points</code></li>
+<li><code>lines</code></li>
+<li><code>histograms</code></li>
+<li><code>boxerrorbars</code></li>
+<li><code>circles</code></li>
+<li><code>boxes</code></li>
+<li><code>filledcurves</code></li>
+<li><code>vectors</code></li>
+<li><code>heatmap</code></li>
+<li>etc (full list in <a href="http://www.gnuplot.info/docs_5.0/gnuplot.pdf">gnuplot doc</a> p. 47)</li>
+</ul>
+
+
+<p>Plot examples:</p>
+
+<p><img src="http://sciruby.com/images/gnuplotrb-gsoc2015/plots.jpg" alt="Plot example" style="width: 100%;"/></p>
+
+<p>For code examples please see
+ <a href="https://github.com/dilcom/gnuplotrb/blob/master/README.rdoc">the repository README</a>,
+ <a href="https://github.com/dilcom/gnuplotrb/blob/master/notebooks/README.rdoc">notebooks</a>
+ and <a href="https://github.com/dilcom/gnuplotrb/tree/master/examples">the examples folder</a>.</p>
+
+<h3>Multiplot</h3>
+
+<p><code>GnuplotRB::Multiplot</code> allows users to place several plots on a single layout and output
+ them at once (e.g., to a PNG file).
+ <a href="http://nbviewer.ipython.org/github/dilcom/gnuplotrb/blob/master/notebooks/multiplot_layout.ipynb">Multiplot notebook</a>.</p>
+
+<p>Here is a multiplot example
+ (taken from <a href="http://nbviewer.ipython.org/github/SciRuby/sciruby-notebooks/blob/master/Data%20Analysis/Analyzing%20baby%20names/Use%20Case%20-%20Daru%20for%20analyzing%20baby%20names%20data.ipynb">Sameer&#8217;s notebook</a>):</p>
+
+<p><img src="http://sciruby.com/images/gnuplotrb-gsoc2015/multiplot.jpg" alt="Multiplot example" style="width: 80%; align: middle;"/></p>
+
+<h3>Animated plots</h3>
+
+<p>GnuplotRB may output any plot to gif file but <code>GnuplotRB::Animation</code> allows
+ to make this gif animated. It takes several <code>Plot</code> or <code>Splot</code> objects just as
+ multiplot does and outputs them one-by-one as frames of gif animation.
+ <a href="http://nbviewer.ipython.org/github/dilcom/gnuplotrb/blob/master/notebooks/animated_plots.ipynb">Animation notebook</a>.</p>
+
+<p><img src="http://sciruby.com/images/gnuplotrb-gsoc2015/trajectory.gif" alt="Trajectory example" style="width: 80%; align: middle;"/></p>
+
+<h3>Fit</h3>
+
+<p>Although the main GnuplotRB&#8217;s purpose is to provide you with swift, robust and
+ easy-to-use plotting tool, it also offers a <code>Fit</code> module that contains several
+ methods for fitting given data with a function. See examples in <a href="http://nbviewer.ipython.org/github/dilcom/gnuplotrb/blob/master/notebooks/fitting_data.ipynb">Fit notebook</a>.</p>
+
+<h3>Integration with other SciRuby tools</h3>
+
+<h4>Embedding plots into iRuby notebooks</h4>
+
+<p>GnuplotRB plots may be embedded into iRuby notebooks as JPEG/PNG/SVG
+ images, as ASCII art or GIF animations (<code>Animation</code> class). This functionality
+ explained in a special <a href="http://nbviewer.ipython.org/github/dilcom/gnuplotrb/blob/master/notebooks/basic_usage.ipynb">iRuby notebook</a>.</p>
+
+<h4>Using data from Daru containers</h4>
+
+<p>To link GnuplotRB with other SciRuby tools I implemented plot
+ creation from data given in Daru containers (<code>Daru::Dataframe</code> and <code>Daru::Vector</code>).
+ One can use <code>daru</code> gem in order to work with statistical SciRuby gems
+ and plotting with GnuplotRB. Notebooks with examples: <a href="http://nbviewer.ipython.org/github/dilcom/gnuplotrb/blob/master/notebooks/plotting_from_daru.ipynb">1</a>, <a href="http://nbviewer.ipython.org/github/dilcom/gnuplotrb/blob/master/notebooks/time_series_from_daru.ipynb">2</a>.</p>
+
+<h3>Possible datasources for plots</h3>
+
+<p>You can pass to Plot (or Splot or Dataset) constructor data in the following forms:</p>
+
+<ul>
+<li>String containing mathematical formula (e.g., <code>'sin(x)'</code>)</li>
+<li>String containing name of file with data (e.g., <code>'points.data'</code>)</li>
+<li>Some Ruby object responding to <code>#to_gnuplot_points</code>
+
+<ul>
+<li><code>Array</code></li>
+<li><code>Daru::Dataframe</code></li>
+<li><code>Daru::Vector</code></li>
+</ul>
+</li>
+</ul>
+
+
+<p>See examples in <a href="https://github.com/dilcom/gnuplotrb/blob/master/notebooks/README.rdoc#possible-datasources">notebooks</a>.</p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://github.com/dilcom/gnuplotrb/">Project repository</a></li>
+<li><a href="https://rubygems.org/gems/gnuplotrb/">Gem page on Rubygems</a></li>
+<li><a href="http://www.rubydoc.info/gems/gnuplotrb/0.3.1">Gem documentation on Rubydoc</a></li>
+<li><a href="http://dilcom.github.io/gnuplotrb/">Blog of the project</a></li>
+<li><a href="https://github.com/dilcom/gnuplotrb/tree/master/examples">Examples</a></li>
+<li><a href="https://github.com/dilcom/gnuplotrb/blob/master/notebooks/README.rdoc">iRuby notebooks</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby Wrappers for SymEngine, a C++ symbolic manipulation library]]></title>
+    <link href="http://sciruby.com/blog/2015/08/17/ruby-wrappers-for-symengine/"/>
+    <updated>2015-08-17T14:30:00-05:00</updated>
+    <id>http://sciruby.com/blog/2015/08/17/ruby-wrappers-for-symengine</id>
+    <content type="html"><![CDATA[<p>I am sure you have heard about <a href="http://www.wolframalpha.com/">Wolfram Alpha</a>. Some of you would have used its <a href="http://www.wolframalpha.com/examples/Math.html">Mathematics section</a> at some point of time to cross check your solution to a maths problem. If you haven&#8217;t, please do. A computer algebra system (CAS) does the same thing. Algebraic computation or symbolic computation are all used interchangeably. A CAS solves problems the same way a human does, but way more quickly and precisely. There is very less chance for an error, that we humans often make.</p>
+
+<h2>Introduction</h2>
+
+<p>My project was to write the Ruby extensions for the library <a href="https://github.com/sympy/symengine">SymEngine</a> and come up with a Ruby-ish interface, after which we can use the features of SymEngine from Ruby.</p>
+
+<p><a href="https://github.com/sympy/symengine">SymEngine</a> is a library for symbolic computation in C++. You may ask, why SymEngine? There are other CASs that I know of. This question was indeed asked. At the beginning, the idea was to use ruby wrappers for <a href="http://www.sagemath.org/">sage</a> (a mathematics software system) which uses <a href="http://pynac.org/">Pynac</a>, an interface to <a href="http://www.ginac.de/">GiNaC</a> (another CAS). As it turns out from the benchmarks, SymEngine is much faster than Pynac. What about directly wrapping GiNaC? SymEngine is also a bit faster than GiNaC.</p>
+
+<p>The motivation for <a href="https://github.com/sympy/symengine">SymEngine</a> itself is to develop it once in C++ and then use it from other languages rather than doing the same thing all over again for each language that it is required in. In particular, a long term goal is to make Sage as well as SymPy use it by default, thus unifying the Python CAS communities. The goal of implementing the Ruby wrappers is to provide a CAS for the Ruby community.</p>
+
+<h3>How will this be useful?</h3>
+
+<p>There are times when we might need a symbolic computation library. Here is an incomplete list of some of the situations:</p>
+
+<ul>
+<li>We need to do some algebra to get systems of equations in suitable form for numerical computation.</li>
+<li>We need to make substitutions for some variables and don’t want to risk a math error by hand. There might be times when we want to partially simplify an expression by substituting only a few of its variables.</li>
+<li>We have a situation where we need to find the optimum number of something to maximise our profits, and the mathematical model devised is just too complicated to solve by hand.</li>
+<li>We need to perform non-trivial derivatives or integrals.</li>
+<li>We are trying to understand the domain of a new function.</li>
+<li>Most root finding algorithms search for a single root, whereas often there are more than one.</li>
+<li>We need to solve a linear system or manipulate a symbolic matrix exactly.</li>
+<li>We need to manipulate exact expressions and solutions, as opposed to approximate ones using a numerical method.</li>
+</ul>
+
+
+<p>With that said, a symbolic manipulation library is indispensable for scientists and students. Ruby has gained a great deal of popularity over the years, and a symbolic manipulation library gem  like this project in Ruby might prove to be the foundation for a computer algebra system in Ruby. With many efforts like these, Ruby might become the first choice for academicians given how easy it is to code your logic in Ruby.</p>
+
+<h2>How to install the gem?</h2>
+
+<p>To install, please follow the <a href="https://github.com/sympy/symengine/blob/master/symengine/ruby/README.md">compile instructions given in the README</a>. After you are done, I would suggest to test the extensions. To run the test suite execute <code>rspec spec</code> on the command line, from the <code>symengine/ruby</code> dir.</p>
+
+<p>The gem is still in alpha release. Please help us out by reporting any issues in <a href="https://github.com/sympy/symengine/issues">the repo issue tracker</a>.</p>
+
+<h2>What can I do with the gem?</h2>
+
+<p>Currently, the following features are available in the gem:
+- Construct expressions out of variables (mathematical).
+- Simplify the expressions.
+- Carry out arithmetic operations like <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code> with the variables and expressions.
+- Extract arguments or variables from an expression.
+- Differentiate an expression with respect to another.
+- Substitute variables with other expressions.</p>
+
+<p>Features that will soon be ported to the SymEngine gem
+- Functions, including trigonometric, hyperbolic and some special functions.
+- Matrices, and their operations.
+- Basic number-theoretic functions.</p>
+
+<p>I have developed a <a href="https://github.com/sympy/symengine/tree/master/symengine/ruby/notebooks">few IRuby notebooks</a> that demonstrate the use of the new SymEngine module in ruby.</p>
+
+<p>Below is an example taken from the notebooks.</p>
+
+<hr />
+
+<h2>Using the SymEngine Gem</h2>
+
+<p>SymEngine is a module in the extensions, and the classes are a part of it. So first you fire up the interpreter or an IRuby notebook and load the file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;symengine&#39;</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Go ahead and try a function:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SymEngine</span><span class="o">.</span><span class="n">ascii_art</span>
+</span><span class='line'><span class="o">=&gt;</span>   <span class="n">_____</span>           <span class="n">_____</span>         <span class="n">_</span>
+</span><span class='line'>    <span class="o">|</span>   <span class="n">__</span><span class="o">|</span><span class="n">_</span> <span class="n">_</span> <span class="n">_____</span><span class="o">|</span>   <span class="n">__</span><span class="o">|</span><span class="n">___</span> <span class="n">___</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">___</span> <span class="n">___</span>
+</span><span class='line'>    <span class="o">|</span><span class="n">__</span>   <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>     <span class="o">|</span>   <span class="n">__</span><span class="o">|</span>   <span class="o">|</span> <span class="o">.</span> <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span> <span class="o">-</span><span class="n">_</span><span class="o">|</span>
+</span><span class='line'>    <span class="o">|</span><span class="n">_____</span><span class="o">|</span><span class="n">_</span>  <span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_____</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span>  <span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">___</span><span class="o">|</span>
+</span><span class='line'>          <span class="o">|</span><span class="n">___</span><span class="o">|</span>               <span class="o">|</span><span class="n">___</span><span class="o">|</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>or create a variable:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">basic</span> <span class="o">=</span> <span class="no">SymEngine</span><span class="o">::</span><span class="no">Basic</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="c1">#&lt;SymEngine::Basic:0x00000001e95290&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This shows that we have successfully loaded the module.</p>
+
+<h3>SymEngine::Symbol</h3>
+
+<p>Just like there are variables like x, y, and z in a mathematical expression or equation, we have <code>SymEngine::Symbol</code> in SymEngine to represent them. To use a variable, first we need to make a <code>SymEngine::Symbol</code> object with the string we are going to represent the variable with.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">puts</span> <span class="n">x</span> <span class="o">=</span> <span class="no">SymEngine</span><span class="o">::</span><span class="no">Symbol</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">y</span> <span class="o">=</span> <span class="no">SymEngine</span><span class="o">::</span><span class="no">Symbol</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">z</span> <span class="o">=</span> <span class="no">SymEngine</span><span class="o">::</span><span class="no">Symbol</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">x</span>
+</span><span class='line'><span class="n">y</span>
+</span><span class='line'><span class="n">z</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then we can construct expressions out of them:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="n">y</span><span class="o">/</span><span class="n">z</span><span class="p">)</span>
+</span><span class='line'><span class="n">e</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;x**y*(x - y)/z&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In SymEngine, every object is an instance of Basic or its subclasses. So, even an instance of <code>SymEngine::Symbol</code> is a Basic object.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">x</span><span class="o">.</span><span class="n">class</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="no">SymEngine</span><span class="o">::</span><span class="no">Symbol</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">x</span><span class="o">.</span><span class="n">is_a?</span> <span class="no">SymEngine</span><span class="o">::</span><span class="no">Basic</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now that we have an expression, we would like to see it&#8217;s expanded form using <code>#expand</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">expand</span><span class="p">()</span>
+</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;x**(1 + y)/z - x**y*y/z&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or check if two expressions are same:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f</span> <span class="o">==</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="o">/</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="n">y</span><span class="o">*</span><span class="n">x</span><span class="o">/</span><span class="n">z</span><span class="p">)</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But <code>e</code> and <code>f</code> are not equal since they are only mathematically equal, not structurally:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">e</span> <span class="o">==</span> <span class="n">f</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="kp">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let us suppose you want to know <strong>what variables/symbols your expression has</strong>. You can do that with the <code>#free_symbols</code> method, which returns a set of the symbols that are in the expression.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">free_symbols</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="c1">#&lt;Set: {#&lt;SymEngine::Basic:0x00000001f0ca70&gt;, #&lt;SymEngine::Basic:0x00000001f0ca48&gt;, #&lt;SymEngine::Basic:0x00000001f0ca20&gt;}&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let us use <code>#map</code> method to see the elements of the <code>Set</code>.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">free_symbols</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>#args</code> returns the terms of the expression,:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+</span><span class='line'><span class="o">[</span><span class="s2">&quot;-x**y*y/z&quot;</span><span class="p">,</span> <span class="s2">&quot;x**(1 + y)/z&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>or if it is a single term it breaks down the elements:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">args</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">k</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;x**y&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z**(-1)&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>SymEngine::Integer</h3>
+
+<p>You can make objects of class <code>SymEngine::Integer</code>. It&#8217;s like regular <code>Integer</code> in ruby kernel, except it can do all the operations a <code>Basic</code> object can &mdash; such as arithmetic operations, etc.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="no">SymEngine</span><span class="o">::</span><span class="nb">Integer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</span><span class='line'><span class="n">b</span> <span class="o">=</span> <span class="no">SymEngine</span><span class="o">::</span><span class="nb">Integer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+</span><span class='line'><span class="n">a</span><span class="o">**</span><span class="n">b</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">=&gt;</span> <span class="mi">1168422057627266461843148138873451659428421700563161428957815831003136</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Additionally, it can support numbers of arbitrarily large length.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;12**x&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>SymEngine::Rational</h3>
+
+<p>You can also make objects of class <code>SymEngine::Rational</code> which is the SymEngine counterpart for <code>Rationals</code> in Ruby.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">c</span> <span class="o">=</span> <span class="no">Rational</span><span class="p">(</span><span class="s1">&#39;2/3&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">d</span> <span class="o">=</span> <span class="no">SymEngine</span><span class="o">::</span><span class="no">Rational</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">=&gt;</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Like any other <code>Basic</code> object arithmetic operations can be done on this rational type too.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;34/3&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<p>You <strong>need not create</strong> an instance of <code>SymEngine::Integer</code> or <code>SymEngine::Rational</code>, every time you want to use them in an expression that uses many <code>Integer</code>s. Let us say you already have <code>Integer</code>/<code>Rational</code> object. Even then you can use them without having to create a new <code>SymEngine</code> object.:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># c is a Rational object, not SymEngine::Rational</span>
+</span><span class='line'><span class="n">k</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;(2/3 + x*y)*(2 + 1/(x*y) - x*y)&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, ruby kernel <code>Integer</code>s and <code>Rational</code>s interoperate seamlessly with the <code>SymEngine</code> objects.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">k</span><span class="o">.</span><span class="n">expand</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;7/3 + (2/3)*1/(x*y) + (4/3)*x*y - x**2*y**2&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<h2>What I learned</h2>
+
+<p>In the rest of the post, I would like to summarise my work and what I learned as a participant of <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2015">Google Summer of Code 2015</a>.</p>
+
+<h2>Pre-midterm Evaluations</h2>
+
+<p>I am a newbie when it comes to Ruby, and it took me a while to setup the gem and configure files for the building of extensions.</p>
+
+<h3>The struggle between shared, static and dynamic libraries</h3>
+
+<p>I faced a lot of problem in the early stages, when I was trying to build the extensions. <a href="https://github.com/certik">Ondrej</a>, my mentor, and <a href="https://github.com/isuruf">Isuru</a>, a fellow GSoC student, helped me a lot. There were many C flags that were being reported as missing. Some flags <code>cmake</code> added by default but <code>extconf.rb</code> didn&#8217;t, the same one that was required to be added to build it as a shared library. I am still confused about the details, some of which are <a href="http://abinashmeher999.github.io/2015/05/29/Building-the-wrappers/">explored in greater detail in my personal blog</a>. Finally, the library had to be built as a dynamic one. The problem of missing C flags was resolved later by hooking the process to <code>cmake</code> rather than <code>mkmf</code>.</p>
+
+<h3>Load Errors and problems in linking</h3>
+
+<p>Many <a href="http://abinashmeher999.github.io/2015/06/12/The-Load-Error/"><code>LoadError</code>s</a> popped up, but were eventually solved. <a href="https://github.com/dilcom/">Ivan</a> helped a lot in debugging the errors. In the end, it turned out to be a simple file missing in the gemspec, that was not being installed.</p>
+
+<h3>Reconfiguring building</h3>
+
+<p>One of our aims during developing this was to get rid of unessential dependencies. The ones we already had the tools for. Like later the file <code>extconf.rb</code>, that is used to generate Makefile for the extension was removed, because that could also be done by <code>cmake</code>. Flags were added to <code>cmake</code> for building the Ruby extensions, like the flag <code>-DWITH_RUBY=yes</code>. The <code>Makefile</code> then generates the library <code>symengine.so</code> in the directory <code>lib/symengine</code>.Along with <code>extconf.rb</code>, the file <code>extconf.h</code> was also gone. Along these lines, the dependency on <code>rake</code> was also removed, and with that the <code>Rakefile</code>. Any task automation will most probably be done in python. So, the <code>Rake::ExtensionTask</code> was done by <code>cmake</code> and the <code>Rake::GemPackageTask</code> was replaced by the manual method of <code>gem build symengine.gemspec</code> and <code>gem install symengine-0.0.0.gem</code></p>
+
+<h3>Travis setup</h3>
+
+<p>Not many projects have travis-ci setup for multiple languages. Not even the tutorials had clearly mentioned about setting up for multiple languages. But I did know about one of them, which is Shogun, the machine-learning toolbox. I referred to their <code>.travis.yml</code> and setup it up. If something like this wouldn&#8217;t have worked the plan was to manually install the required version of ruby and then execute the shell commands.</p>
+
+<h3>Making a basic object</h3>
+
+<p>Finally, I was able to successfully build the extensions, link the extensions with the SymEngine library, load the ruby-extension library in the interpreter and successfully instantiate an object of type <code>Basic</code>.</p>
+
+<h3>Inheritance and Symbols</h3>
+
+<p>At this time, the way inheritance works(like the sequence of formation and destruction of objects of a class that had a superclass) with the Ruby C API, was confusing for all of us. I designed an <a href="http://abinashmeher999.github.io/2015/06/26/the-symbol-class/#inheritance-in-ruby-c-api">experiment</a>
+to check what was actually happening. That cleared things out, and made the it easier to wrap things from now on. I also wrapped the <code>Symbol</code> class during the course.</p>
+
+<h2>Post-midterm Evaluations</h2>
+
+<h3>Redesign of the C interface</h3>
+
+<p>We had to design an ugly function to wrap vector in C. That led us to redesign the C interface. This approach had no reinterpret casting that was being done earlier. Each data structure had a type that was determined at compile time. For C, it was an opaque structure, while for C++ the opaque structure declared in the shared header file was implemented in the source file that had C++ data types. This <a href="http://abinashmeher999.github.io/2015/07/03/improving-the-c-interface/">blog post</a> explains it further.</p>
+
+<h3>Integer and Rational</h3>
+
+<p>While trying to port the SymEngine classes, <code>Integer</code> and <code>Rational</code>, I had to port many methods in <code>Basic</code> before that. I also replicated the <code>rake</code> tasks in NMatrix, for detection of memory leaks, in form of bash scripts.</p>
+
+<h3>Common enumeration</h3>
+
+<p>Since all objects in the Ruby C API are of the type <code>CBasic</code>, we needed a function that would give us the typename during the runtime for the corresponding objects to be wrapped in ruby, as an object of the correct <code>Class</code> in ruby. Since, this was achieved with <code>enum</code> in C++, the same thing could be done in C too, with all the classes written manually again. But there was no guarantee for this to be consistent, if ever the features required to be wrapped for a new language, and also manually adding the class in all the enum list everytime a new class is added was prone to errors. So, to make this DRY, we automated this by sharing the list of enums. More details for the implementation can be found <a href="http://abinashmeher999.github.io/2015/07/17/common-enumeration-in-c-and-c++/">here</a>.</p>
+
+<h3>Class coercion and interoperability</h3>
+
+<p>To support interoperability with the builtin ruby types, I had to overload the methods in builtin classes earlier(this was not continued). Overriding all the existing binary operations for a ruby class to support SymEngine types, violated the open/closed principle. There was indeed another way, which is <em>&#8216;Class Coercion&#8217;</em>. It was suggested by <a href="https://github.com/isuruf/">Isuru</a>. After that, SymEngine types could seamlessly interoperate between the ruby types.</p>
+
+<h3>Arithmetic operations</h3>
+
+<p>After this, all the arithmetic operations had been successfully ported. Each <code>Basic</code> object can now perform arithmetic operations with other <code>Basic</code> object(sometimes even ruby objects like <code>Integer</code>). The test file in python, that had all the corresponding test cases was ported to its RSpec counterpart.</p>
+
+<h3>Substitutions</h3>
+
+<p>Recently I completed porting the substitutions module to the extensions(<code>#subs</code>). This feature has added a lot of convenience as now you can substitute a <code>SymEngine::Symbol</code> with some other value in an expression and then <code>#expand</code> to get the result.</p>
+
+<h3>Trigonometric functions</h3>
+
+<p>Currently, I am working on porting the trigonometric functions in SymEngine to the extensions. This would first require to wrap the <code>Function</code> class and then the <code>TrigFunction</code> class in SymEngine.</p>
+
+<h3>Integration of other Ruby gems</h3>
+
+<p>I also have plans to integrate the ruby bindings for <code>gmp</code>, <code>mpfr</code> and <code>mpc</code> libraries, that are already available as gems, with ruby bindings for our library. I have created an issue <a href="https://github.com/sympy/symengine/issues/490">here</a>. Feel free to drop any suggestions.</p>
+
+<hr />
+
+<p>There is much scope for improvement in both the projects. For SymEngine, to support more features like polynomials and series-expansion in the near future, and improving the user interface and the exception handling for the extensions. In short, making the extensions more ruby-ish.</p>
+
+<p>I am grateful to my mentor, <a href="https://github.com/certik">Mr. Ondřej Čertík</a>, the <a href="http://sciruby.com/">Ruby Science Foundation</a> and the <a href="http://www.sympy.org/en/index.html">SymPy Organisation</a> for the opportunity that they gave me and guiding me through the project, and my team-mates for helping me with the issues. I hope more people will contribute to the project and together we will give a nice symbolic manipulation gem to the Ruby community.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Summary of work on daru this summer for GSOC 2015]]></title>
+    <link href="http://sciruby.com/blog/2015/08/16/summary-of-work-on-daru-this-summer-for-gsoc-2015/"/>
+    <updated>2015-08-16T23:53:00-05:00</updated>
+    <id>http://sciruby.com/blog/2015/08/16/summary-of-work-on-daru-this-summer-for-gsoc-2015</id>
+    <content type="html"><![CDATA[<p>Over this summer as a part of <a href="www.google-melange.com">Google Summer of Code 2015</a>, <a href="www.github.com/v0dro/daru/">daru</a> received a lot of upgrades and new features which have it made a pretty robust tool for data analysis in pure Ruby. Of course, a lot of work still remains for bringing daru at par with the other data analysis solutions on offer today, but I feel the work done this summer has put daru on that path.</p>
+
+<p>The new features led to the inclusion of daru in many of SciRuby&#8217;s gems, which use daru&#8217;s data storage, access and indexing features for storing and carrying around data. <a href="https://github.com/SciRuby/statsample">Statsample</a>, <a href="https://github.com/SciRuby/statsample-glm">statsample-glm</a>, <a href="https://github.com/SciRuby/statsample-timeseries">statsample-timeseries</a>, <a href="https://github.com/SciRuby/statsample-bivariate-extension">statsample-bivariate-extensions</a> are all now compatible with daru and use <code>Daru::Vector</code> and <code>Daru::DataFrame</code> as their primary data structures. I also overhauled Daru&#8217;s <a href="http://nbviewer.ipython.org/github/SciRuby/sciruby-notebooks/blob/master/Visualization/Visualizing%20data%20with%20daru%20DataFrame.ipynb">plotting functionality</a>, that interfaced with <a href="https://github.com/domitry/nyaplot">nyaplot</a> for creating interactive plots directly from the data.</p>
+
+<p>Also, new gems developed by other GSOC students, notably <a href="https://github.com/dilcom/gnuplotrb">Ivan&#8217;s GnuplotRB gem</a> and <a href="https://github.com/agisga/mixed_models">Alexej&#8217;s mixed_models gem</a> both now accept data from daru data structures. Do see their repo pages for seeing interesting ways of using daru.</p>
+
+<p>The work on daru is also proving to be quite useful for other people, which led to a talk/presentation at <a href="http://www.deccanrubyconf.org/">DeccanRubyConf 2015</a>, which is one of the three major Ruby conferences in India. You can see the slides and notebooks presented at the talk <a href="https://github.com/v0dro/talks/tree/master/DeccanRubyConf15">here</a>. Given the current interest in data analysis and the need for a viable solution in Ruby, I plan to take daru much further. Keep watching the repo for interesting updates :)</p>
+
+<p>In the rest of this post I&#8217;ll elaborate on all the work done this summer.</p>
+
+<h2>Pre-mid term submissions</h2>
+
+<p>Daru as a gem before GSOC was not exactly user friendly. There were many cases, particularly the iterators, that required some thinking before anybody used them. This is against the design philosophy of daru, or even Ruby general, where surprising programmers with ubiqtuos constructs is usually frowned down upon by the community. So the first thing that I did mainly concerned overhauling the daru&#8217;s many iterators for both <code>Vector</code> and <code>DataFrame</code>.</p>
+
+<p>For example, the <code>#map</code> iterator from <code>Enumerable</code> returns an <code>Array</code> no matter object you call it on. This was not the case before, where <code>#map</code> would a <code>Daru::Vector</code> or <code>Daru::DataFrame</code>. This behaviour was changed, and now <code>#map</code> returns an <code>Array</code>. If you want a <code>Vector</code> or a <code>DataFrame</code> of the modified values, you should call <code>#recode</code> on <code>Vector</code> or <code>DataFrame</code>.</p>
+
+<p>Each of these iterators also accepts an optional argument, <code>:row</code> or <code>:vector</code>, which will define the axis over which iteration is supposed to be carried out. So now there are the <code>#each</code>, <code>#map</code>, <code>#map!</code>, <code>#recode</code>, <code>#recode!</code>, <code>#collect</code>, <code>#collect_matrix</code>, <code>#all?</code>, <code>#any?</code>, <code>#keep_vector_if</code> and <code>#keep_row_if</code>. To iterate over elements along with their respective indexes (or labels), you can likewise use <code>#each_row_with_index</code>, <code>#each_vector_with_index</code>, <code>#map_rows_with_index</code>, <code>#map_vector_with_index</code>, <code>#collect_rows_with_index</code>, <code>#collect_vector_with_index</code> or <code>#each_index</code>. I urge you to go over the docs of each of these methods to utilize the full power of daru.</p>
+
+<p>Apart from the improvements to iterators there was also quite a bit of refactoring involved for many methods (courtesy <a href="https://github.com/agisga">Alexej</a>). The refactoring of certain core methods has made daru much faster than previous versions.</p>
+
+<p>The next (major) thing to do was making daru compatible with Statsample. This was very essential since statsample is very important tool for statistics in Ruby and it was using its own <code>Vector</code> and <code>Dataset</code> classes, which weren&#8217;t very robust as computation tools and very difficult to use when it came to cleaning or munging data. So I replaced statsample&#8217;s Vector and Dataset clases with <code>Daru::Vector</code> and <code>Daru::DataFrame</code>. It involved a significant amount of work on both statsample and daru &mdash; Statsample because many constructs had to be changed to make them compatible with daru, and daru because there was a lot of essential functionality in these classes that had to be ported to daru.</p>
+
+<p>Porting code from statsample to daru improved daru significantly. There were a whole of statistics methods in statsample that were imported into daru and you can now use all them from daru. Statsample also works well with <a href="https://github.com/clbustos/rubyvis">rubyvis</a>, a great tool for visualization. <a href="https://github.com/SciRuby/statsample#visualizations">You can now do that with daru as well</a>.</p>
+
+<p>Many new methods for reading and writing data to and from files were also added to daru. You can now read and write data to and from CSV, Excel, plain text files or even SQL databases.</p>
+
+<p>In effect, daru is now completely compatible with Statsample (and all the other Statsample extensions). You can use daru data structures for storing data and pass them to statsample for performing computations. The biggest advantage of this approach is that the analysed data can be passed around to other scientific Ruby libraries (some of which listed above) that use daru as well. Since daru offers in-built functions to better &#8216;see&#8217; your data, better visualization is possible.</p>
+
+<p>See these <a href="https://github.com/v0dro/daru#blog-posts">blogs</a> and <a href="https://github.com/v0dro/daru#notebooks">notebooks</a> for a complete overview of daru&#8217;s new features.</p>
+
+<p>Also see the <a href="https://github.com/SciRuby/statsample#notebooks">notebooks in the statsample README</a> for using daru with statsample.</p>
+
+<h2>Post-mid term submissions</h2>
+
+<p>Most of time post the mid term submissions was spent in implementing the time series functions for daru.</p>
+
+<p>I implemented a new index, the DateTimeIndex, which can used for indexing data on time stamps. It enables users to query data based on time stamps. Time stamps can either be specified with precise Ruby DateTime objects or can be specified as strings, which will lead to retrival of all the data falling under that time. For example specifying &#8216;2012&#8217; returns all data that falls in the year 2012. See detailed usage of <code>DateTimeIndex</code> and <code>DateTime</code> in conjunction with other daru constructs <a href="https://github.com/v0dro/daru/blob/master/README.md">in the daru README</a>.</p>
+
+<p>An essential utility in implementing <code>DateTimeIndex</code> was <code>DateOffset</code>, which is a new set of classes that offsets dates based on certain rules or business logic. It can advance or lag a Ruby <code>DateTime</code> to the nearest day, or any day of the week, or the end or beginning of the month, etc. <code>DateOffset</code> is an essential part of <code>DateTimeIndex</code> and can also be used as a stand-alone utility for advancing/lagging <code>DateTime</code> objects. <a href="http://v0dro.github.io/blog/2015/07/27/date-offsets-in-daru/">This blog post</a> elaborates more on the nuances of <code>DateOffset</code> and its usage.</p>
+
+<p>The last thing done during the post mid term was complete compatibility with <a href="https://github.com/AnkurGel">Ankur Goel</a>&#8217;s <a href="https://github.com/SciRuby/statsample-timeseries">statsample-timeseries</a>, which was created by  during GSOC 2013. Statsample-timeseries is a comprehensive suite offering various functions for statistical analysis of time sries data. It now works with daru containers and can be used for statistical analysis of data indexed on <code>Daru::DateTimeIndex</code>. See some use cases <a href="https://github.com/SciRuby/statsample-timeseries/blob/master/README.rdoc">in the README</a>.</p>
+
+<p>I&#8217;d like to conclude by thanking all the people directly and indirectly involved in making this project a success - My mentor <a href="https://github.com/agarie">Carlos</a> for his help and support throughout the summer, <a href="https://github.com/dilcom">Ivan</a>, <a href="https://github.com/agisga">Alexej</a> and <a href="https://github.com/wlevine">Will</a> for their support and feedback in various stages of developing daru. Also a big thank you to all the <a href="https://github.com/orgs/SciRuby/teams">SciRuby maintainers</a> for making this happen!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[NMatrix's first beta release (belated announcement)]]></title>
     <link href="http://sciruby.com/blog/2015/02/14/nmatrix-beta-released-belated-announcement/"/>
-    <updated>2015-02-14T14:56:00-05:00</updated>
+    <updated>2015-02-14T14:56:00-06:00</updated>
     <id>http://sciruby.com/blog/2015/02/14/nmatrix-beta-released-belated-announcement</id>
     <content type="html"><![CDATA[<p>Almost two months ago, in December, we <a href="https://rubygems.org/gems/nmatrix">release our first beta of NMatrix</a>, our
 linear algebra library for the Ruby language.</p>
@@ -77,7 +1107,7 @@ our <a href="https://groups.google.com/forum/#!forum/sciruby-dev">mailing list</
   <entry>
     <title type="html"><![CDATA[Nyaplot: interactive plots generator with Ruby]]></title>
     <link href="http://sciruby.com/blog/2014/08/23/nyaplot-interactive-plots-generateor-with-ruby/"/>
-    <updated>2014-08-23T10:07:00-04:00</updated>
+    <updated>2014-08-23T10:07:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/08/23/nyaplot-interactive-plots-generateor-with-ruby</id>
     <content type="html"><![CDATA[<iframe width="853" height="480" src="http://sciruby.com//www.youtube.com/embed/ZxjqsIluM88" frameborder="0" allowfullscreen></iframe>
 
@@ -240,7 +1270,7 @@ summer thanks to all people related to this project.</p>
   <entry>
     <title type="html"><![CDATA[Benchmarks for Integration Gem]]></title>
     <link href="http://sciruby.com/blog/2014/07/28/benchmarks-for-integration-gem/"/>
-    <updated>2014-07-28T02:44:00-04:00</updated>
+    <updated>2014-07-28T02:44:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/07/28/benchmarks-for-integration-gem</id>
     <content type="html"><![CDATA[<p>The Integration gem now includes quite a few functions from which to
 choose. To make this choice easier, I have done some benchmarking to
@@ -461,7 +1491,7 @@ running the benchmarks with your desired functions.</p>
   <entry>
     <title type="html"><![CDATA[The Nyaplot internal event handler]]></title>
     <link href="http://sciruby.com/blog/2014/07/09/nyaplot-internal-event-handler/"/>
-    <updated>2014-07-09T17:01:00-04:00</updated>
+    <updated>2014-07-09T17:01:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/07/09/nyaplot-internal-event-handler</id>
     <content type="html"><![CDATA[<p><img src="https://dl.dropboxusercontent.com/u/47978121/gsoc/multiple_panes.png" alt="Nyaplot multi-pane example" /></p>
 
@@ -535,7 +1565,7 @@ events in DataFrame is both natural and efficient for Nyaplot.</p>
   <entry>
     <title type="html"><![CDATA[Usage: Integration Gem Improvements]]></title>
     <link href="http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements/"/>
-    <updated>2014-07-02T17:43:00-04:00</updated>
+    <updated>2014-07-02T17:43:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/07/02/usage-integration-gem-improvements</id>
     <content type="html"><![CDATA[<h2>Numerical Integration</h2>
 
@@ -576,7 +1606,7 @@ Instead of <code>{:method=&gt;:simpson}</code> in the above code, you can use an
   <entry>
     <title type="html"><![CDATA[The progress of the GSoC D3/Visualization Project]]></title>
     <link href="http://sciruby.com/blog/2014/07/02/progress-of-d3-project/"/>
-    <updated>2014-07-02T17:09:00-04:00</updated>
+    <updated>2014-07-02T17:09:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/07/02/progress-of-d3-project</id>
     <content type="html"><![CDATA[<p>This week is the half-way point of this year&#8217;s Google Summer of
 Code. Let me report the progress during the term.</p>
@@ -679,7 +1709,7 @@ pull-requests, even during the GSoC term.</p>
   <entry>
     <title type="html"><![CDATA[Updates: Minimization and Integration]]></title>
     <link href="http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration/"/>
-    <updated>2014-06-24T14:32:00-04:00</updated>
+    <updated>2014-06-24T14:32:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/06/24/updates-minimization-and-integration</id>
     <content type="html"><![CDATA[<h2>Minimization</h2>
 
@@ -724,7 +1754,7 @@ JScience and JRuby.</p>
   <entry>
     <title type="html"><![CDATA[Progress on Minimization methods]]></title>
     <link href="http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods/"/>
-    <updated>2014-06-19T01:00:00-04:00</updated>
+    <updated>2014-06-19T01:00:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/06/19/progress-on-minimization-methods</id>
     <content type="html"><![CDATA[<h2>Current Progress on Minimization Gem</h2>
 
@@ -739,7 +1769,7 @@ JScience and JRuby.</p>
   <entry>
     <title type="html"><![CDATA[Introduction: Minimization and Integration (Lahiru)]]></title>
     <link href="http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration/"/>
-    <updated>2014-06-18T16:45:00-04:00</updated>
+    <updated>2014-06-18T16:45:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/06/18/introduction-minimization-and-integration</id>
     <content type="html"><![CDATA[<p class="note"><strong>Editor&#8217;s Note:</strong> We have two students
 working on numerical minimization and integration this summer, Rajat and
@@ -778,7 +1808,7 @@ test cases.</p>
   <entry>
     <title type="html"><![CDATA[Introduction to the Minimization and Integration project (Rajat)]]></title>
     <link href="http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project/"/>
-    <updated>2014-06-04T14:23:00-04:00</updated>
+    <updated>2014-06-04T14:23:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/06/04/introduction-to-the-minimization-and-integration-project</id>
     <content type="html"><![CDATA[<p class="note"><strong>Editor&#8217;s Note:</strong> We have two students
 working on numerical minimization and integration this summer, Rajat and
@@ -839,7 +1869,7 @@ minimization methods.</p>
   <entry>
     <title type="html"><![CDATA[Introducing the FFTW SciRuby GSoC project]]></title>
     <link href="http://sciruby.com/blog/2014/06/04/introducing-the-fftw-sciruby-gsoc-project/"/>
-    <updated>2014-06-04T12:30:00-04:00</updated>
+    <updated>2014-06-04T12:30:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/06/04/introducing-the-fftw-sciruby-gsoc-project</id>
     <content type="html"><![CDATA[<p>My name is Magdalen Berns and I am a physics student with a technical
 background in live audio. I am particularly interested in using science
@@ -900,7 +1930,7 @@ community, after all!</p>
   <entry>
     <title type="html"><![CDATA[Introducing the GSoC 2014 D3 Project]]></title>
     <link href="http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project/"/>
-    <updated>2014-06-02T14:00:00-04:00</updated>
+    <updated>2014-06-02T14:00:00-05:00</updated>
     <id>http://sciruby.com/blog/2014/06/02/introducing-gsoc-2014-the-d3-project</id>
     <content type="html"><![CDATA[<p>Hello. I am Naoki, one of four Google Summer of Code (GSoC) 2014
 students in SciRuby. Let me introduce my project. The goal of the GSoC
@@ -940,7 +1970,7 @@ achievable during this Summer of Code. Thank you for reading!</p>
   <entry>
     <title type="html"><![CDATA[Ruby Science Foundation selected for GSoC 2014]]></title>
     <link href="http://sciruby.com/blog/2014/02/24/gsoc-2014/"/>
-    <updated>2014-02-24T21:45:00-05:00</updated>
+    <updated>2014-02-24T21:45:00-06:00</updated>
     <id>http://sciruby.com/blog/2014/02/24/gsoc-2014</id>
     <content type="html"><![CDATA[<p>We&#8217;re excited to announce that the Ruby Science Foundation has been selected as
 a mentoring organization for <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2014">Google Summer of Code 2014</a>!</p>
@@ -972,7 +2002,7 @@ the moment.</p>
   <entry>
     <title type="html"><![CDATA[Some words from GSoC 2013 alumni]]></title>
     <link href="http://sciruby.com/blog/2014/01/28/gsoc-alumni/"/>
-    <updated>2014-01-28T16:07:00-05:00</updated>
+    <updated>2014-01-28T16:07:00-06:00</updated>
     <id>http://sciruby.com/blog/2014/01/28/gsoc-alumni</id>
     <content type="html"><![CDATA[<p>In 2013, SciRuby was a mentoring organization for the Google Summer of Code. We
 asked our alumni:</p>
@@ -1146,29 +2176,30 @@ there&#8217;s anything I can do to get involved this year, I&#8217;ll be availab
   <entry>
     <title type="html"><![CDATA[Statistics with Ruby: Time Series and General Linear Models]]></title>
     <link href="http://sciruby.com/blog/2013/11/07/statistics-with-ruby-time-series-and-general-linear-models/"/>
-    <updated>2013-11-07T13:15:00-05:00</updated>
+    <updated>2013-11-07T13:15:00-06:00</updated>
     <id>http://sciruby.com/blog/2013/11/07/statistics-with-ruby-time-series-and-general-linear-models</id>
     <content type="html"><![CDATA[<p class="note"><strong>Editor&#8217;s Note:</strong> This is the third of four blog posts detailing our Google Summer of
 Code 2013 students&#8217; work, edited by John Woods.</p>
 
 
+
+
+<p class="note"><strong>Gem Maintainer&#8217;s Note:</strong> These gems have changed recently. Edits reflect the changes.</p>
+
+
 <h2>Introduction</h2>
 
-<p><a href="https://github.com/clbustos/statsample/">Statsample</a> is a basic and advanced statistics suite in Ruby. It attempts to
-support JRuby and MRI/YARV equally, and also provides pure Ruby implementations for many functions.</p>
+<p><a href="https://github.com/clbustos/statsample/">Statsample</a> is a basic and advanced statistics suite in Ruby. It attempts to support JRuby and MRI/YARV equally, and also provides pure Ruby implementations for many functions.</p>
 
-<p>Statsample is the perfect library for anyone who is (a) interested in exploring statistical aspects and (b) even a little
-familiar (or interested) in Ruby.</p>
+<p>Statsample is a ruby gem for statistical analysis in ruby.</p>
 
-<p>It includes a rich API, except for problems involving time series and generalized linear models (GLM), for which the functionality
-was rather basic.</p>
+<p>It includes a rich API, except for problems involving time series and generalized linear models (GLM), for which the functionality was rather basic.</p>
 
-<p>So, in this <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2013">Google Summer of Code 2013</a> program, working
-on the SciRuby Project, I released two extensions:</p>
+<p>So, in this <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2013">Google Summer of Code 2013</a> program, working on the SciRuby Project, I released two extensions:</p>
 
 <ul>
-<li><a href="http://github.com/ankurgel/statsample-timeseries">Statsample TimeSeries</a></li>
-<li><a href="https://github.com/AnkurGel/statsample-glm">Statsample GLM</a></li>
+<li><a href="http://github.com/sciruby/statsample-timeseries">Statsample TimeSeries</a></li>
+<li><a href="https://github.com/sciruby/statsample-glm">Statsample GLM</a></li>
 </ul>
 
 
@@ -1176,35 +2207,31 @@ on the SciRuby Project, I released two extensions:</p>
 
 <h2>Statsample TimeSeries</h2>
 
-<p><a href="https://rubygems.org/gems/statsample-glm"><em>Statsample TimeSeries</em></a> is equipped with a variety of operations, which are directly available on the <code>Series</code> object. A few of those
-functionalities are:</p>
+<p><a href="https://rubygems.org/gems/statsample-timeseries"><em>Statsample TimeSeries</em></a> is equipped with a variety of operations. A few of those functionalities are:</p>
 
 <ul>
-<li>_<a href="http://en.wikipedia.org/wiki/Autocorrelation">Autocorrelation</a> of series: For finding repeating patterns (like a periodic signal) in noisy data or for
-identifying persistence (if it rained today, will it rain tomorrow?).</li>
-<li><a href="http://en.wikipedia.org/wiki/Autoregressive_moving_average_model">Autoregressive and Moving Average</a>: Autoregressive
-models (AR and ARMA) are useful for describing random processes such as found in nature and economics believed to be
+<li>_<a href="http://en.wikipedia.org/wiki/Autocorrelation">Autocorrelation</a> of series: For finding repeating patterns (like a periodic signal) in noisy data or for identifying persistence (if it rained today, will it rain tomorrow?).</li>
+<li><a href="http://en.wikipedia.org/wiki/Autoregressive_moving_average_model">Autoregressive and Moving Average</a>: Autoregressive models (AR and ARMA) are useful for describing random processes such as found in nature and economics believed to be
 predictable from past behavior (e.g., El Niño, the stock market).</li>
-<li><a href="http://en.wikipedia.org/wiki/Partial_autocorrelation_function">Partial autocorrelation</a>
-with Yule&ndash;Walker, a method for calculating the coefficients of autoregressive models.</li>
-<li><a href="http://en.wikipedia.org/wiki/Levinson_recursion">Levinson&ndash;Durbin</a> estimation: for <a href="http://www.mathworks.com/help/dsp/ref/levinsondurbin.html">solving linear equations</a>
-involving a <a href="http://en.wikipedia.org/wiki/Toeplitz_matrix">Toeplitz matrix</a>, such as in signal processing or cyclic signals.</li>
-<li><a href="http://en.wikipedia.org/wiki/Kalman_filter">Kalman filtering</a> (or linear quadratic estimation): often used for
-determining position and motion of a moving object based on sensor information (e.g., for drawing a vehicle&#8217;s position
-on a map using GPS data, or for aircraft or spacecraft navigation based on sensor inputs)</li>
-<li>Moving averages, differences and autocovariances.</li>
+<li><a href="http://en.wikipedia.org/wiki/Partial_autocorrelation_function">Partial autocorrelation</a> with Yule&ndash;Walker, a method for calculating the coefficients of autoregressive models.</li>
+<li><a href="http://en.wikipedia.org/wiki/Levinson_recursion">Levinson&ndash;Durbin</a> estimation: for <a href="http://www.mathworks.com/help/dsp/ref/levinsondurbin.html">solving linear equations</a> involving a <a href="http://en.wikipedia.org/wiki/Toeplitz_matrix">Toeplitz matrix</a>, such as in signal processing or cyclic signals.</li>
+<li><a href="http://en.wikipedia.org/wiki/Kalman_filter">Kalman filtering</a> (or linear quadratic estimation): often used for determining position and motion of a moving object based on sensor information (e.g., for drawing a vehicle&#8217;s position on a map using GPS data, or for aircraft or spacecraft navigation based on sensor inputs)</li>
 </ul>
 
 
 <p>To get your hands dirty,</p>
 
 <ul>
-<li> Install Statsample with <code>gem install statsample</code>.</li>
-<li> Next, install the TimeSeries extension with <code>gem install statsample-timeseries</code>.</li>
+<li>Install Statsample with <code>gem install statsample</code>.</li>
+<li>Next, install the TimeSeries extension with <code>gem install statsample-timeseries</code>.</li>
 </ul>
 
 
-<p>Now, let&#8217;s make a simple <code>TimeSeries</code> object:</p>
+<p>EDIT: Statsample-timeseries now uses <a href="www.github.com/v0dro/daru/">daru</a> for data storage and cleaning. Thus all ephemeral time series statistics functions (moving average, acf, etc.) have been moved to Daru::Vector, which can be indexed on a DateTimeIndex, which lets you access data indexed by a time stamp. See the <a href="https://github.com/v0dro/daru/blob/master/README.md">daru README</a> for examples.</p>
+
+<p><code>Statsample::TimeSeries::Series</code> has been deprecated in favour of <code>Daru::Vector</code>.</p>
+
+<p>To demonstrate:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1220,38 +2247,22 @@ on a map using GPS data, or for aircraft or spacecraft navigation based on senso
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;statsample-timeseries&#39;</span>
-</span><span class='line'><span class="kp">include</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">TimeSeries</span> <span class="c1"># Enable the DSL</span>
-</span><span class='line'><span class="c1"># Create a randomized timeseries of 100 continuous elements</span>
-</span><span class='line'><span class="n">ts</span> <span class="o">=</span> <span class="mi">100</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="p">}</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;daru&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;statsample-timeseries&#39;</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1"># Get the autocorrelation of the series</span>
-</span><span class='line'><span class="n">ts</span><span class="o">.</span><span class="n">acf</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># Get the partial autocorrelation of the series</span>
-</span><span class='line'><span class="n">ts</span><span class="o">.</span><span class="n">pacf</span>
-</span><span class='line'>
+</span><span class='line'><span class="n">ts</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">Vector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">100</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="p">},</span> <span class="n">index</span><span class="p">:</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DateTimeIndex</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="ss">:start</span> <span class="o">=&gt;</span> <span class="s1">&#39;2012-2&#39;</span><span class="p">,</span> <span class="ss">:periods</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">))</span>
+</span><span class='line'><span class="n">ts</span><span class="o">.</span><span class="n">acf</span> <span class="c1"># Calculate auto-correlation</span>
+</span><span class='line'><span class="n">ts</span><span class="o">.</span><span class="n">pacf</span> <span class="c1"># Calculate partial autocorrelation</span>
 </span><span class='line'><span class="c1"># Partial autocorrelation with 11 lags by maximum likelihood estimation</span>
 </span><span class='line'><span class="n">ts</span><span class="o">.</span><span class="n">pacf</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;mle&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># autoregressive coefficients:</span>
-</span><span class='line'><span class="n">ts</span><span class="o">.</span><span class="n">ar</span>
+</span><span class='line'><span class="n">ts</span><span class="o">.</span><span class="n">ar</span> <span class="c1"># Autoregressive coefficients</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1"># ARIMA(2, 1, 1)</span>
-</span><span class='line'><span class="n">k_obj</span> <span class="o">=</span> <span class="no">TimeSeries</span><span class="o">.</span><span class="n">arima</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="n">k_obj</span><span class="o">.</span><span class="n">ar</span> <span class="c1">#Gives autoregressive coefficients</span>
-</span><span class='line'><span class="n">k_obj</span><span class="o">.</span><span class="n">ma</span> <span class="c1">#Gives moving average coefficients</span>
+</span><span class='line'><span class="n">k_obj</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">TimeSeries</span><span class="o">.</span><span class="n">arima</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="n">k_obj</span><span class="o">.</span><span class="n">ar</span> <span class="c1"># autoregressive coefficients</span>
+</span><span class='line'><span class="n">k_obj</span><span class="o">.</span><span class="n">ma</span> <span class="c1"># moving average coefficients</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
-<p>You can go through the <a href="http://rubydoc.info/gems/statsample-timeseries/0.0.3/frames">documentation and API for more information</a>.</p>
 
 <h2>Statsample GLM</h2>
 
@@ -1260,23 +2271,21 @@ Some of those techniques are:</p>
 
 <ul>
 <li><a href="http://en.wikipedia.org/wiki/Poisson_regression">Poisson Regression</a>: used to model contingency tables and counts</li>
-<li><a href="http://en.wikipedia.org/wiki/Logistic_regression">Logistic Regression</a>: among other things, predicts patient outcomes in medicine based on
-categorical data (age, test results, etc.); and predicts how someone will vote in an election using demographic information</li>
-<li>Exponential Regression: one case of <a href="http://en.wikipedia.org/wiki/Nonlinear_regression">nonlinear regression</a> (examples
-might include the <a href="http://mathbits.com/MathBits/TISection/Statistics2/exponential.htm">temperature of a cup of coffee</a> left
-in a cold room, or the decay of an orbit)</li>
-<li><a href="http://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares">Iteratively Reweighted Least Squares</a>: used to
-mitigate the effects of outliers</li>
+<li><a href="http://en.wikipedia.org/wiki/Logistic_regression">Logistic Regression</a></li>
+<li>Exponential Regression: one case of <a href="http://en.wikipedia.org/wiki/Nonlinear_regression">nonlinear regression</a> (examples might include the <a href="http://mathbits.com/MathBits/TISection/Statistics2/exponential.htm">temperature of a cup of coffee</a> left in a cold room, or the decay of an orbit)</li>
+<li><a href="http://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares">Iteratively Reweighted Least Squares</a>: used to mitigate the effects of outliers</li>
 </ul>
 
 
-<p>The top level module for regression techniques is <code>Statsample::Regression</code>.</p>
+<p>The top level module for regression techniques is <code>Statsample::GLM</code>.</p>
 
 <p>Using it is as simple as ever:</p>
 
-<pre><code>  * First, install `statsample` by `gem install statsample`.
-  * Then, install GLM by `gem install `statsample-glm`.
-</code></pre>
+<ul>
+<li>First, install <code>statsample</code> by <code>gem install statsample</code>.</li>
+<li>Then, install GLM by <code>gem install</code>statsample-glm`.</li>
+</ul>
+
 
 <p>Let&#8217;s get started:</p>
 
@@ -1291,400 +2300,37 @@ mitigate the effects of outliers</li>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;statsample-glm&#39;</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;daru&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;statsample-glm&#39;</span>
 </span><span class='line'><span class="c1"># Create the datasets:</span>
-</span><span class='line'><span class="n">x1</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">Vector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">537322309644812</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">717124209978434</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">519166718891331</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">434970973986765</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">761822002215759</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">51170030921189</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">883854199811195</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">908689798854196</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">70331977539793</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">246971150634099</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">59077593922623</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">721548040910253</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">467025703920194</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">510132788447137</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">430106510266798</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">144353683251536</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">54943800728303</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">849307651309298</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">640304240933579</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">31462478279425</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">399783455165345</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">0453055645017</span><span class="mi">902</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">58212161987746</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">16484414309359</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">08829266466281</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">243893919684792</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">96655661929441</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">301335373291024</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">665832694463588</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mo">0120650</span><span class="mi">855753837</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">5116066367604</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">557300353673344</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">12829931872045</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">234443748015922</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mo">034</span><span class="mi">86690662651</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">275544751380246</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">231465849558696</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">356880153225012</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">57746647541923</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">35758352580655</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">23971669378224</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">662466275100489</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">313263561921793</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">08783223256362</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">41964722846899</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">29325100940785</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">72153880625103</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">440580131022748</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">0351</span><span class="mi">917814720056</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">142353224879252</span><span class="o">]</span><span class="p">,</span><span class="ss">:scale</span><span class="p">)</span>
-</span><span class='line'><span class="n">x2</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">Vector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[-</span><span class="mi">0</span><span class="o">.</span><span class="mi">866655707911859</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">367820249977585</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">361486610435</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">857332626245179</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">133438466268095</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">716104533073575</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">77206093023382</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">10136697295802</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">777086491435508</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">204573554913706</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">963353531412233</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">10103024900542</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">404372761837392</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">230226345183469</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">0363730246</span><span class="mi">866971</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">838265540390497</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">12543549657924</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">57929175648001</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">747060244805248</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">58946979365152</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">531952663697324</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">53338594419818</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">521992029051441</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">41631763288724</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">611402316795129</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">518355638373296</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">515192557101107</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">672697937866108</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">84347042325327</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">21195540664804</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">269869371631611</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">296155694010096</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">18097898069634</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">21314663927206</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">49193669881581</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">38969280369493</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">400680808117106</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">87282814976479</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">82394870451051</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">637864732838274</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">141155946382493</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">06</span><span class="mi">99950644281617</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">32568550595165</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">412599258349398</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">14436832227506</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">16507785388489</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">16782049922428</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">24318371493798</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">258954871320764</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">151966534521183</span><span class="o">]</span><span class="p">,</span><span class="ss">:scale</span><span class="p">)</span>
+</span><span class='line'><span class="n">x1</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">Vector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">537322309644812</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">717124209978434</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">519166718891331</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">434970973986765</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">761822002215759</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">51170030921189</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">883854199811195</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">908689798854196</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">70331977539793</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">246971150634099</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">59077593922623</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">721548040910253</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">467025703920194</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">510132788447137</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">430106510266798</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">144353683251536</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">54943800728303</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">849307651309298</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">640304240933579</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">31462478279425</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">399783455165345</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">0453055645017</span><span class="mi">902</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">58212161987746</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">16484414309359</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">08829266466281</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">243893919684792</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">96655661929441</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">301335373291024</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">665832694463588</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mo">0120650</span><span class="mi">855753837</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">5116066367604</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">557300353673344</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">12829931872045</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">234443748015922</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mo">034</span><span class="mi">86690662651</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">275544751380246</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">231465849558696</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">356880153225012</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">57746647541923</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">35758352580655</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">23971669378224</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">662466275100489</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">313263561921793</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">08783223256362</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">41964722846899</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">29325100940785</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">72153880625103</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">440580131022748</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">0351</span><span class="mi">917814720056</span><span class="p">,</span> <span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">142353224879252</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">x2</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">Vector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[-</span><span class="mi">0</span><span class="o">.</span><span class="mi">866655707911859</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">367820249977585</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">361486610435</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">857332626245179</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">133438466268095</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">716104533073575</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">77206093023382</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">10136697295802</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">777086491435508</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">204573554913706</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">963353531412233</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">10103024900542</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">404372761837392</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">230226345183469</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">0363730246</span><span class="mi">866971</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">838265540390497</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">12543549657924</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">57929175648001</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">747060244805248</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">58946979365152</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">531952663697324</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">53338594419818</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">521992029051441</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">41631763288724</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">611402316795129</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">518355638373296</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">515192557101107</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">672697937866108</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">84347042325327</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">21195540664804</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">269869371631611</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">296155694010096</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">18097898069634</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">21314663927206</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">49193669881581</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">38969280369493</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">400680808117106</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">87282814976479</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">82394870451051</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">637864732838274</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">141155946382493</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mo">06</span><span class="mi">99950644281617</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">32568550595165</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">412599258349398</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">14436832227506</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">16507785388489</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">16782049922428</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">24318371493798</span><span class="p">,</span><span class="mi">0</span><span class="o">.</span><span class="mi">258954871320764</span><span class="p">,</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">151966534521183</span><span class="o">]</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">y</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">Vector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="o">]</span><span class="p">,</span><span class="ss">:scale</span><span class="p">)</span>
+</span><span class='line'><span class="n">y</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">Vector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="o">]</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">Dataset</span><span class="o">.</span><span class="n">new</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="o">=&gt;</span><span class="n">intercept</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="o">=&gt;</span><span class="n">x1</span><span class="p">,</span><span class="s2">&quot;x2&quot;</span><span class="o">=&gt;</span><span class="n">x2</span><span class="p">})</span>
+</span><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="o">.</span><span class="n">new</span><span class="p">({</span><span class="s2">&quot;x1&quot;</span><span class="o">=&gt;</span><span class="n">x1</span><span class="p">,</span><span class="s2">&quot;x2&quot;</span><span class="o">=&gt;</span><span class="n">x2</span><span class="p">})</span>
 </span><span class='line'>
-</span><span class='line'><span class="n">obj</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">Regression</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="ss">:binomial</span><span class="p">)</span>
+</span><span class='line'><span class="n">obj</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">GLM</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="ss">:binomial</span><span class="p">)</span>
 </span><span class='line'><span class="c1"># =&gt; Returns logistic regression object</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>The <a href="http://rubydoc.info/gems/statsample-glm/Statsample/Regression">documentation and API details is available here</a></p>
 
-<p>We have some more plans for GLM module. First in the list is to make the algorithms work with singular value decomposition,
-because manual inversion of matrices is not fun for larger values in a Poisson regression.</p>
+<p>We have some more plans for GLM module. First in the list is to make the algorithms work with singular value decomposition, because manual inversion of matrices is not fun for larger values in a Poisson regression.</p>
 
 <h2>Conclusion</h2>
 
 <p>I have <a href="http://ankurgoel.com">blogged about most of the functionalities</a>; additional information is available there.</p>
 
-<p>Please explore and use the libraries; I eagerly await your input, suggestions and questions. Feel free to leave
-any questions on <a href="http://github.com/SciRuby/statsample-glm/issues">the Statsample GLM tracker</a> or
-<a href="[the%20Statsample%20GLM%20tracker](http://github.com/SciRuby/statsample-glm/issues">the Statsample TimeSeries tracker</a>.</p>
+<p>For more updated use cases refer to the notebooks in the respective project READMEs.</p>
+
+<p>Please explore and use the libraries; I eagerly await your input, suggestions and questions. Feel free to leave any questions on <a href="http://github.com/SciRuby/statsample-glm/issues">the Statsample GLM tracker</a> or <a href="[the%20Statsample%20GLM%20tracker](http://github.com/SciRuby/statsample-glm/issues">the Statsample TimeSeries tracker</a>.</p>
 
 <p>I had an amazing summer!</p>
 
 <p>Stay tuned and Enjoy.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Call for funding: more women needed in open source science software]]></title>
-    <link href="http://sciruby.com/blog/2013/11/01/call-for-funding-more-women-needed-in-open-source-science-software/"/>
-    <updated>2013-11-01T16:24:00-04:00</updated>
-    <id>http://sciruby.com/blog/2013/11/01/call-for-funding-more-women-needed-in-open-source-science-software</id>
-    <content type="html"><![CDATA[<p><a href="http://www.ncwit.org/blog/did-you-know-demographics-technical-women">Women make up 51% of the American workforce, and yet only 20% of software engineers are female.</a> Worldwide,
-the situation is similar. <a href="http://www.networkworld.com/community/node/58218">In open source software engineering, the statistics are worse: only 1.5&ndash;5% are female.</a></p>
-
-<p>One of the organizations which presented at the Google Summer of Code Mentor Summit was the <a href="http://gnome.org/opw/">GNOME Foundation&#8217;s Outreach Program for Women</a> (OPW). OPW is
-similar to GSoC, except that OPW doesn&#8217;t require its applicants to be
-students &mdash; or know how to program when the coding period begins. The pay is competitive with GSoC. And of course,
-only women can apply.</p>
-
-<p>In the process of our Google Code-In 2013 application, I recruited several female mentors to work with female GCI
-students &mdash; not a requirement, but I think it helps to have supportive people involved with whom one can identify. Unfortunately,
-we weren&#8217;t selected for the Code-In (not too disappointing given <a href="https://groups.google.com/forum/#!topic/gci-announce/P73dzsxKdsM">the several venerable and accomplished organizations that were chosen</a>). But we want to have another go, this
-time by applying for the Outreach Program for Women.</p>
-
-<p>Here&#8217;s where we need your help.</p>
-
-<p>Work for a company that might want to support this goal? Show this to your boss. Have him or her get in touch with
-us (sciruby.project at gmail dot com).</p>
-
-<p>If you don&#8217;t work for such a company, but would still like to help, you can also get in touch at the same email address.
-As a general rule of thumb, <a href="https://pledgie.com/campaigns/15783">you can always donate via Pledgie</a>, even if you don&#8217;t
-have access to tons of money.</p>
-
-<p>By the way, <a href="http://sciruby.com/blog/2013/10/25/mentoring-future-computational-power-women-for-gci-2013/">here&#8217;s a blog post by one of our mentors, Anna Belak</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Mentoring future computational power women for GCI 2013]]></title>
-    <link href="http://sciruby.com/blog/2013/10/25/mentoring-future-computational-power-women-for-gci-2013/"/>
-    <updated>2013-10-25T14:09:00-04:00</updated>
-    <id>http://sciruby.com/blog/2013/10/25/mentoring-future-computational-power-women-for-gci-2013</id>
-    <content type="html"><![CDATA[<p>My name is Anna, and I&#8217;m an engineer and a scientist. I study Materials Science and Engineering at the University of
-Michigan; and I graduated from Virginia Tech with a degree in Physics. My thesis project deals with computationally
-predicting the properties of materials used in lithium-ion batteries and airplane turbine blades.</p>
-
-<p><img src="http://sciruby.com/images/anna_belak.jpg" title="Anna Belak coding like a boss" /></p>
-
-<p>I&#8217;m writing this blog post for SciRuby, but I&#8217;m really writing it for the young women out there. SciRuby is applying to
-participate in <a href="https://developers.google.com/open-source/gci/">Google&#8217;s Code-In 2013</a>, which aims to get high school
-students involved in the open source movement, and specifically in coding. It&#8217;s great preparation for college and
-beyond — whatever you might choose to study.</p>
-
-<p>I became involved in science because I love figuring stuff out and working with smart, interesting people, and I want
-you to get involved, too. Modern science wouldn&#8217;t be possible without open source software. Moreover, if you learn how
-to code, you&#8217;ll always have a job. Always.</p>
-
-<p>And the cool part is that you don&#8217;t have to know how to code in order to participate. Many of the tasks involve research
-and documentation in science and mathematics — which is a great way to obtain valuable experience for college
-applications.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby and the Semantic Web, RDF, and SPARQL: PubliSci]]></title>
-    <link href="http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci/"/>
-    <updated>2013-10-12T16:36:00-04:00</updated>
-    <id>http://sciruby.com/blog/2013/10/12/ruby-and-the-semantic-web-rdf-sparql-publisci</id>
-    <content type="html"><![CDATA[<p class="note"><strong>Editor&#8217;s Note:</strong> This is the second of four blog posts detailing our Google Summer of
-Code 2013 students&#8217; work. I edited it to include a very incomplete list of public RDF repositories. &mdash;John Woods</p>
-
-
-<h2>Introduction</h2>
-
-<p>Across all fields and disciplines, contemporary scientists are faced with a massive and growing volume of data. It often
-won&#8217;t fit in a lab notebook, and there is a pressing need to share it more quickly and widely than publication in a
-journal article would allow for. Database software is one great solution for storage of such data, but relational
-databases become brittle in the face of changes or new information, do not play nicely with other databases or data
-derived from such databases, and may not be fully machine (or human) readable without pre-existing knowledge.</p>
-
-<p>Meanwhile, the Internet is an extremely useful place to discover and share useful information, but it is essentially
-built around linked documents, rather than pure data, and so our primary mechanism for sharing data is as HTML or text.</p>
-
-<p>RDF and related technologies propose to provide the means to move beyond a web of documents to a web of data. Along
-the way, these technologies may address many of the problems with conventional relational databases (e.g., SQL). At its
-core, RDF defines an extremely flexible method for representing data on the web &mdash; which is nonetheless
-unambiguously defined, without any external context, and can be linked to other data as web documents link to each
-other. Because RDF data can be understood as either a set of subject&ndash;predicate&ndash;object statements or a
-directed graph with labeled edges, a number of supporting standards and tools that have grown up around it to provide
-powerful storage and access methods that are often easier to implement and use than those associated with relational
-databases and the document-based web.</p>
-
-<h2>Enter PubliSci</h2>
-
-<p>This summer I created a Ruby gem, <a href="http://github.com/sciruby/publisci">PubliSci</a>, to facilitate data publication and interaction using
-the <a href="https://en.wikipedia.org/wiki/Semantic_web">Semantic Web</a>. The format offers a unified way to share and combine
-information from multiple sources, support for machine learning tools,
-a <a href="https://en.wikipedia.org/wiki/SPARQL">flexible query language</a> that makes application integration easy, and the
-backing of the World Wide Web Consortium (W3C) and other standards-setting bodies.</p>
-
-<p>The PubliSci gem comprises a set of parsers for converting various input formats using
-the <a href="http://semanticweb.com/w3c-publishes-last-call-working-drafts-for-rdf-data-cube-dcat_b35950">RDF Data Cube vocabulary</a>, and
-a Ruby interface for defining new ones. Since the relationship between external datasets and semantic web formats is
-sometimes up to interpretation, a domain-specific language is included to allow end users to resolve ambiguities and
-provide additional metadata.</p>
-
-<p>Along with the conversion tool, a standalone server is available as an extension to the gem that simplifies setting up and interacting
-with RDF data stores. The server allows import, export, querying, and management of external <a href="https://en.wikipedia.org/wiki/Triplestore">triplestores</a> such as
-<a href="http://4store.org/">4store</a>, and supports both cross-domain access and content negotiation so the gem can be accessed
-using Javascript or other applications.</p>
-
-<p class="note"><strong>Triplestores</strong> are databases for the storage and retrieval of <strong>triples</strong>,
-which are typically subject&ndash;object&ndash;predicate relationships (e.g., <i>Bob knows Fred</i>).</p>
-
-
-<p>If you&#8217;d like to contribute, the <a href="https://github.com/sciruby/publisci">source code is available on Github</a>, and <a href="http://gsocsemantic.wordpress.com/2013/08/05/bio-publisci/">a broad
-outline of the to do list can be had as well</a>.</p>
-
-<h2>Usage</h2>
-
-<p>Once you&#8217;ve done <code>gem install publisci</code>, you can require the gem in the normal way (<code>require 'publisci'</code>). To invoke the
-domain-specific language, you&#8217;ll also want to include the <code>DSL</code> module:</p>
-
-<pre><code>require 'publisci'
-include PubliSci::DSL
-</code></pre>
-
-<p>Input data can be specified like so:</p>
-
-<pre><code># Specify input data
-data do
-  # Use local or remote paths to point to the data file you want to load:
-  source 'https://github.com/wstrinz/publisci/raw/master/spec/csv/bacon.csv'
-
-  # Specify datacube properties.
-  dimension 'producer', 'pricerange'
-  measure 'chunkiness'
-
-  # Set parser-specific options.
-  option 'label_column', 'producer'
-end
-</code></pre>
-
-<p>You can provide meta-data on your dataset as well.</p>
-
-<pre><code>metadata do
-  dataset 'bacon'
-  title 'Bacon dataset'
-  creator 'Will Strinz'
-  description 'some data about bacon'
-  date '1-10-2010'
-end
-</code></pre>
-
-<p>Sending the data to a repository is simple.</p>
-
-<pre><code># Send output to an RDF::Repository
-#  can also use 'generate_n3' to output a turtle string
-repo = to_repository
-</code></pre>
-
-<p>SPARQL queries can be run on the dataset using the <code>QueryHelper</code> module.</p>
-
-<pre><code># run SPARQL queries on the dataset
-PubliSci::QueryHelper.execute('select * where {?s ?p ?o} limit 5', repo)
-</code></pre>
-
-<p>Finally, data can be exported in other formats, such as ARFF:</p>
-
-<pre><code># export in other formats
-PubliSci::Writers::ARFF.new.from_store(repo)
-</code></pre>
-
-<h2>Some places to look for RDF repositories</h2>
-
-<ul>
-<li>Social sciences and economics: <a href="http://wiki.planet-data.eu/web/Datasets">PlanetData wiki: Datasets</a>, <a href="http://270a.info/">270a Linked Dataspaces</a></li>
-<li>Chemistry: <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118380/">Resource description framework technologies in chemistry</a></li>
-<li>Molecular biology: <a href="http://www.ebi.ac.uk/rdf/">EMBL-EBI: Current RDF Resources</a>, <a href="http://bio2rdf.org/">Bio2RDF</a>,
-<a href="http://www.geneontology.org/GO.format.rdfxml.shtml">Gene Ontology</a></li>
-<li>Ecology: <a href="http://www.bbc.co.uk/nature/feedsanddata">BBC Wildlife Finder</a></li>
-<li>General: <a href="http://dataincubator.org/">Data Incubator: Growing the Web of Data</a></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[GSOC 2013: Data mining in JRuby with Ruby Band]]></title>
-    <link href="http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band/"/>
-    <updated>2013-09-24T10:44:00-04:00</updated>
-    <id>http://sciruby.com/blog/2013/09/24/gsoc-2013-data-mining-in-jruby-with-ruby-band</id>
-    <content type="html"><![CDATA[<p class="note"><strong>Editor&#8217;s Note:</strong> This is the first of four blog posts detailing
-our Google Summer of Code 2013 students&#8217; work, edited by John Woods.</p>
-
-
-<p>In the context of the Google Summer of Code 2013, I have developed a Ruby gem called <a href="https://github.com/arrigonialberto86/ruby-band">Ruby Band</a>
-that makes some selected Java software for data mining and machine learning applications available to the JRuby/Ruby
-users. This project complements existing software already developed for SciRuby by adding support for the Weka Toolkit
-and general functions included in the Apache Commons Math library.</p>
-
-<p>As Weka does, Ruby Band features a comprehensive collection of data preprocessing and modeling techniques, and supports
-several standard data mining tasks, more specifically: data pre-processing (filtering), clustering, classification,
-regression, and feature selection.</p>
-
-<p>All of Ruby Band&#8217;s techniques have been built on the assumption that the data is
-available as a single flat file or relation, where each datum is described by a fixed number of attributes. The
-loaded datasets are stored in Weka Instances objects, which are used as &#8216;core&#8217; data types for the interactions with
-other software (Apache Commons Math) or platforms.</p>
-
-<p>Originally, Ruby Band was called Ruby Mining. I renamed it Ruby Band, as I imagine
-different software sources (Weka, Apache, etc.) working as a whole, like in a real band. Ruby Band has been designed
-with a modular structure, so that it can be easily extended and integrated with other Java software. The Core module is
-allows data types from different sources to be defined and integrated using converter methods;
-functionalities from each piece of additional software are independently imported. This structure increases the
-extensibility of the product, as in the future other developers may add functionalities according to their needs.</p>
-
-<p>Though Ruby Band provides full support for the greatest part of the Weka APIs, some topics still need to be addressed
-properly. As I coded, I utilized the Weka Java APIs documentation as my roadmap; if you want to contribute,
-<a href="http://weka.wikispaces.com/Use+WEKA+in+your+Java+code">go see what is still missing</a>. The best and easiest way
-to introduce a new functionality into the Ruby Band framework is to write up a pertinent Cucumber test, as a number of
-Weka recipes have been posted online by the creators.</p>
-
-<p>The beta version of Ruby Band has already been released for general use on Rubygems (<code>gem install ruby-band</code>).</p>
-
-<p>This is a quick example of how to train a classifier on a dataset parsed from an ARFF file:</p>
-
-<pre><code>require 'ruby-band'
-
-# parse a dataset
-dataset = Core::Parser.parse_ARFF(my_file.arff)
-
-# initialize and train a classifier
-classifier = Weka::Classifier::Lazy::KStar::Base.new do
-  set_options '-M d'
-  set_data dataset
-  set_class_index 4
-end
-
-# cross-validate the trained classifier
-puts classifier.cross_validate(3)
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[NMatrix nearing beta release]]></title>
-    <link href="http://sciruby.com/blog/2013/09/18/nmatrix-nearing-beta-release/"/>
-    <updated>2013-09-18T15:18:00-04:00</updated>
-    <id>http://sciruby.com/blog/2013/09/18/nmatrix-nearing-beta-release</id>
-    <content type="html"><![CDATA[<p>As of this writing, NMatrix v0.0.9 is available on RubyGems. It is likely that the next version will be a beta release
-candidate, as there&#8217;s only one critical feature still missing (<code>==</code> between matrices of different storage types).</p>
-
-<p>An enormous amount has changed since my last entry.</p>
-
-<h2>New, friendlier constructor</h2>
-
-<p>First and foremost, NMatrix sports a new constructor, based
-on <a href="https://groups.google.com/d/msg/sciruby-dev/tPwnmPbRR_U/PL0Nc92gdzEJ">helpful comments from folks on the listserv</a>. Here
-are some examples of construction:</p>
-
-<pre><code>NMatrix.new([4,4], 0) # 4x4 dense matrix of :int32, all 0
-NMatrix.new([4,4], 0.0) # 4x4 dense matrix of :float64, all 0.0
-NMatrix.new([4,4], 0.0, dtype: :complex64) # 4x4 dense matrix of :complex64
-NMatrix.new([1,4], stype: :yale) # size 4 sparse (Yale) row vector of 0s
-NMatrix.new([4,3], [0,1,2]) # 4 rows, 3 columns: gradient across each row from 0 to 2 (int32)
-NMatrix.new([4,3], [0,1,2], stype: :yale, default: 0) # same as above, but Yale storage (int32)
-NMatrix.new([4,1], stype: :list, dtype: :rational128) # size 4 sparse (list) column vector of rational 0s
-NMatrix.new([4,4]) # 4x4 dense matrix containing nils
-NMatrix.new([4,4], dtype: :int64) # 4x4 uninitialized dense matrix containing 64-bit integers
-NMatrix.new(4)     # same as above
-</code></pre>
-
-<p>The different storage types (stypes) have slightly different behaviors when no initialization value is provided. This
-may change in the future, but addresses the somewhat different use-cases of these storage types.</p>
-
-<p>I show a variety of examples above, several of which are not particularly wise uses &#8212; for example, the <code>[0,1,2]</code> Yale
-gradient, which uses 32-bit integers and must store 11 column indices and pointers (which are most likely unsigned
-long integers) in addition to the 11 entries (4 for the always-stored diagonal, 1 for the default, and 6 for the
-non-diagonal non-zeros).</p>
-
-<p>The key to understanding the differing construction is the default value. All sparse matrices need a default. Usually we
-think of sparse matrices as being zero-based (only non-zero values are stored), but NMatrix now allows other defaults.
-However, dense matrices don&#8217;t need defaults, and in fact sometimes it&#8217;s more efficient to allocate them without
-initializing them &#8212; such as if they&#8217;re about to store the results of some LAPACK function call. But if they contain
-Ruby objects, they <strong>have</strong> to be initialized, which is why they become nil.</p>
-
-<p>We&#8217;re still working out a few bugs in construction. If you find any, please report them in our <a href="http://github.com/SciRuby/nmatrix/issues">issue tracker</a>.</p>
-
-<h2>Elimination of NVectors</h2>
-
-<p>We removed the NVector class. Frankly, it didn&#8217;t make sense. A vector can&#8217;t have an orientation unless it has multiple
-dimensions &#8212; even if some of those dimensions have length 1. Now, vectors and matrices are treated the same in the code.</p>
-
-<p>The good news is that element access (<code>[]</code>) has been rewritten so that the programmer only needs provide the coordinates
-whose dimensions are not 1. For example:</p>
-
-<pre><code>n = NMatrix.new([4,1,3], 0) # 3-dimensional matrix of 0s
-n[2,1] == n[2,0,1]
-=&gt; true
-</code></pre>
-
-<p>The same rule applies to slicing.</p>
-
-<h2>Slicing improvements</h2>
-
-<p>Aleksey Timin contributed the framework for matrix slicing. Matrices can be sliced by copying or by reference. Modifying
-a copy-slice does not modify the original matrix; but modifying a reference slice does.</p>
-
-<p>A copy of some portion of the matrix may be made using <code>NMatrix#slice</code>:</p>
-
-<pre><code>new_matrix = n.slice(0..1,0..2)
-</code></pre>
-
-<p>And what appears to be a copy, but is actually a reference, may be made using brackets:</p>
-
-<pre><code>ref = n[0..1,0..2]
-</code></pre>
-
-<p>Reference slices may also be modified in a variety of ways:</p>
-
-<pre><code>n[0..4,2..8] = 0   # change all entries to 0
-n[0..4,2..8] = [0,1,2]  # change the selected entries to [0,1,2,0,1,2,0,1,2...]
-n[0..4,2..8] = NMatrix.new([3,3], [0,1,2]) # same as above
-</code></pre>
-
-<p>For the sake of speed, each of these <code>[]=</code> returns the right-hand value, whether that value is an array, matrix, or
-single value. So, you can do this:</p>
-
-<pre><code>x = m[0..4,2..8] = n[0..1,0..2] = [1,2,3]
-</code></pre>
-
-<p>and <code>x</code> will be equal to <code>[1,2,3]</code> after the evaluation.</p>
-
-<h2>Iteration</h2>
-
-<p>Matrices are now enumerable. There are a variety of enumerators &#8212; namely <code>each_with_indices</code> (and <code>each</code>), <code>each_stored_with_indices</code>,
-and <code>each_ordered_stored_with_indices</code>. The first, <code>each</code>, is guaranteed to produce the same iteration regardless of the
-storage type. The other two iterate only across the stored entries.</p>
-
-<h2>Elementwise comparisons</h2>
-
-<p>A regular matrix comparison, returning a single boolean, can be accomplished using <code>==</code> or <code>!=</code>. In earlier versions of
-NMatrix, the results of the element-wise versions, <code>=~</code>, <code>!~</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, and <code>&lt;=</code>, were matrices of 0s and 1s,
-stored using the <code>:byte</code> dtype.</p>
-
-<p>Now, these comparisons return matrices of Ruby objects:</p>
-
-<pre><code>n &lt; m
-=&gt; [ true,  false, false, true,
-     false, false, false, true,
-     true,  true,  true,  true  ]
-</code></pre>
-
-<p>Try experimenting with sparse matrices to see how the default value (<code>#default_value</code>) is initialized on the result during an
-elementwise comparison.</p>
-
-<h2>Chunky bacon</h2>
-
-<p>I&#8217;m really excited about all of the chunky bacon in our latest release. I feel like things are really coming together
-for our library. I&#8217;m also glad to see that people are using it.</p>
-
-<p>If you&#8217;re thinking of using NMatrix yourself, I strongly encourage it. Although I&#8217;m writing my dissertation, I plan to
-prioritize troubleshooting ahead of just about everything else. I want using NMatrix to be an easy choice for every
-Rubyist.</p>
-
-<p>Thanks for reading!</p>
 ]]></content>
   </entry>
   
